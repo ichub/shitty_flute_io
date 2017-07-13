@@ -12,13 +12,13 @@ export class PageComponent extends React.Component<any, IPageComponentState> {
 
         this.state = {
             buttons: [
-                makeIFluteButtonInfo("A"),
-                makeIFluteButtonInfo("B"),
-                makeIFluteButtonInfo("C"),
-                makeIFluteButtonInfo("D"),
-                makeIFluteButtonInfo("E"),
-                makeIFluteButtonInfo("F"),
-                makeIFluteButtonInfo("G"),
+                makeIFluteButtonInfo("A", "/res/notes/A-Normal.mp3", "/res/notes/A-Shitty.mp3"),
+                makeIFluteButtonInfo("B", "/res/notes/B-Normal.mp3", "/res/notes/B-Shitty.mp3"),
+                makeIFluteButtonInfo("C", "/res/notes/C-Normal.mp3", "/res/notes/C-Shitty.mp3"),
+                makeIFluteButtonInfo("D", "/res/notes/D-Normal.mp3", "/res/notes/D-Shitty.mp3"),
+                makeIFluteButtonInfo("E", "/res/notes/E-Normal.mp3", "/res/notes/E-Shitty.mp3"),
+                makeIFluteButtonInfo("F", "/res/notes/F-Normal.mp3", "/res/notes/F-Shitty.mp3"),
+                makeIFluteButtonInfo("G", "/res/notes/G-Normal.mp3", "/res/notes/G-Shitty.mp3"),
             ],
         };
     }

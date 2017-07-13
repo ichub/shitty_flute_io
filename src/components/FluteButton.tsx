@@ -7,6 +7,9 @@ import {IFluteButtonInfo} from "../models/IFluteButtonInfo";
 export class FluteButton extends React.Component<IFluteButtonProps, IFluteButtonState> {
     props: IFluteButtonProps;
     state: IFluteButtonState;
+    refs: {
+        audio: HTMLAudioElement
+    };
 
     constructor(props: IFluteButtonProps) {
         super();
@@ -14,16 +17,30 @@ export class FluteButton extends React.Component<IFluteButtonProps, IFluteButton
 
     render() {
         return (
-            <div style={[
-                FluteButton.styles.base,
-            ]}>
+            <div onMouseDown={this.onMouseDown.bind(this)}
+                 onMouseUp={this.onMouseUp.bind(this)}
+                 style={[
+                     FluteButton.styles.base,
+                 ]}>
                 <span style={[
                     FluteButton.styles.noteText,
                 ]}>
                     {this.props.buttonInfo.name}
+
+                    <audio ref="audio" loop={true}>
+                          <source src={this.props.buttonInfo.soundFileUrl}/>
+                    </audio>
                 </span>
             </div>
         );
+    }
+
+    onMouseDown() {
+        this.refs.audio.play();
+    }
+
+    onMouseUp() {
+        this.refs.audio.pause();
     }
 
     private static buttonColor = "red";

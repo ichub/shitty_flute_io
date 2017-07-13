@@ -6,7 +6,7 @@ import * as bodyParser from "body-parser";
 export const rootPath = path.join(__dirname, "../../");
 export const htmlDir = path.join(rootPath, "html");
 export const jsDir = path.join(rootPath, "dist", "bundle");
-export const resDir = path.join(rootPath, "resources");
+export const resDir = path.join(rootPath, "res");
 export const cssDir = path.join(rootPath, "css");
 
 const app = express();
