@@ -37,7 +37,7 @@ export class FluteButton extends React.Component<IFluteButtonProps, IFluteButton
             justifyContent: "center",
             alignItems: "center",
             cursor: "pointer",
-            "-webkit-user-select": "none",
+            WebkitUserSelect: "none",
 
             ":hover": {
                 backgroundColor: color(FluteButton.buttonColor).darken(0.5),
