@@ -3,6 +3,7 @@ import * as Radium from "radium";
 import * as color from "color";
 
 import {INoteInfo} from "../models/INoteInfo";
+import {FluteAudioPlayer} from "./FluteAudioPlayer";
 
 @Radium
 export class Composer extends React.Component<IComposerProps, IComposerState> {
@@ -19,6 +20,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             playing: false,
             playingColumnIndex: -1,
             composition: this.makeNewComposition(),
+            currentlyPlayingNotes: [],
         };
     }
 
@@ -29,17 +31,10 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         }, () => {
             const playColumnAndNext = () => {
                 setTimeout(() => {
-                        console.log(`playing column ${this.state.playingColumnIndex}`);
-
-                        for (let note = 0; note < this.props.notes.length; note++) {
-                            if (this.isNoteOn(this.state.playingColumnIndex, note)) {
-                                console.log(this.props.notes[note]);
-                            }
-                        }
-
                         if (this.state.playingColumnIndex < Composer.DURATION - 1) {
                             this.setState({
                                 playingColumnIndex: this.state.playingColumnIndex + 1,
+                                currentlyPlayingNotes: this.getCurrentlyPlayingNotes(),
                             }, () => {
                                 playColumnAndNext();
                             });
@@ -48,16 +43,29 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                             this.setState({
                                 playing: false,
                                 playingColumnIndex: -1,
-                            }, () => {
-                                console.log("finished playing");
                             });
                         }
                     },
                     Composer.MILLISECONDS_PER_NOTE);
             };
-
             playColumnAndNext();
         });
+    }
+
+    getCurrentlyPlayingNotes(): number[] {
+        if (this.state.playingColumnIndex == -1) {
+            return [];
+        }
+
+        const result = [];
+
+        for (let note = 0; note < this.props.notes.length; note++) {
+            if (this.isNoteOn(this.state.playingColumnIndex, note)) {
+                result.push(note);
+            }
+        }
+
+        return result;
     }
 
     makeNewComposition(): boolean[][] {
@@ -98,6 +106,9 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             <div style={[
                 Composer.styles.base,
             ]}>
+                <FluteAudioPlayer notes={this.props.notes}
+                                  playingIndices={this.state.currentlyPlayingNotes}/>
+
                 {
                     this.props.notes.map((note, noteIndex) => {
                         const noteButtons = [];
@@ -179,4 +190,5 @@ export interface IComposerState {
     playing: boolean;
     playingColumnIndex: number;
     composition: boolean[][];
+    currentlyPlayingNotes: number[];
 }
