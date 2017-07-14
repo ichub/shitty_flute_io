@@ -1,11 +1,13 @@
 import * as React from "react";
 import * as Radium from "radium";
+import * as color from "color";
+
 import {INoteInfo} from "../models/INoteInfo";
 
 @Radium
 export class Composer extends React.Component<IComposerProps, IComposerState> {
     private static readonly DURATION = 10;
-    private static readonly MILLISECONDS_PER_NOTE = 500;
+    private static readonly MILLISECONDS_PER_NOTE = 250;
 
     props: IComposerProps;
     state: IComposerState;
@@ -15,7 +17,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
         this.state = {
             playing: false,
-            playingColumnIndex: 0,
+            playingColumnIndex: -1,
             composition: this.makeNewComposition(),
         };
     }
@@ -45,6 +47,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                         } else {
                             this.setState({
                                 playing: false,
+                                playingColumnIndex: -1,
                             }, () => {
                                 console.log("finished playing");
                             });
@@ -85,7 +88,9 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     }
 
     handleClick(time: number, noteIndex: number) {
-        this.toggleNote(time, noteIndex);
+        if (!this.state.playing) {
+            this.toggleNote(time, noteIndex);
+        }
     }
 
     render() {
@@ -105,6 +110,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                                          Composer.styles.inline,
                                          Composer.styles.singleButton,
                                          Composer.styles[this.isNoteOn(time, noteIndex) ? "on" : "off"],
+                                         Composer.styles[time == this.state.playingColumnIndex ? (this.isNoteOn(time, noteIndex) ? "playingOn" : "playingOff") : "none"],
                                      ]}>
                                     button
                                 </div>
@@ -155,6 +161,13 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         off: {
             backgroundColor: "grey",
         },
+        playingOn: {
+            backgroundColor: "yellow",
+        },
+        playingOff: {
+            backgroundColor: color("grey").lighten(0.5).hex(),
+        },
+        none: {},
     };
 }
 
