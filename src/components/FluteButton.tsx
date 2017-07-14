@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Radium from "radium";
 import * as color from "color";
-import {IFluteButtonInfo} from "../models/IFluteButtonInfo";
+import {INoteInfo} from "../models/INoteInfo";
 
 @Radium
 export class FluteButton extends React.Component<IFluteButtonProps, IFluteButtonState> {
@@ -28,7 +28,7 @@ export class FluteButton extends React.Component<IFluteButtonProps, IFluteButton
                     {this.props.buttonInfo.name}
 
                     <audio ref="audio" loop={true}>
-                          <source src={this.props.buttonInfo.soundFileUrl}/>
+                          <source src={this.props.buttonInfo.shittySoundFileUrl}/>
                     </audio>
                 </span>
             </div>
@@ -67,7 +67,7 @@ export class FluteButton extends React.Component<IFluteButtonProps, IFluteButton
 }
 
 export interface IFluteButtonProps {
-    buttonInfo: IFluteButtonInfo;
+    buttonInfo: INoteInfo;
 }
 
 export interface IFluteButtonState {
