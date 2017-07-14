@@ -2,6 +2,7 @@ import * as express from "express";
 import * as path from "path";
 import * as morgan from "morgan";
 import * as bodyParser from "body-parser";
+import {ApiController} from "./ApiController";
 
 export const rootPath = path.join(__dirname, "../../");
 export const htmlDir = path.join(rootPath, "html");
@@ -13,6 +14,8 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(morgan("dev" as any));
+
+app.use(ApiController)
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(htmlDir, "index.html"));
