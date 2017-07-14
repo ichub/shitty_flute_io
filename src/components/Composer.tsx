@@ -5,6 +5,7 @@ import {INoteInfo} from "../models/INoteInfo";
 @Radium
 export class Composer extends React.Component<IComposerProps, IComposerState> {
     private static readonly DURATION = 10;
+    private static readonly MILLISECONDS_PER_NOTE = 500;
 
     props: IComposerProps;
     state: IComposerState;
@@ -13,8 +14,47 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         super(props);
 
         this.state = {
+            playing: false,
+            playingColumnIndex: 0,
             composition: this.makeNewComposition(),
         };
+    }
+
+    play() {
+        this.setState({
+            playing: true,
+            playingColumnIndex: 0,
+        }, () => {
+            const playColumnAndNext = () => {
+                setTimeout(() => {
+                        console.log(`playing column ${this.state.playingColumnIndex}`);
+
+                        for (let note = 0; note < this.props.notes.length; note++) {
+                            if (this.isNoteOn(this.state.playingColumnIndex, note)) {
+                                console.log(this.props.notes[note]);
+                            }
+                        }
+
+                        if (this.state.playingColumnIndex < Composer.DURATION - 1) {
+                            this.setState({
+                                playingColumnIndex: this.state.playingColumnIndex + 1,
+                            }, () => {
+                                playColumnAndNext();
+                            });
+
+                        } else {
+                            this.setState({
+                                playing: false,
+                            }, () => {
+                                console.log("finished playing");
+                            });
+                        }
+                    },
+                    Composer.MILLISECONDS_PER_NOTE);
+            };
+
+            playColumnAndNext();
+        });
     }
 
     makeNewComposition(): boolean[][] {
@@ -83,6 +123,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                         );
                     })
                 }
+                <input type="button" value="play" onClick={this.play.bind(this)} disabled={this.state.playing}/>
             </div>
         );
     }
@@ -122,5 +163,7 @@ export interface IComposerProps {
 }
 
 export interface IComposerState {
+    playing: boolean;
+    playingColumnIndex: number;
     composition: boolean[][];
 }
