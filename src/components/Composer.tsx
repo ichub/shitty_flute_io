@@ -6,6 +6,8 @@ import {INoteInfo} from "../models/INoteInfo";
 import {FluteAudioPlayer} from "./FluteAudioPlayer";
 import {IComposition, makeNewIComposition} from "../models/IComposition";
 
+declare const initializedState: any; // TODO: replace 'any' with an actual type
+
 @Radium
 export class Composer extends React.Component<IComposerProps, IComposerState> {
     private static readonly DURATION = 10;
@@ -17,25 +19,27 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     constructor(props: IComposerProps) {
         super(props);
 
+        console.log(initializedState);
+
         this.state = {
             playing: false,
             playingColumnIndex: -1,
             composition: makeNewIComposition(props.notes),
-            currentlyPlayingNotes: [],
+            currentlyPlayingNotes: []
         };
     }
 
     play() {
         this.setState({
             playing: true,
-            playingColumnIndex: 0,
+            playingColumnIndex: 0
         }, () => {
             const playColumnAndNext = () => {
                 setTimeout(() => {
                         if (this.state.playingColumnIndex < Composer.DURATION - 1) {
                             this.setState({
                                 playingColumnIndex: this.state.playingColumnIndex + 1,
-                                currentlyPlayingNotes: this.getCurrentlyPlayingNotes(),
+                                currentlyPlayingNotes: this.getCurrentlyPlayingNotes()
                             }, () => {
                                 playColumnAndNext();
                             });
@@ -43,7 +47,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                         } else {
                             this.setState({
                                 playing: false,
-                                playingColumnIndex: -1,
+                                playingColumnIndex: -1
                             });
                         }
                     },
@@ -86,7 +90,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
     toggleNote(time: number, noteIndex: number): void {
         // this.state.composition[time][noteIndex] = !this.state.composition[time][noteIndex];
-        let compositionNote = this.state.composition.compositionNotes[noteIndex]
+        let compositionNote = this.state.composition.compositionNotes[noteIndex];
         if (compositionNote.length <= time) {
             // extend musicDataArray if needed
             let lengthDiff = time - compositionNote.length + 1;
@@ -102,16 +106,16 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                 compositionNote.musicData[time] = 1;
             }
         }
-        console.log(compositionNote.musicData)
+        console.log(compositionNote.musicData);
         this.setState({
-            composition: this.state.composition,
+            composition: this.state.composition
         });
     }
 
     isNoteOn(time: number, noteIndex: number): boolean {
-        let compositionNote = this.state.composition.compositionNotes[noteIndex]
+        let compositionNote = this.state.composition.compositionNotes[noteIndex];
         if (compositionNote.length <= time) {
-            return false
+            return false;
         }
         return (compositionNote.musicData[time] > 0); // 1 and 2 indicate on
     }
@@ -125,7 +129,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     render() {
         return (
             <div style={[
-                Composer.styles.base,
+                Composer.styles.base
             ]}>
                 <FluteAudioPlayer notes={this.props.notes}
                                   playingIndices={this.state.currentlyPlayingNotes}/>
@@ -142,7 +146,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                                          Composer.styles.inline,
                                          Composer.styles.singleButton,
                                          Composer.styles[this.isNoteOn(time, noteIndex) ? "on" : "off"],
-                                         Composer.styles[time == this.state.playingColumnIndex ? (this.isNoteOn(time, noteIndex) ? "playingOn" : "playingOff") : "none"],
+                                         Composer.styles[time == this.state.playingColumnIndex ? (this.isNoteOn(time, noteIndex) ? "playingOn" : "playingOff") : "none"]
                                      ]}>
                                     button
                                 </div>
@@ -168,43 +172,56 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     }
 
     private save() {
-        // do post here
+        let json = JSON.stringify(this.state.composition);
+
+        let request = new XMLHttpRequest();
+        let url = "http://localhost:4000/composer/asdf67";
+        request.open("POST", url, true);
+        request.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+        request.onreadystatechange = function () {
+            if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
+                console.log("Successfully sent request: ");
+                console.log(request.responseText);
+            }
+        };
+
+        request.send(json);
     }
 
     private static styles = {
         base: {
             width: "100%",
-            WebkitUserSelect: "none",
+            WebkitUserSelect: "none"
         },
         row: {
             width: "100%",
-            marginBottom: "10px",
+            marginBottom: "10px"
         },
         inline: {
-            display: "inline-block",
+            display: "inline-block"
         },
         rowTitle: {
-            width: "20px",
+            width: "20px"
         },
         singleButton: {
             width: "50px",
             height: "50px",
             marginRight: "10px",
-            cursor: "pointer",
+            cursor: "pointer"
         },
         on: {
-            backgroundColor: "green",
+            backgroundColor: "green"
         },
         off: {
-            backgroundColor: "grey",
+            backgroundColor: "grey"
         },
         playingOn: {
-            backgroundColor: "yellow",
+            backgroundColor: "yellow"
         },
         playingOff: {
-            backgroundColor: color("grey").lighten(0.5).hex(),
+            backgroundColor: color("grey").lighten(0.5).hex()
         },
-        none: {},
+        none: {}
     };
 }
 

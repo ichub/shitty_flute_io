@@ -19,6 +19,6 @@ export function makeICompositionNote(note: INoteInfo, musicData: number[]) {
 }
 
 export function makeNewICompositionNote(note: INoteInfo) {
-    let musicData: number[] = []
+    let musicData: number[] = [];
     return makeICompositionNote(note, musicData);
 }

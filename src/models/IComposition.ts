@@ -4,6 +4,7 @@
 
 import {ICompositionNote, makeNewICompositionNote} from "./ICompositionNote";
 import {INoteInfo} from "./INoteInfo";
+import * as ICompositionStore from "./ICompositionStore";
 
 export interface IComposition {
     compositionNotes: ICompositionNote[]
@@ -16,6 +17,6 @@ export function makeIComposition(compositionNotes: ICompositionNote[]): IComposi
 }
 
 export function makeNewIComposition(notes: INoteInfo[]): IComposition {
-    let compositionNotes = notes.map(makeNewICompositionNote)
-    return makeIComposition(compositionNotes)
+    let compositionNotes = notes.map(makeNewICompositionNote);
+    return makeIComposition(compositionNotes);
 }
