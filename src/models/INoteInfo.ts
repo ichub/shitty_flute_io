@@ -9,6 +9,6 @@ export function makeINoteInfo(name: string, soundFileUrl: string, shittySoundFil
     return {
         name: name,
         soundFileUrl: soundFileUrl,
-        shittySoundFileUrl: shittySoundFileUrl,
+        shittySoundFileUrl: shittySoundFileUrl
     };
 }

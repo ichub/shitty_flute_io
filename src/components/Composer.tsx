@@ -4,6 +4,7 @@ import * as color from "color";
 
 import {INoteInfo} from "../models/INoteInfo";
 import {FluteAudioPlayer} from "./FluteAudioPlayer";
+import {IComposition, makeNewIComposition} from "../models/IComposition";
 
 @Radium
 export class Composer extends React.Component<IComposerProps, IComposerState> {
@@ -19,7 +20,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         this.state = {
             playing: false,
             playingColumnIndex: -1,
-            composition: this.makeNewComposition(),
+            composition: makeNewIComposition(props.notes),
             currentlyPlayingNotes: [],
         };
     }
@@ -68,34 +69,55 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         return result;
     }
 
-    makeNewComposition(): boolean[][] {
-        const result = [];
-
-        for (let i = 0; i < Composer.DURATION; i++) {
-            const column = [];
-            result.push(column);
-
-            for (let i = 0; i < this.props.notes.length; i++) {
-                column.push(false);
-            }
-        }
-
-        return result;
-    }
+    // makeNewComposition(): boolean[][] {
+    //     const result = [];
+    //
+    //     for (let i = 0; i < Composer.DURATION; i++) {
+    //         const column = [];
+    //         result.push(column);
+    //
+    //         for (let i = 0; i < this.props.notes.length; i++) {
+    //             column.push(false);
+    //         }
+    //     }
+    //
+    //     return result;
+    // }
 
     toggleNote(time: number, noteIndex: number): void {
-        this.state.composition[time][noteIndex] = !this.state.composition[time][noteIndex];
-
+        console.log("attempting to toggle...")
+        // this.state.composition[time][noteIndex] = !this.state.composition[time][noteIndex];
+        let compositionNote = this.state.composition.compositionNotes[noteIndex]
+        if (compositionNote.length <= time) {
+            console.log("attempting to extend array")
+            // extend musicDataArray if needed
+            let lengthDiff = time - compositionNote.length + 1;
+            for (let i = 0; i < lengthDiff - 1; i++) {
+                compositionNote.musicData.push(0);
+            }
+            compositionNote.musicData.push(1);
+        } else {
+            if (compositionNote.musicData[time] > 0) {
+                compositionNote.musicData[time] = 0;
+            } else {
+                compositionNote.musicData[time] = 1;
+            }
+        }
         this.setState({
             composition: this.state.composition,
         });
     }
 
     isNoteOn(time: number, noteIndex: number): boolean {
-        return this.state.composition[time][noteIndex];
+        let compositionNote = this.state.composition.compositionNotes[noteIndex]
+        if (compositionNote.length <= time) {
+            return false
+        }
+        return (compositionNote.musicData[time] > 0); // 1 and 2 indicate on
     }
 
     handleClick(time: number, noteIndex: number) {
+        console.log("handling click...")
         if (!this.state.playing) {
             this.toggleNote(time, noteIndex);
         }
@@ -141,8 +163,13 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                     })
                 }
                 <input type="button" value="play" onClick={this.play.bind(this)} disabled={this.state.playing}/>
+                <input type="button" value="save" onClick={this.save.bind(this)} disabled={this.state.playing}/>
             </div>
         );
+    }
+
+    private save() {
+        // do post here
     }
 
     private static styles = {
@@ -189,6 +216,6 @@ export interface IComposerProps {
 export interface IComposerState {
     playing: boolean;
     playingColumnIndex: number;
-    composition: boolean[][];
+    composition: IComposition;
     currentlyPlayingNotes: number[];
 }
