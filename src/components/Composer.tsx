@@ -85,17 +85,16 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     // }
 
     toggleNote(time: number, noteIndex: number): void {
-        console.log("attempting to toggle...")
         // this.state.composition[time][noteIndex] = !this.state.composition[time][noteIndex];
         let compositionNote = this.state.composition.compositionNotes[noteIndex]
         if (compositionNote.length <= time) {
-            console.log("attempting to extend array")
             // extend musicDataArray if needed
             let lengthDiff = time - compositionNote.length + 1;
             for (let i = 0; i < lengthDiff - 1; i++) {
                 compositionNote.musicData.push(0);
             }
             compositionNote.musicData.push(1);
+            compositionNote.length = compositionNote.musicData.length;
         } else {
             if (compositionNote.musicData[time] > 0) {
                 compositionNote.musicData[time] = 0;
@@ -103,6 +102,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                 compositionNote.musicData[time] = 1;
             }
         }
+        console.log(compositionNote.musicData)
         this.setState({
             composition: this.state.composition,
         });
@@ -117,7 +117,6 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     }
 
     handleClick(time: number, noteIndex: number) {
-        console.log("handling click...")
         if (!this.state.playing) {
             this.toggleNote(time, noteIndex);
         }
