@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Radium from "radium";
+import * as color from "color";
 
 import {INoteInfo} from "../models/INoteInfo";
 
@@ -74,33 +75,45 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     render() {
         return (
             <div style={[Composer.styles.base]}>
-                {
-                    this.props.notes.map((note, i) => {
-                        const downStyle = this.isNoteDown(note) ? Composer.styles.noteDown : null;
+                <div style={[Composer.styles.noteContainer]}>
+                    {
+                        this.props.notes.map((note, i) => {
+                            const downStyle = this.isNoteDown(note) ? Composer.styles.noteDown : null;
 
-                        return (
-                            <div key={i} style={[
-                                Composer.styles.note,
-                                downStyle,
-                            ]}>
-                                {note.name}
-                            </div>
-                        );
-                    })
-                }
+                            return (
+                                <div key={i} style={[
+                                    Composer.styles.note,
+                                    downStyle,
+                                ]}>
+                                    {note.name}
+                                </div>
+                            );
+                        })
+                    }
+                </div>
+                <div style={[Composer.styles.timeSeries]}>
+
+                </div>
             </div>
         );
     }
 
     private static styles = {
         base: {
-            width: "100%",
+            width: "100vw",
+            height: "100vh",
+
+        },
+        noteContainer: {
             height: "100%",
-            display: "flex",
+            width: "200px",
+            display: "inline-flex",
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "column",
             WebkitUserSelect: "none",
+            backgroundColor: "grey",
+            float: "left",
         },
         note: {
             width: "100px",
@@ -111,6 +124,11 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         },
         noteDown: {
             backgroundColor: "red",
+        },
+        timeSeries: {
+            height: "100%",
+            backgroundColor: color("purple").lighten(0.5).hex(),
+            overflow: "hidden",
         },
     };
 }
