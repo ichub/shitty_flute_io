@@ -8,7 +8,6 @@ import {InitializationState} from "../models/IInitializationState";
 
 export declare var initializedState: InitializationState;
 
-
 export const rootPath = path.join(__dirname, "../../");
 export const htmlDir = path.join(rootPath, "html");
 export const jsDir = path.join(rootPath, "dist", "bundle");
@@ -28,7 +27,7 @@ app.use(ApiController);
 app.get("/", (req, res) => {
     const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
     initializedState = {
-        pageName: "landing"
+        pageName: "landing",
     };
     res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
 });
