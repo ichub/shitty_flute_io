@@ -15,7 +15,9 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         super(props);
 
         this.state = {
+            stateName: ComposerStateName.Idle,
             downNotes: [],
+            composition: [],
         };
     }
 
@@ -25,8 +27,6 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
     attachListeners() {
         document.addEventListener("keydown", (e: KeyboardEvent) => {
-            console.log(e);
-
             for (let i = 0; i < this.props.notes.length; i++) {
                 if (this.isKeyboardEventForNote(this.props.notes[i], e)) {
                     this.handleNoteDown(this.props.notes[i]);
@@ -49,7 +49,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
     isNoteDown(note: INoteInfo): boolean {
         for (let i = 0; i < this.state.downNotes.length; i++) {
-            if (this.state.downNotes[i].name == note.name) {
+            if (this.state.downNotes[i].note.name == note.name) {
                 return true;
             }
         }
@@ -60,39 +60,71 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     handleNoteDown(note: INoteInfo) {
         if (!this.isNoteDown(note)) {
             const copied = this.state.downNotes.slice();
-            copied.push(note);
+            copied.push({
+                note: note,
+                start: new Date().getTime(),
+                length: -1,
+            });
             this.setState({downNotes: copied});
         }
     }
 
     handleNoteUp(note: INoteInfo) {
         if (this.isNoteDown(note)) {
-            const copied = this.state.downNotes.filter(item => item.name !== note.name);
-            this.setState({downNotes: copied});
+            const released = this.state.downNotes.filter(item => item.note.name === note.name)[0];
+            const copied = this.state.downNotes.filter(item => item !== released);
+
+            released.length = new Date().getTime() - released.start;
+            const copiedComposition = this.state.composition.slice();
+            copiedComposition.push(released);
+
+            this.setState({
+                downNotes: copied,
+                composition: copiedComposition,
+            });
         }
+    }
+
+    handlePlayClick(): void {
+        this.setState({
+            stateName: ComposerStateName.Playing,
+        });
+    }
+
+    handleRecordClick(): void {
     }
 
     render() {
         return (
-            <div style={[Composer.styles.base]}>
-                <div style={[Composer.styles.noteContainer]}>
-                    {
-                        this.props.notes.map((note, i) => {
-                            const downStyle = this.isNoteDown(note) ? Composer.styles.noteDown : null;
+            <div>
+                <div style={[Composer.styles.base]}>
+                    <div style={[Composer.styles.noteContainer]}>
+                        {
+                            this.props.notes.map((note, i) => {
+                                const downStyle = this.isNoteDown(note) ? Composer.styles.noteDown : null;
 
-                            return (
-                                <div key={i} style={[
-                                    Composer.styles.note,
-                                    downStyle,
-                                ]}>
-                                    {note.name}
-                                </div>
-                            );
-                        })
-                    }
+                                return (
+                                    <div key={i} style={[
+                                        Composer.styles.note,
+                                        downStyle,
+                                    ]}>
+                                        {note.name}
+                                    </div>
+                                );
+                            })
+                        }
+                    </div>
+                    <div style={[Composer.styles.timeSeries]}>
+                        {
+                            this.state.composition.map((item, n) => {
+                                return <div key={n}>{item.note.name} {item.length}ms</div>;
+                            })
+                        }
+                    </div>
                 </div>
-                <div style={[Composer.styles.timeSeries]}>
-
+                <div style={[Composer.styles.controls]}>
+                    <input type="button" value="play" onClick={this.handlePlayClick.bind(this)}/>
+                    <input type="button" value="record" onClick={this.handleRecordClick.bind(this)}/>
                 </div>
             </div>
         );
@@ -101,7 +133,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     private static styles = {
         base: {
             width: "100vw",
-            height: "100vh",
+            height: "50vh",
 
         },
         noteContainer: {
@@ -127,10 +159,26 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         },
         timeSeries: {
             height: "100%",
-            backgroundColor: color("purple").lighten(0.5).hex(),
+            backgroundColor: color("purple").lighten(1).hex(),
             overflow: "hidden",
         },
+        controls: {
+            width: "100%",
+            backgroundColor: color("grey").lighten(20).hex(),
+        },
     };
+}
+
+enum ComposerStateName {
+    Idle,
+    Recording,
+    Playing
+}
+
+export interface IClickedNote {
+    note: INoteInfo,
+    start: number;
+    length: number;
 }
 
 export interface IComposerProps {
@@ -138,5 +186,7 @@ export interface IComposerProps {
 }
 
 export interface IComposerState {
-    downNotes: INoteInfo[];
+    stateName: ComposerStateName;
+    downNotes: IClickedNote[];
+    composition: IClickedNote[];
 }
