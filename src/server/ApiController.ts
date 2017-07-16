@@ -30,6 +30,7 @@ ApiController.get("/composer/:compositionId", (req: express.Request, res: expres
     const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
     const initializedState = {
         pageName: "composer",
+        compositionId: req.params.compositionId
     };
 
     res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
@@ -49,5 +50,5 @@ ApiController.post("/composer/:compositionId", (req: express.Request, res: expre
 });
 
 ApiController.get("/composer/:compositionId/data", (req: express.Request, res: express.Response) => {
-    res.json();
+    res.json({}); // TODO
 });

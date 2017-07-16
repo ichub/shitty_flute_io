@@ -4,11 +4,11 @@ import {Composer} from "./Composer";
 import {INoteInfo, makeINoteInfo} from "../models/INoteInfo";
 
 @Radium
-export class PageComponent extends React.Component<any, IPageComponentState> {
+export class PageComponent extends React.Component<IPageComponentProps, IPageComponentState> {
     public state: IPageComponentState;
 
     constructor(props) {
-        super();
+        super(props);
 
         this.state = {
             notes: [
@@ -18,8 +18,8 @@ export class PageComponent extends React.Component<any, IPageComponentState> {
                 makeINoteInfo("F", "/res/notes/F-Normal.mp3", "/res/notes/F-Shitty.mp3", "F"),
                 makeINoteInfo("G", "/res/notes/G-Normal.mp3", "/res/notes/G-Shitty.mp3", "G"),
                 makeINoteInfo("A", "/res/notes/A-Normal.mp3", "/res/notes/A-Shitty.mp3", "H"),
-                makeINoteInfo("B", "/res/notes/B-Normal.mp3", "/res/notes/B-Shitty.mp3", "J"),
-            ],
+                makeINoteInfo("B", "/res/notes/B-Normal.mp3", "/res/notes/B-Shitty.mp3", "J")
+            ]
         };
     }
 
@@ -27,19 +27,23 @@ export class PageComponent extends React.Component<any, IPageComponentState> {
         return (
             <div>
                 <div style={[
-                    PageComponent.styles.base,
+                    PageComponent.styles.base
                 ]}>
-                    <Composer notes={this.state.notes}/>
+                    <Composer compositionId={this.props.compositionId} notes={this.state.notes}/>
                 </div>
             </div>
         );
     }
 
     private static styles = {
-        base: {},
+        base: {}
     };
 }
 
 export interface IPageComponentState {
     notes: INoteInfo[];
+}
+
+export interface IPageComponentProps {
+    compositionId: string;
 }

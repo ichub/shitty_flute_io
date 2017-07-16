@@ -43,6 +43,7 @@
     "typescript": "^2.1.5"
   },
   "dependencies": {
+    "@types/axios": "^0.14.0",
     "@types/body-parser": "^1.16.4",
     "@types/cheerio": "^0.17.31",
     "@types/clone": "^0.1.30",
@@ -57,6 +58,7 @@
     "@types/react-dom": "^0.14.23",
     "@types/react-modal": "^1.6.2",
     "@types/sqlite3": "^3.1.0",
+    "axios": "^0.16.2",
     "body-parser": "^1.17.2",
     "cheerio": "^0.22.0",
     "clone": "^2.1.0",

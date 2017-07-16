@@ -4,14 +4,16 @@ import {PageComponent} from "../components/PageComponent";
 import {InitializationState} from "../models/IInitializationState";
 import {LandingPageComponent} from "../components/LandingPageComponent";
 
-declare var initializedState: InitializationState;
+declare const initializedState: InitializationState;
 
 if (initializedState.pageName === "landing") {
     ReactDom.render(<LandingPageComponent/>, document.getElementById("app-container"));
 } else if (initializedState.pageName === "composerSelect") {
 
 } else if (initializedState.pageName === "composer") {
-    ReactDom.render(<PageComponent/>, document.getElementById("app-container"));
+    ReactDom.render(
+        <PageComponent compositionId={initializedState.compositionId}/>,
+        document.getElementById("app-container"));
 }
 
 console.log(initializedState.pageName);

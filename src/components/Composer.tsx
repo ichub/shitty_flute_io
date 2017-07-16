@@ -1,10 +1,9 @@
 import * as React from "react";
 import * as Radium from "radium";
 import * as color from "color";
+const axios = require("axios");
 
 import {INoteInfo} from "../models/INoteInfo";
-
-declare const initializedState: any;
 
 @Radium
 export class Composer extends React.Component<IComposerProps, IComposerState> {
@@ -17,8 +16,23 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         this.state = {
             stateName: ComposerStateName.Idle,
             downNotes: [],
-            composition: [],
+            composition: []
         };
+
+        this.reloadData();
+    }
+
+    reloadData() {
+        axios.get(`/composer/${this.props.compositionId}/data`)
+            .then((response) => {
+                // transform the data object into something the composer component understands
+                const parsedComposition = response.data;
+                console.log(parsedComposition);
+
+                this.setState(parsedComposition);
+
+                // TODO
+            });
     }
 
     componentDidMount() {
@@ -63,7 +77,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             copied.push({
                 note: note,
                 start: new Date().getTime(),
-                length: -1,
+                length: -1
             });
             this.setState({downNotes: copied});
         }
@@ -80,14 +94,14 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
             this.setState({
                 downNotes: copied,
-                composition: copiedComposition,
+                composition: copiedComposition
             });
         }
     }
 
     handlePlayClick(): void {
         this.setState({
-            stateName: ComposerStateName.Playing,
+            stateName: ComposerStateName.Playing
         });
     }
 
@@ -106,7 +120,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                                 return (
                                     <div key={i} style={[
                                         Composer.styles.note,
-                                        downStyle,
+                                        downStyle
                                     ]}>
                                         {note.name}
                                     </div>
@@ -133,7 +147,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     private static styles = {
         base: {
             width: "100vw",
-            height: "50vh",
+            height: "50vh"
 
         },
         noteContainer: {
@@ -145,27 +159,27 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             flexDirection: "column",
             WebkitUserSelect: "none",
             backgroundColor: "grey",
-            float: "left",
+            float: "left"
         },
         note: {
             width: "100px",
             height: "100px",
             display: "inline-block",
             backgroundColor: "green",
-            margin: "20px",
+            margin: "20px"
         },
         noteDown: {
-            backgroundColor: "red",
+            backgroundColor: "red"
         },
         timeSeries: {
             height: "100%",
             backgroundColor: color("purple").lighten(1).hex(),
-            overflow: "hidden",
+            overflow: "hidden"
         },
         controls: {
             width: "100%",
-            backgroundColor: color("grey").lighten(20).hex(),
-        },
+            backgroundColor: color("grey").lighten(20).hex()
+        }
     };
 }
 
@@ -183,6 +197,7 @@ export interface IClickedNote {
 
 export interface IComposerProps {
     notes: INoteInfo[];
+    compositionId: string;
 }
 
 export interface IComposerState {
