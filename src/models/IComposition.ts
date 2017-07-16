@@ -2,21 +2,23 @@
  * Created by bgu on 7/14/17.
  */
 
-import {ICompositionNote, makeNewICompositionNote} from "./ICompositionNote";
-import {INoteInfo} from "./INoteInfo";
-import * as ICompositionStore from "./ICompositionStore";
+import {ICompositionNote} from "./ICompositionNote";
 
 export interface IComposition {
-    compositionNotes: ICompositionNote[]
+    compName: string
+    compId: string
+    notes: ICompositionNote[]
 }
 
-export function makeIComposition(compositionNotes: ICompositionNote[]): IComposition {
+export function makeIComposition(name: string, id: string, notes: ICompositionNote[]): IComposition {
     return {
-        compositionNotes: compositionNotes
+        compName: name,
+        compId: id,
+        notes: notes
     };
 }
 
-export function makeNewIComposition(notes: INoteInfo[]): IComposition {
-    let compositionNotes = notes.map(makeNewICompositionNote);
-    return makeIComposition(compositionNotes);
+export function makeNewIComposition(name: string, id: string): IComposition {
+    let notes: ICompositionNote[] = [];
+    return makeIComposition(name, id, notes);
 }
