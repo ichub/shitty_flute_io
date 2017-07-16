@@ -4,6 +4,8 @@ import * as color from "color";
 const axios = require("axios");
 
 import {INoteInfo} from "../models/INoteInfo";
+import {IComposition, makeNewIComposition} from "../models/IComposition";
+import {ICompositionNote} from "../models/ICompositionNote";
 
 @Radium
 export class Composer extends React.Component<IComposerProps, IComposerState> {
@@ -16,7 +18,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         this.state = {
             stateName: ComposerStateName.Idle,
             downNotes: [],
-            composition: []
+            composition: makeNewIComposition("", this.props.compositionId)
         };
 
         this.reloadData();
@@ -25,13 +27,12 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     reloadData() {
         axios.get(`/composer/${this.props.compositionId}/data`)
             .then((response) => {
-                // transform the data object into something the composer component understands
-                const parsedComposition = response.data;
-                console.log(parsedComposition);
+                console.log("the loaded composition state is:");
+                console.log(response.data);
 
-                this.setState(parsedComposition);
-
-                // TODO
+                this.setState({
+                    composition: response.data
+                });
             });
     }
 
@@ -63,7 +64,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
     isNoteDown(note: INoteInfo): boolean {
         for (let i = 0; i < this.state.downNotes.length; i++) {
-            if (this.state.downNotes[i].note.name == note.name) {
+            if (this.state.downNotes[i].noteInfo.name == note.name) {
                 return true;
             }
         }
@@ -75,7 +76,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         if (!this.isNoteDown(note)) {
             const copied = this.state.downNotes.slice();
             copied.push({
-                note: note,
+                noteInfo: note,
                 start: new Date().getTime(),
                 length: -1
             });
@@ -85,16 +86,15 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
     handleNoteUp(note: INoteInfo) {
         if (this.isNoteDown(note)) {
-            const released = this.state.downNotes.filter(item => item.note.name === note.name)[0];
-            const copied = this.state.downNotes.filter(item => item !== released);
+            const released = this.state.downNotes.filter(item => item.noteInfo.name === note.name)[0];
 
             released.length = new Date().getTime() - released.start;
-            const copiedComposition = this.state.composition.slice();
-            copiedComposition.push(released);
+            this.state.downNotes = this.state.downNotes.filter(item => item.noteInfo.name != released.noteInfo.name);
+            this.state.composition.notes.push(released);
 
             this.setState({
-                downNotes: copied,
-                composition: copiedComposition
+                downNotes: this.state.downNotes,
+                composition: this.state.composition
             });
         }
     }
@@ -130,8 +130,8 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                     </div>
                     <div style={[Composer.styles.timeSeries]}>
                         {
-                            this.state.composition.map((item, n) => {
-                                return <div key={n}>{item.note.name} {item.length}ms</div>;
+                            this.state.composition.notes.map((item, n) => {
+                                return <div key={n}>{item.noteInfo.name} {item.length}ms</div>;
                             })
                         }
                     </div>
@@ -189,12 +189,6 @@ enum ComposerStateName {
     Playing
 }
 
-export interface IClickedNote {
-    note: INoteInfo,
-    start: number;
-    length: number;
-}
-
 export interface IComposerProps {
     notes: INoteInfo[];
     compositionId: string;
@@ -202,6 +196,6 @@ export interface IComposerProps {
 
 export interface IComposerState {
     stateName: ComposerStateName;
-    downNotes: IClickedNote[];
-    composition: IClickedNote[];
+    downNotes: ICompositionNote[];
+    composition: IComposition;
 }

@@ -6,6 +6,7 @@ import * as express from "express";
 import * as path from "path";
 import {generateToken} from "./ComposerTokenLoader";
 import {htmlDir} from "./Server";
+import {makeNewIComposition} from "../models/IComposition";
 
 export const ApiController = express.Router();
 export const rootPath = path.join(__dirname, "../../");
@@ -18,15 +19,6 @@ ApiController.get("/composer", (req: express.Request, res: express.Response) => 
 });
 
 ApiController.get("/composer/:compositionId", (req: express.Request, res: express.Response) => {
-    let readPath = rootPath + "data/" + req.params.compositionId;
-    let jsonData = JSON.parse("{}");
-    fs.readFile(readPath, function (err, data) {
-        if (!(err)) {
-            jsonData = JSON.parse(data);
-        }
-    });
-    //res.sendFile(path.join(htmlDir, "index.html"));
-
     const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
     const initializedState = {
         pageName: "composer",
@@ -50,5 +42,13 @@ ApiController.post("/composer/:compositionId", (req: express.Request, res: expre
 });
 
 ApiController.get("/composer/:compositionId/data", (req: express.Request, res: express.Response) => {
-    res.json({}); // TODO
+    let readPath = rootPath + "data/" + req.params.compositionId;
+    let jsonData = makeNewIComposition("", req.params.compositionId);
+    fs.readFile(readPath, function (err, data) {
+        if (!(err)) {
+            jsonData = JSON.parse(data);
+        }
+    });
+    console.log(jsonData);
+    res.json(jsonData);
 });

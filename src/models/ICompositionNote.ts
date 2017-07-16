@@ -10,9 +10,9 @@ export interface ICompositionNote {
     length: number
 }
 
-export function makeICompositionNote(note: INoteInfo, start: number, length: number) {
+export function makeICompositionNote(note: INoteInfo, start: number, length: number): ICompositionNote {
     return {
-        note: note,
+        noteInfo: note,
         start: start,
         length: length
     };

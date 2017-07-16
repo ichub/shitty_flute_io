@@ -16,5 +16,5 @@ if (initializedState.pageName === "landing") {
         document.getElementById("app-container"));
 }
 
-console.log(initializedState.pageName);
+console.log(`the current page is: ${initializedState.pageName}`);
 
