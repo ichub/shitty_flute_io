@@ -119,13 +119,13 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     }
 
     generateNoteInInterface(note: ICompositionNote): IClickedNoteLayoutParams {
-        const scale = 50;
+        const scale = 4;
 
         return {
             nameString: note.noteInfo.name,
             height: "10px",
             width: note.length * (1 / scale) + "px",
-            offset: note.start * (1 / scale) + "px",
+            offset: note.start * (1 / scale),
         };
     }
 
@@ -151,18 +151,33 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                     </div>
                     <div style={[Composer.styles.timeSeries]}>
                         {
-                            this.state.composition.notes
-                                .map(this.generateNoteInInterface)
-                                .map((item, n) => {
-                                    return <div key={n} style={[{
-                                        width: item.width,
-                                        height: item.height,
-                                        marginLeft: item.offset,
-                                        backgroundColor: "orange",
-                                    }]}>
-                                        {item.nameString}
-                                    </div>;
-                                })
+                            this.props.notes.map((note, i) => {
+                                const matching = this.state.composition.notes.filter(compNote => compNote.noteInfo.name == note.name);
+                                let runningOffset = 0;
+
+                                return (
+                                    <div key={i} style={[Composer.styles.noteRow]}>
+                                        {
+                                            matching.map(this.generateNoteInInterface).map((int, n) => {
+                                                runningOffset += int.offset;
+
+                                                return (
+                                                    <div key={n} style={[
+                                                        Composer.styles.compositionNote,
+                                                        {
+                                                            width: int.width,
+                                                            height: int.height,
+                                                            left: int.offset + "px",
+                                                            backgroundColor: "orange",
+                                                        }]}>
+                                                        {int.nameString}
+                                                    </div>
+                                                );
+                                            })
+                                        }
+                                    </div>
+                                );
+                            })
                         }
                     </div>
                 </div>
@@ -210,6 +225,14 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             width: "100%",
             backgroundColor: color("grey").lighten(20).hex(),
         },
+        noteRow: {
+            width: "100%",
+            position: "relative",
+            height: "20px",
+        },
+        compositionNote: {
+            position: "absolute",
+        },
     };
 }
 
@@ -223,7 +246,7 @@ export interface IClickedNoteLayoutParams {
     width: string;
     height: string;
     nameString: string;
-    offset: string;
+    offset: number;
 }
 
 export interface IComposerProps {
