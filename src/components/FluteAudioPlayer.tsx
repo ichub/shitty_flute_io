@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Radium from "radium";
 import {INoteInfo} from "../models/INoteInfo";
+import {ICompositionNote} from "../models/ICompositionNote";
 
 @Radium
 export class FluteAudioPlayer extends React.Component<IFluteAudioPlayerProps, IFluteAudioPlayerState> {
@@ -9,6 +10,8 @@ export class FluteAudioPlayer extends React.Component<IFluteAudioPlayerProps, IF
 
     constructor(props: IFluteAudioPlayerProps) {
         super(props);
+
+        console.log(props);
     }
 
     componentDidMount() {
@@ -17,13 +20,13 @@ export class FluteAudioPlayer extends React.Component<IFluteAudioPlayerProps, IF
 
     stopAllSounds() {
         for (let i = 0; i < this.props.notes.length; i++) {
-            (this.refs[i + ""] as HTMLAudioElement).pause();
+            (this.refs[this.props.notes[i].name] as HTMLAudioElement).pause();
         }
     }
 
     playPlayingSounds() {
-        for (let i = 0; i < this.props.playingIndices.length; i++) {
-            (this.refs[this.props.playingIndices[i + ""]] as HTMLAudioElement).play();
+        for (let i = 0; i < this.props.playingNotes.length; i++) {
+            (this.refs[this.props.playingNotes[i].noteInfo.name] as HTMLAudioElement).play();
         }
     }
 
@@ -42,7 +45,7 @@ export class FluteAudioPlayer extends React.Component<IFluteAudioPlayerProps, IF
                     this.props.notes.map((note, i) => {
                         return (
                             <div key={i}>
-                                <audio ref={i + ""}>
+                                <audio ref={note.name}>
                                     <source src={note.soundFileUrl}/>
                                 </audio>
                             </div>
@@ -61,7 +64,7 @@ export class FluteAudioPlayer extends React.Component<IFluteAudioPlayerProps, IF
 }
 
 export interface IFluteAudioPlayerProps {
-    playingIndices: number[]
+    playingNotes: ICompositionNote[]
     notes: INoteInfo[];
 }
 

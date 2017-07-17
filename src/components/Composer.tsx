@@ -5,6 +5,7 @@ import {INoteInfo} from "../models/INoteInfo";
 import {IComposition, makeNewIComposition} from "../models/IComposition";
 import {ICompositionNote} from "../models/ICompositionNote";
 import {MusicPlayerHelper} from "../MusicPlayerHelper";
+import {FluteAudioPlayer} from "./FluteAudioPlayer";
 const axios = require("axios");
 
 @Radium
@@ -29,6 +30,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             recordStartingTime: -1,
             interval: null,
             player: null,
+            playingNotes: [],
         };
 
         this.reloadData();
@@ -140,10 +142,19 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
             this.state.player.addListener(MusicPlayerHelper.NOTE_START, (note: ICompositionNote) => {
                 console.log(`start: ${note.noteInfo.name}`);
+
+                this.state.playingNotes.push(note);
+                this.setState({
+                    playingNotes: this.state.playingNotes,
+                });
             });
 
             this.state.player.addListener(MusicPlayerHelper.NOTE_END, (note: ICompositionNote) => {
                 console.log(`end: ${note.noteInfo.name}`);
+                this.state.playingNotes = this.state.playingNotes.filter(n => n.noteInfo.name !== note.noteInfo.name);
+                this.setState({
+                    playingNotes: this.state.playingNotes,
+                });
             });
 
             this.state.player.playAsynchronously();
@@ -212,6 +223,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     render() {
         return (
             <div>
+                <FluteAudioPlayer playingNotes={this.state.playingNotes} notes={this.props.notes}/>
                 <div style={[Composer.styles.base]}>
                     <div style={[Composer.styles.noteContainer]}>
                         {
@@ -386,6 +398,7 @@ export interface IComposerProps {
 export interface IComposerState {
     stateName: ComposerStateName;
     downNotes: ICompositionNote[];
+    playingNotes: ICompositionNote[];
     composition: IComposition;
     recordStartingTime: number;
     interval: NodeJS.Timer;
