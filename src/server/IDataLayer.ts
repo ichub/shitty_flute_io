@@ -5,5 +5,6 @@
 import {IComposition} from "../models/IComposition";
 
 export interface IDataLayer {
-    getSongData(compositionId: string): IComposition
+    getComposition(compositionId: string): Promise<IComposition>;
+    saveComposition(compositionId: string, composition: IComposition): Promise<IComposition>;
 }

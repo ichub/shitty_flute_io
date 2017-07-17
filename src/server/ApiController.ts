@@ -6,10 +6,12 @@ import * as express from "express";
 import * as path from "path";
 import {generateToken} from "./ComposerTokenLoader";
 import {htmlDir} from "./Server";
-import {makeNewIComposition} from "../models/IComposition";
+import {IComposition, makeNewIComposition} from "../models/IComposition";
+import {FSDataLayer} from "./FSDataLayer";
 
 export const ApiController = express.Router();
 export const rootPath = path.join(__dirname, "../../");
+const DATA_LAYER = new FSDataLayer();
 const fs = require("fs");
 // export const dataLayer: IDataLayer = new MockDataLayer();
 
@@ -29,26 +31,14 @@ ApiController.get("/composer/:compositionId", (req: express.Request, res: expres
 });
 
 ApiController.post("/composer/:compositionId", (req: express.Request, res: express.Response) => {
-    let data = JSON.stringify(req.body);
-    let writePath = rootPath + "data/" + req.params.compositionId;
-    fs.writeFile(writePath, data, function (err) {
-        if (err) {
-            console.log("Unable to save file. Error: " + err);
-        } else {
-            console.log("Data saved to path: " + writePath);
-        }
-    });
-    res.json(req.body);
+    let composition = req.body as IComposition;
+    let jsonData = DATA_LAYER.saveComposition(req.params.compositionId, composition);
+    res.json(jsonData);
 });
 
 ApiController.get("/composer/:compositionId/data", (req: express.Request, res: express.Response) => {
-    let readPath = rootPath + "data/" + req.params.compositionId;
-    let jsonData = makeNewIComposition("", req.params.compositionId);
-    fs.readFile(readPath, function (err, data) {
-        if (!(err)) {
-            jsonData = JSON.parse(data);
-        }
-    });
-    console.log(jsonData);
+    let jsonData = DATA_LAYER.getComposition(req.params.compositionId);
     res.json(jsonData);
+    console.log("loaded data for composition id " + req.params.compositionId);
+    console.log(jsonData);
 });

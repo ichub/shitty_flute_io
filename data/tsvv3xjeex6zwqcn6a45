@@ -1,0 +1,166 @@
+{
+  "compName": "",
+  "compId": "tsvv3xjeex6zwqcn6a45",
+  "notes": [
+    {
+      "noteInfo": {
+        "name": "C",
+        "soundFileUrl": "/res/notes/C-Normal.mp3",
+        "shittySoundFileUrl": "/res/notes/C-Shitty.mp3",
+        "keyboardCharacter": "A"
+      },
+      "start": 1500249617852,
+      "length": 105
+    },
+    {
+      "noteInfo": {
+        "name": "D",
+        "soundFileUrl": "/res/notes/D-Normal.mp3",
+        "shittySoundFileUrl": "/res/notes/D-Shitty.mp3",
+        "keyboardCharacter": "S"
+      },
+      "start": 1500249617868,
+      "length": 96
+    },
+    {
+      "noteInfo": {
+        "name": "E",
+        "soundFileUrl": "/res/notes/E-Normal.mp3",
+        "shittySoundFileUrl": "/res/notes/E-Shitty.mp3",
+        "keyboardCharacter": "D"
+      },
+      "start": 1500249617940,
+      "length": 135
+    },
+    {
+      "noteInfo": {
+        "name": "C",
+        "soundFileUrl": "/res/notes/C-Normal.mp3",
+        "shittySoundFileUrl": "/res/notes/C-Shitty.mp3",
+        "keyboardCharacter": "A"
+      },
+      "start": 1500249618061,
+      "length": 112
+    },
+    {
+      "noteInfo": {
+        "name": "D",
+        "soundFileUrl": "/res/notes/D-Normal.mp3",
+        "shittySoundFileUrl": "/res/notes/D-Shitty.mp3",
+        "keyboardCharacter": "S"
+      },
+      "start": 1500249618083,
+      "length": 104
+    },
+    {
+      "noteInfo": {
+        "name": "E",
+        "soundFileUrl": "/res/notes/E-Normal.mp3",
+        "shittySoundFileUrl": "/res/notes/E-Shitty.mp3",
+        "keyboardCharacter": "D"
+      },
+      "start": 1500249618156,
+      "length": 128
+    },
+    {
+      "noteInfo": {
+        "name": "C",
+        "soundFileUrl": "/res/notes/C-Normal.mp3",
+        "shittySoundFileUrl": "/res/notes/C-Shitty.mp3",
+        "keyboardCharacter": "A"
+      },
+      "start": 1500249618268,
+      "length": 119
+    },
+    {
+      "noteInfo": {
+        "name": "D",
+        "soundFileUrl": "/res/notes/D-Normal.mp3",
+        "shittySoundFileUrl": "/res/notes/D-Shitty.mp3",
+        "keyboardCharacter": "S"
+      },
+      "start": 1500249618290,
+      "length": 112
+    },
+    {
+      "noteInfo": {
+        "name": "E",
+        "soundFileUrl": "/res/notes/E-Normal.mp3",
+        "shittySoundFileUrl": "/res/notes/E-Shitty.mp3",
+        "keyboardCharacter": "D"
+      },
+      "start": 1500249618372,
+      "length": 136
+    },
+    {
+      "noteInfo": {
+        "name": "C",
+        "soundFileUrl": "/res/notes/C-Normal.mp3",
+        "shittySoundFileUrl": "/res/notes/C-Shitty.mp3",
+        "keyboardCharacter": "A"
+      },
+      "start": 1500249618500,
+      "length": 119
+    },
+    {
+      "noteInfo": {
+        "name": "D",
+        "soundFileUrl": "/res/notes/D-Normal.mp3",
+        "shittySoundFileUrl": "/res/notes/D-Shitty.mp3",
+        "keyboardCharacter": "S"
+      },
+      "start": 1500249618533,
+      "length": 126
+    },
+    {
+      "noteInfo": {
+        "name": "E",
+        "soundFileUrl": "/res/notes/E-Normal.mp3",
+        "shittySoundFileUrl": "/res/notes/E-Shitty.mp3",
+        "keyboardCharacter": "D"
+      },
+      "start": 1500249618612,
+      "length": 128
+    },
+    {
+      "noteInfo": {
+        "name": "E",
+        "soundFileUrl": "/res/notes/E-Normal.mp3",
+        "shittySoundFileUrl": "/res/notes/E-Shitty.mp3",
+        "keyboardCharacter": "D"
+      },
+      "start": 1500249618804,
+      "length": 95
+    },
+    {
+      "noteInfo": {
+        "name": "E",
+        "soundFileUrl": "/res/notes/E-Normal.mp3",
+        "shittySoundFileUrl": "/res/notes/E-Shitty.mp3",
+        "keyboardCharacter": "D"
+      },
+      "start": 1500249618971,
+      "length": 81
+    },
+    {
+      "noteInfo": {
+        "name": "E",
+        "soundFileUrl": "/res/notes/E-Normal.mp3",
+        "shittySoundFileUrl": "/res/notes/E-Shitty.mp3",
+        "keyboardCharacter": "D"
+      },
+      "start": 1500249619124,
+      "length": 63
+    },
+    {
+      "noteInfo": {
+        "name": "E",
+        "soundFileUrl": "/res/notes/E-Normal.mp3",
+        "shittySoundFileUrl": "/res/notes/E-Shitty.mp3",
+        "keyboardCharacter": "D"
+      },
+      "start": 1500249619260,
+      "length": 128
+    }
+  ]
+}

@@ -221,6 +221,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     }
 
     render() {
+        window["state"] = this.state.composition;
         return (
             <div>
                 <FluteAudioPlayer playingNotes={this.state.playingNotes} notes={this.props.notes}/>
