@@ -210,8 +210,13 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         this.state.interval = null;
         this.refs.milliseconds.innerHTML = "";
 
+        for (let note of this.state.downNotes) {
+            this.handleNoteUp(note.noteInfo);
+        }
+
         this.setState({
             stateName: ComposerStateName.Idle,
+            downNotes: [],
         });
     }
 

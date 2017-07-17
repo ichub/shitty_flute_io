@@ -8,6 +8,10 @@ export class FluteAudioPlayer extends React.Component<IFluteAudioPlayerProps, IF
     props: IFluteAudioPlayerProps;
     state: IFluteAudioPlayerState;
 
+    refs: {
+        silence: HTMLAudioElement;
+    };
+
     constructor(props: IFluteAudioPlayerProps) {
         super(props);
 
@@ -16,6 +20,7 @@ export class FluteAudioPlayer extends React.Component<IFluteAudioPlayerProps, IF
 
     componentDidMount() {
         this.playPlayingSounds();
+        this.refs.silence.play();
     }
 
     iterateOverNotes(consumer: (audio: HTMLAudioElement, note: INoteInfo) => void) {
@@ -63,6 +68,9 @@ export class FluteAudioPlayer extends React.Component<IFluteAudioPlayerProps, IF
                         );
                     })
                 }
+                <audio ref="silence" loop={true}>
+                    <source src="/res/5-minutes-of-silence.mp3"/>
+                </audio>
             </div>
         );
     }
