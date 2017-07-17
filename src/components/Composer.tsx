@@ -15,7 +15,8 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     state: IComposerState;
 
     refs: {
-        milliseconds: HTMLDivElement
+        milliseconds: HTMLDivElement;
+        scrubBar: HTMLDivElement;
     };
 
     constructor(props: IComposerProps) {
@@ -152,6 +153,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         const updateTimer = () => {
             const seconds = (new Date().getTime() - startTime) / 1000;
             this.refs.milliseconds.innerHTML = seconds + "";
+            this.refs.scrubBar.style.left = this.convertMillisecondsToPercentage(new Date().getTime() - startTime) + "%";
 
             if (seconds >= Composer.COMPOSITION_SECONDS) {
                 this.stopRecording();
@@ -159,11 +161,12 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
         };
 
+        updateTimer();
+
         this.setState({
             interval: setInterval(updateTimer, 10),
         });
 
-        updateTimer();
     }
 
     stopRecording(): void {
@@ -232,6 +235,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                                 );
                             })
                         }
+                        <div ref="scrubBar" style={[Composer.styles.scrubBar]}></div>
                     </div>
                 </div>
                 <div style={[Composer.styles.controls]}>
@@ -317,6 +321,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             height: "100%",
             backgroundColor: color("purple").lighten(1).hex(),
             overflow: "hidden",
+            position: "relative",
         },
         controls: {
             width: "100%",
@@ -329,6 +334,13 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         },
         compositionNote: {
             position: "absolute",
+        },
+        scrubBar: {
+            position: "absolute",
+            width: "2px",
+            height: "100%",
+            backgroundColor: "blue",
+            top: "0px",
         },
     };
 }
