@@ -4,6 +4,7 @@ import * as color from "color";
 import {INoteInfo} from "../models/INoteInfo";
 import {IComposition, makeNewIComposition} from "../models/IComposition";
 import {ICompositionNote} from "../models/ICompositionNote";
+import {MusicPlayerHelper} from "../MusicPlayerHelper";
 const axios = require("axios");
 
 @Radium
@@ -27,6 +28,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             composition: makeNewIComposition("", this.props.compositionId),
             recordStartingTime: -1,
             interval: null,
+            player: null,
         };
 
         this.reloadData();
@@ -135,6 +137,16 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             this.setState({
                 stateName: ComposerStateName.Playing,
             });
+
+            this.state.player.addListener(MusicPlayerHelper.NOTE_START, (note: ICompositionNote) => {
+                console.log(`start: ${note.noteInfo.name}`);
+            });
+
+            this.state.player.addListener(MusicPlayerHelper.NOTE_END, (note: ICompositionNote) => {
+                console.log(`end: ${note.noteInfo.name}`);
+            });
+
+            this.state.player.playAsynchronously();
         }
     }
 
@@ -182,6 +194,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
         this.setState({
             stateName: ComposerStateName.Idle,
+            player: new MusicPlayerHelper(this.state.composition.notes),
         });
     }
 
@@ -376,4 +389,5 @@ export interface IComposerState {
     composition: IComposition;
     recordStartingTime: number;
     interval: NodeJS.Timer;
+    player: MusicPlayerHelper;
 }
