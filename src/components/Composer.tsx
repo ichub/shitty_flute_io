@@ -4,7 +4,6 @@ import * as color from "color";
 import {INoteInfo} from "../models/INoteInfo";
 import {IComposition, makeNewIComposition} from "../models/IComposition";
 import {ICompositionNote} from "../models/ICompositionNote";
-import {setInterval} from "timers";
 const axios = require("axios");
 
 @Radium
@@ -141,6 +140,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
     handleRecordClick(): void {
         if (this.state.stateName === ComposerStateName.Idle) {
+            this.handleResetClick();
             this.setState({
                 stateName: ComposerStateName.Recording,
             });
@@ -151,26 +151,33 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         const startTime = new Date().getTime();
 
         const updateTimer = () => {
+            console.log("interval");
             const seconds = (new Date().getTime() - startTime) / 1000;
-            this.refs.milliseconds.innerHTML = seconds + "";
-            this.refs.scrubBar.style.left = this.convertMillisecondsToPercentage(new Date().getTime() - startTime) + "%";
 
             if (seconds >= Composer.COMPOSITION_SECONDS) {
                 this.stopRecording();
+                return;
             }
 
+            console.log("interval");
+            this.refs.milliseconds.innerHTML = seconds + "";
+            this.refs.scrubBar.style.left = this.convertMillisecondsToPercentage(new Date().getTime() - startTime) + "%";
         };
 
         updateTimer();
 
-        this.setState({
-            interval: setInterval(updateTimer, 10),
-        });
-
+        if (this.state.interval === null) {
+            this.setState({
+                interval: setInterval(updateTimer, 10),
+            });
+        }
     }
 
     stopRecording(): void {
+        console.log("stopping");
+
         clearInterval(this.state.interval);
+        this.state.interval = null;
         this.refs.milliseconds.innerHTML = "";
 
         this.setState({
