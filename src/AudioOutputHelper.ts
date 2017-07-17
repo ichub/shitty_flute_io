@@ -1,5 +1,6 @@
 import {MusicPlayerHelper} from "./MusicPlayerHelper";
 import {INoteInfo} from "./models/INoteInfo";
+import {IComposition} from "./models/IComposition";
 const axios = require("axios");
 
 export class AudioOutputHelper {
@@ -71,6 +72,16 @@ export class AudioOutputHelper {
             duration);
 
         source.start(0, 0, duration / 1000);
+    }
+
+    public playComposition(composition: IComposition) {
+        for (let note of composition.notes) {
+            setTimeout(
+                () => {
+                    this.playNote(note.noteInfo, note.length);
+                },
+                note.start);
+        }
     }
 
     attachToMusicPlayerHelper(helper: MusicPlayerHelper) {

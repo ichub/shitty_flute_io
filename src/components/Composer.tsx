@@ -40,6 +40,9 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         AudioOutputHelper.fromNotes(this.props.notes)
             .then(helper => {
                 this.helper = helper;
+            })
+            .catch(err => {
+                console.log(err);
             });
     }
 
@@ -142,32 +145,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     }
 
     handlePlayClick(): void {
-        if (this.state.stateName === ComposerStateName.Idle) {
-            this.setState({
-                stateName: ComposerStateName.Playing,
-                player: new MusicPlayerHelper(this.state.composition.notes),
-            }, () => {
-                this.state.player.addListener(MusicPlayerHelper.NOTE_START, (note: ICompositionNote) => {
-                    this.state.playingNotes.push(note);
-                    this.setState({
-                        playingNotes: this.state.playingNotes,
-                    });
-                });
-
-                this.state.player.addListener(MusicPlayerHelper.NOTE_END, (note: ICompositionNote) => {
-                    this.state.playingNotes = this.state.playingNotes.filter(n => n.noteInfo.name !== note.noteInfo.name);
-                    this.setState({
-                        playingNotes: this.state.playingNotes,
-                    });
-                });
-
-                this.state.player.on(MusicPlayerHelper.COMPOSITION_END, () => {
-                    this.stopPlaying();
-                });
-
-                this.state.player.playAsynchronously();
-            });
-        }
+        this.helper.playComposition(this.state.composition);
     }
 
     stopPlaying(): void {
