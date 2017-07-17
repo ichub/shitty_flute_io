@@ -49,17 +49,21 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
     attachListeners() {
         document.addEventListener("keydown", (e: KeyboardEvent) => {
-            for (let i = 0; i < this.props.notes.length; i++) {
-                if (this.isKeyboardEventForNote(this.props.notes[i], e)) {
-                    this.handleNoteDown(this.props.notes[i]);
+            if (this.state.stateName == ComposerStateName.Recording) {
+                for (let i = 0; i < this.props.notes.length; i++) {
+                    if (this.isKeyboardEventForNote(this.props.notes[i], e)) {
+                        this.handleNoteDown(this.props.notes[i]);
+                    }
                 }
             }
         });
 
         document.addEventListener("keyup", (e: KeyboardEvent) => {
-            for (let i = 0; i < this.props.notes.length; i++) {
-                if (this.isKeyboardEventForNote(this.props.notes[i], e)) {
-                    this.handleNoteUp(this.props.notes[i]);
+            if (this.state.stateName == ComposerStateName.Recording) {
+                for (let i = 0; i < this.props.notes.length; i++) {
+                    if (this.isKeyboardEventForNote(this.props.notes[i], e)) {
+                        this.handleNoteUp(this.props.notes[i]);
+                    }
                 }
             }
         });
@@ -117,12 +121,19 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     }
 
     handlePlayClick(): void {
-        this.setState({
-            stateName: ComposerStateName.Playing,
-        });
+        if (this.state.stateName === ComposerStateName.Idle) {
+            this.setState({
+                stateName: ComposerStateName.Playing,
+            });
+        }
     }
 
     handleRecordClick(): void {
+        if (this.state.stateName === ComposerStateName.Idle) {
+            this.setState({
+                stateName: ComposerStateName.Recording,
+            });
+        }
     }
 
     generateNoteInInterface(note: ICompositionNote): IClickedNoteLayoutParams {
@@ -163,7 +174,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                                 return (
                                     <div key={i} style={[Composer.styles.noteRow]}>
                                         {
-                                            matching.map(this.generateNoteInInterface.bind(this)).map((int, n) => {
+                                            matching.map(this.generateNoteInInterface.bind(this)).map((int: IClickedNoteLayoutParams, n) => {
                                                 return (
                                                     <div key={n} style={[
                                                         Composer.styles.compositionNote,
@@ -185,11 +196,52 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                     </div>
                 </div>
                 <div style={[Composer.styles.controls]}>
-                    <input type="button" value="play" onClick={this.handlePlayClick.bind(this)}/>
-                    <input type="button" value="record" onClick={this.handleRecordClick.bind(this)}/>
+                    <input
+                        type="button"
+                        value="play"
+                        onClick={this.handlePlayClick.bind(this)}
+                        disabled={this.state.stateName !== ComposerStateName.Idle}/>
+                    <input
+                        type="button"
+                        value="record"
+                        onClick={this.handleRecordClick.bind(this)}
+                        disabled={this.state.stateName !== ComposerStateName.Idle}/>
+                    <input
+                        type="button"
+                        value="reset"
+                        onClick={this.handleResetClick.bind(this)}
+                        disabled={this.state.stateName !== ComposerStateName.Idle}/>
+
+                    <span>
+                        {
+                            ((state: ComposerStateName) => {
+                                switch (state) {
+                                    case ComposerStateName.Recording :
+                                        return "recording";
+                                    case ComposerStateName.Idle :
+                                        return "idle";
+                                    case ComposerStateName.Playing :
+                                        return "playing";
+                                }
+                            })(this.state.stateName)
+                        }
+                    </span>
                 </div>
             </div>
         );
+    }
+
+    handleResetClick() {
+        if (this.state.stateName === ComposerStateName.Idle) {
+            this.state.composition.notes = [];
+
+            this.setState({
+                composition: this.state.composition,
+                stateName: ComposerStateName.Idle,
+                downNotes: [],
+                recordStartingTime: -1,
+            });
+        }
     }
 
     private static styles = {
