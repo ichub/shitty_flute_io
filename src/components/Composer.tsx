@@ -8,6 +8,8 @@ const axios = require("axios");
 
 @Radium
 export class Composer extends React.Component<IComposerProps, IComposerState> {
+    private static readonly COMPOSITION_SECONDS = 10;
+
     props: IComposerProps;
     state: IComposerState;
 
@@ -22,6 +24,11 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         };
 
         this.reloadData();
+    }
+
+    convertMillisecondsToPercentage(milliseconds: number): number {
+        const totalMilliseconds = Composer.COMPOSITION_SECONDS * 1000;
+        return milliseconds / totalMilliseconds * 100;
     }
 
     reloadData() {
@@ -124,8 +131,8 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         return {
             nameString: note.noteInfo.name,
             height: "10px",
-            width: note.length * (1 / scale) + "px",
-            offset: note.start * (1 / scale),
+            width: this.convertMillisecondsToPercentage(note.length) + "%",
+            offset: this.convertMillisecondsToPercentage(note.start) + "%",
         };
     }
 
@@ -153,21 +160,17 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                         {
                             this.props.notes.map((note, i) => {
                                 const matching = this.state.composition.notes.filter(compNote => compNote.noteInfo.name == note.name);
-                                let runningOffset = 0;
-
                                 return (
                                     <div key={i} style={[Composer.styles.noteRow]}>
                                         {
-                                            matching.map(this.generateNoteInInterface).map((int, n) => {
-                                                runningOffset += int.offset;
-
+                                            matching.map(this.generateNoteInInterface.bind(this)).map((int, n) => {
                                                 return (
                                                     <div key={n} style={[
                                                         Composer.styles.compositionNote,
                                                         {
                                                             width: int.width,
                                                             height: int.height,
-                                                            left: int.offset + "px",
+                                                            left: int.offset,
                                                             backgroundColor: "orange",
                                                         }]}>
                                                         {int.nameString}
@@ -246,7 +249,7 @@ export interface IClickedNoteLayoutParams {
     width: string;
     height: string;
     nameString: string;
-    offset: number;
+    offset: string;
 }
 
 export interface IComposerProps {
