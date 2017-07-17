@@ -4,6 +4,7 @@ import * as color from "color";
 import {INoteInfo} from "../models/INoteInfo";
 import {IComposition, makeNewIComposition} from "../models/IComposition";
 import {ICompositionNote} from "../models/ICompositionNote";
+import {setInterval} from "timers";
 const axios = require("axios");
 
 @Radium
@@ -13,6 +14,10 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     props: IComposerProps;
     state: IComposerState;
 
+    refs: {
+        milliseconds: HTMLDivElement
+    };
+
     constructor(props: IComposerProps) {
         super(props);
 
@@ -21,6 +26,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             downNotes: [],
             composition: makeNewIComposition("", this.props.compositionId),
             recordStartingTime: -1,
+            interval: null,
         };
 
         this.reloadData();
@@ -90,6 +96,10 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
             const isFirstNote = this.state.recordStartingTime == -1;
 
+            if (isFirstNote) {
+                this.startRecordTimer();
+            }
+
             copied.push({
                 noteInfo: note,
                 start: isFirstNote ? 0 : time - this.state.recordStartingTime,
@@ -134,6 +144,35 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                 stateName: ComposerStateName.Recording,
             });
         }
+    }
+
+    startRecordTimer(): void {
+        const startTime = new Date().getTime();
+
+        const updateTimer = () => {
+            const seconds = (new Date().getTime() - startTime) / 1000;
+            this.refs.milliseconds.innerHTML = seconds + "";
+
+            if (seconds >= Composer.COMPOSITION_SECONDS) {
+                this.stopRecording();
+            }
+
+        };
+
+        this.setState({
+            interval: setInterval(updateTimer, 10),
+        });
+
+        updateTimer();
+    }
+
+    stopRecording(): void {
+        clearInterval(this.state.interval);
+        this.refs.milliseconds.innerHTML = "";
+
+        this.setState({
+            stateName: ComposerStateName.Idle,
+        });
     }
 
     generateNoteInInterface(note: ICompositionNote): IClickedNoteLayoutParams {
@@ -226,6 +265,9 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                             })(this.state.stateName)
                         }
                     </span>
+                    <span ref="milliseconds">
+
+                    </span>
                 </div>
             </div>
         );
@@ -314,4 +356,5 @@ export interface IComposerState {
     downNotes: ICompositionNote[];
     composition: IComposition;
     recordStartingTime: number;
+    interval: NodeJS.Timer;
 }
