@@ -138,27 +138,38 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         if (this.state.stateName === ComposerStateName.Idle) {
             this.setState({
                 stateName: ComposerStateName.Playing,
-            });
-
-            this.state.player.addListener(MusicPlayerHelper.NOTE_START, (note: ICompositionNote) => {
-                console.log(`start: ${note.noteInfo.name}`);
-
-                this.state.playingNotes.push(note);
-                this.setState({
-                    playingNotes: this.state.playingNotes,
+                player: new MusicPlayerHelper(this.state.composition.notes),
+            }, () => {
+                this.state.player.addListener(MusicPlayerHelper.NOTE_START, (note: ICompositionNote) => {
+                    this.state.playingNotes.push(note);
+                    this.setState({
+                        playingNotes: this.state.playingNotes,
+                    });
                 });
-            });
 
-            this.state.player.addListener(MusicPlayerHelper.NOTE_END, (note: ICompositionNote) => {
-                console.log(`end: ${note.noteInfo.name}`);
-                this.state.playingNotes = this.state.playingNotes.filter(n => n.noteInfo.name !== note.noteInfo.name);
-                this.setState({
-                    playingNotes: this.state.playingNotes,
+                this.state.player.addListener(MusicPlayerHelper.NOTE_END, (note: ICompositionNote) => {
+                    this.state.playingNotes = this.state.playingNotes.filter(n => n.noteInfo.name !== note.noteInfo.name);
+                    this.setState({
+                        playingNotes: this.state.playingNotes,
+                    });
                 });
-            });
 
-            this.state.player.playAsynchronously();
+                this.state.player.on(MusicPlayerHelper.COMPOSITION_END, () => {
+                    this.stopPlaying();
+                });
+
+                this.state.player.playAsynchronously();
+            });
         }
+    }
+
+    stopPlaying(): void {
+        this.state.player.stop();
+
+        this.setState({
+            stateName: ComposerStateName.Idle,
+            playingNotes: [],
+        });
     }
 
     handleRecordClick(): void {
@@ -174,7 +185,6 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         const startTime = new Date().getTime();
 
         const updateTimer = () => {
-            console.log("interval");
             const seconds = (new Date().getTime() - startTime) / 1000;
 
             if (seconds >= Composer.COMPOSITION_SECONDS) {
@@ -182,7 +192,6 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                 return;
             }
 
-            console.log("interval");
             this.refs.milliseconds.innerHTML = seconds + "";
             this.refs.scrubBar.style.left = this.convertMillisecondsToPercentage(new Date().getTime() - startTime) + "%";
         };
@@ -197,15 +206,12 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     }
 
     stopRecording(): void {
-        console.log("stopping");
-
         clearInterval(this.state.interval);
         this.state.interval = null;
         this.refs.milliseconds.innerHTML = "";
 
         this.setState({
             stateName: ComposerStateName.Idle,
-            player: new MusicPlayerHelper(this.state.composition.notes),
         });
     }
 

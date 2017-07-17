@@ -18,20 +18,31 @@ export class FluteAudioPlayer extends React.Component<IFluteAudioPlayerProps, IF
         this.playPlayingSounds();
     }
 
-    stopAllSounds() {
+    iterateOverNotes(consumer: (audio: HTMLAudioElement, note: INoteInfo) => void) {
         for (let i = 0; i < this.props.notes.length; i++) {
-            (this.refs[this.props.notes[i].name] as HTMLAudioElement).pause();
+            const note = this.props.notes[i];
+            const element = this.refs[note.name] as HTMLAudioElement;
+
+            consumer(element, note);
         }
+    }
+
+    stopAllSounds() {
+        this.iterateOverNotes((audio, note) => {
+            audio.pause();
+            audio.currentTime = 0;
+        });
     }
 
     playPlayingSounds() {
-        for (let i = 0; i < this.props.playingNotes.length; i++) {
-            (this.refs[this.props.playingNotes[i].noteInfo.name] as HTMLAudioElement).play();
-        }
+        this.iterateOverNotes((audio, note) => {
+            if (this.props.playingNotes.filter(playing => note.name === playing.noteInfo.name)[0]) {
+                audio.play();
+            }
+        });
     }
 
     componentWillReceiveProps(props: IFluteAudioPlayerProps) {
-        console.log("will");
         this.stopAllSounds();
         this.playPlayingSounds();
     }
