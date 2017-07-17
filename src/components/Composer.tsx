@@ -17,7 +17,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         this.state = {
             stateName: ComposerStateName.Idle,
             downNotes: [],
-            composition: makeNewIComposition("", this.props.compositionId)
+            composition: makeNewIComposition("", this.props.compositionId),
             recordStartingTime: -1,
         };
 
@@ -80,7 +80,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             const isFirstNote = this.state.recordStartingTime == -1;
 
             copied.push({
-                note: note,
+                noteInfo: note,
                 start: isFirstNote ? 0 : time - this.state.recordStartingTime,
                 length: -1,
             });
@@ -118,11 +118,11 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     handleRecordClick(): void {
     }
 
-    generateNoteInInterface(note: IClickedNote): IClickedNoteLayoutParams {
+    generateNoteInInterface(note: ICompositionNote): IClickedNoteLayoutParams {
         const scale = 50;
 
         return {
-            nameString: note.note.name,
+            nameString: note.noteInfo.name,
             height: "10px",
             width: note.length * (1 / scale) + "px",
             offset: note.start * (1 / scale) + "px",
@@ -151,7 +151,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                     </div>
                     <div style={[Composer.styles.timeSeries]}>
                         {
-                            this.state.composition
+                            this.state.composition.notes
                                 .map(this.generateNoteInInterface)
                                 .map((item, n) => {
                                     return <div key={n} style={[{
@@ -223,13 +223,7 @@ export interface IClickedNoteLayoutParams {
     width: string;
     height: string;
     nameString: string;
-    offset: number;
-}
-
-export interface IClickedNote {
-    note: INoteInfo,
-    start: number;
-    length: number;
+    offset: string;
 }
 
 export interface IComposerProps {
@@ -241,7 +235,5 @@ export interface IComposerState {
     stateName: ComposerStateName;
     downNotes: ICompositionNote[];
     composition: IComposition;
-    downNotes: IClickedNote[];
-    composition: IClickedNote[];
     recordStartingTime: number;
 }
