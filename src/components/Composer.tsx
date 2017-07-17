@@ -5,7 +5,7 @@ import {INoteInfo} from "../models/INoteInfo";
 import {IComposition, makeNewIComposition} from "../models/IComposition";
 import {ICompositionNote} from "../models/ICompositionNote";
 import {MusicPlayerHelper} from "../MusicPlayerHelper";
-import {FluteAudioPlayer} from "./FluteAudioPlayer";
+import {AudioOutputHelper} from "../AudioOutputHelper";
 const axios = require("axios");
 
 @Radium
@@ -19,6 +19,8 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         milliseconds: HTMLDivElement;
         scrubBar: HTMLDivElement;
     };
+
+    helper: AudioOutputHelper;
 
     constructor(props: IComposerProps) {
         super(props);
@@ -34,6 +36,11 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         };
 
         this.reloadData();
+
+        AudioOutputHelper.fromNotes(this.props.notes)
+            .then(helper => {
+                this.helper = helper;
+            });
     }
 
     convertMillisecondsToPercentage(milliseconds: number): number {
@@ -235,7 +242,6 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         window["state"] = this.state.composition;
         return (
             <div>
-                <FluteAudioPlayer playingNotes={this.state.playingNotes} notes={this.props.notes}/>
                 <div style={[Composer.styles.base]}>
                     <div style={[Composer.styles.noteContainer]}>
                         {
