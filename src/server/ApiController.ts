@@ -6,14 +6,24 @@ import * as express from "express";
 import * as path from "path";
 import {generateToken} from "./ComposerTokenLoader";
 import {htmlDir} from "./Server";
-import {IComposition, makeNewIComposition} from "../models/IComposition";
+import {IComposition} from "../models/IComposition";
 import {FSDataLayer} from "./FSDataLayer";
+import {SQLiteDataLayer} from "./SQLiteDataLayer";
+import {IDataLayer} from "./IDataLayer";
 
 export const ApiController = express.Router();
 export const rootPath = path.join(__dirname, "../../");
-const DATA_LAYER = new FSDataLayer();
 const fs = require("fs");
 // export const dataLayer: IDataLayer = new MockDataLayer();
+
+function returnJson(res: express.Response, promise: Promise<any>): void {
+    promise.then(data => res.json(data)).catch(err => {
+        res.status(500);
+        res.json(err);
+
+        console.log(err);
+    });
+}
 
 ApiController.get("/composer", (req: express.Request, res: express.Response) => {
     let token = generateToken();
@@ -32,13 +42,20 @@ ApiController.get("/composer/:compositionId", (req: express.Request, res: expres
 
 ApiController.post("/composer/:compositionId", (req: express.Request, res: express.Response) => {
     let composition = req.body as IComposition;
-    let jsonData = DATA_LAYER.saveComposition(req.params.compositionId, composition);
-    res.json(jsonData);
+    returnJson(res,
+        SQLiteDataLayer
+            .getInstance()
+            .then((dataLayer) => dataLayer.saveComposition(req.params.compositionId, composition)));
 });
 
 ApiController.get("/composer/:compositionId/data", (req: express.Request, res: express.Response) => {
-    let jsonData = DATA_LAYER.getComposition(req.params.compositionId);
-    res.json(jsonData);
-    console.log("loaded data for composition id " + req.params.compositionId);
-    console.log(jsonData);
+    returnJson(
+        res,
+        SQLiteDataLayer
+            .getInstance()
+            .then((dataLayer) => {
+                console.log("got instance");
+                return dataLayer.getComposition(req.params.compositionId);
+            })
+    );
 });

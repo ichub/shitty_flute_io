@@ -6,5 +6,5 @@ import {IComposition} from "../models/IComposition";
 
 export interface IDataLayer {
     getComposition(compositionId: string): Promise<IComposition>;
-    saveComposition(compositionId: string, composition: IComposition): Promise<IComposition>;
+    saveComposition(compositionId: string, composition: IComposition): Promise<void>;
 }

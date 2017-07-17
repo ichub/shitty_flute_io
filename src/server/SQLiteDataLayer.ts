@@ -1,6 +1,7 @@
 import {IDataLayer} from "./IDataLayer";
 import {IComposition} from "../models/IComposition";
 import * as sqlite3 from "sqlite3";
+import {RunResult} from "sqlite3";
 
 export class SQLiteDataLayer implements IDataLayer {
     private static instancePromise: Promise<SQLiteDataLayer> = null;
@@ -11,33 +12,69 @@ export class SQLiteDataLayer implements IDataLayer {
         this.db = new sqlite3.Database(":memory:");
     }
 
+    execWithPromise(query: string, params: any[] = []): Promise<RunResult> {
+        return new Promise<RunResult>((resolve, reject) => {
+            this.db.run(query, params, (result, err) => {
+                // console.log(query);
+                // console.log(params);
+
+                if (err) {
+                    // console.log(`failed to run query: ${query}`);
+                    // console.log(err);
+                    reject(err);
+                } else {
+                    // console.log(`succeeded running query: ${query}`);
+                    console.log(result);
+                    resolve(result);
+                }
+            });
+        });
+    }
+
     createTables(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            this.db.serialize(() => {
-                this.db.run("CREATE TABLE compositions" +
-                    "(id VARCHAR(100)," +
-                    "name VARCHAR(100)," +
-                    "CONSTRAINT compositions_pk PRIMARY_KEY(id))",
-                    []);
-                this.db.run("CREATE TABLE compositions_notes_map" +
+        return this.execWithPromise(
+            "CREATE TABLE compositions " +
+            "(id VARCHAR(100)," +
+            "name VARCHAR(100))")
+            .then(() => {
+                return this.execWithPromise(
+                    "CREATE TABLE compositions_notes_map " +
                     "(id VARCHAR(100)," +
                     "note_id INT," +
                     "start BIGINT," +
                     "length BIGINT)");
-                this.db.run("CREATE TABLE note_info" +
+            })
+            .then(() => {
+                return this.execWithPromise(
+                    "CREATE TABLE note_info " +
                     "(id INT," +
                     "name VARCHAR(100)," +
                     "sound_file VARCHAR(100)," +
                     "shitty_sound_file VARCHAR(100)," +
-                    "keyboard_character VARCHAR(1)," +
-                    "CONSTRAINT note_info_pk PRIMARY KEY (id))");
-                this.db.run("CREATE TABLE composition_json_table (id VARCHAR(100)," +
-                    "data TEXT," +
-                    "CONSTRAINT composition_json_table_pk PRIMARY_KEY(id))");
-
-                resolve();
+                    "keyboard_character VARCHAR(1))");
+            })
+            .then(() => {
+                return this.execWithPromise(
+                    "CREATE TABLE composition_json_table " +
+                    "(id VARCHAR(100)," +
+                    "data TEXT)");
             });
-        });
+    }
+
+    getComposition(compositionId: string): Promise<IComposition> {
+        return this.execWithPromise(
+            "SELECT data from composition_json_table WHERE id=?",
+            [compositionId])
+            .then(row => {
+                return Promise.resolve(JSON.parse((row as any).data) as IComposition);
+            });
+    }
+
+    saveComposition(compositionId: string, composition: IComposition): Promise<void> {
+        const data = JSON.stringify(composition);
+        return this.execWithPromise(
+            "INSERT INTO composition_json_table (id, data) VALUES (?,?) ON DUPLICATE KEY UPDATE data=?",
+            [compositionId, data, data]);
     }
 
     static getInstance(): Promise<SQLiteDataLayer> {
@@ -53,41 +90,13 @@ export class SQLiteDataLayer implements IDataLayer {
                     resolve(dataLayer);
                 })
                 .catch(err => {
+                    console.log("WARNING: FAILED TO GET INSTANCE OF DATA LAYER");
+                    console.log(err);
+                    process.exit(100);
                     reject(err);
                 });
         });
 
         return SQLiteDataLayer.instancePromise;
     }
-
-    private resolveJson(data: string) {
-        return Promise.resolve(JSON.parse(data));
-    }
-
-    getComposition(compositionId: string): Promise<IComposition> {
-        return new Promise<IComposition>((resolve, reject) => {
-            this.db.get("SELECT data from composition_json_table WHERE id=?", [compositionId], function (err, row) {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(JSON.parse(row.data));
-                }
-            });
-        });
-    }
-
-    saveComposition(compositionId: string, composition: IComposition): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            let data = JSON.stringify(composition);
-            let query = "INSERT INTO composition_json_table (id, data) VALUES (?,?) ON DUPLICATE KEY UPDATE data=?";
-            this.db.run(query, [compositionId, data, data], function (err, row) {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            });
-        });
-    }
-
 }
