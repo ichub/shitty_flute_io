@@ -1,11 +1,10 @@
 import * as React from "react";
 import * as Radium from "radium";
 import * as color from "color";
-const axios = require("axios");
-
 import {INoteInfo} from "../models/INoteInfo";
 import {IComposition, makeNewIComposition} from "../models/IComposition";
 import {ICompositionNote} from "../models/ICompositionNote";
+const axios = require("axios");
 
 @Radium
 export class Composer extends React.Component<IComposerProps, IComposerState> {
@@ -19,6 +18,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             stateName: ComposerStateName.Idle,
             downNotes: [],
             composition: makeNewIComposition("", this.props.compositionId)
+            recordStartingTime: -1,
         };
 
         this.reloadData();
@@ -31,7 +31,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                 console.log(response.data);
 
                 this.setState({
-                    composition: response.data
+                    composition: response.data,
                 });
             });
     }
@@ -75,37 +75,58 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     handleNoteDown(note: INoteInfo) {
         if (!this.isNoteDown(note)) {
             const copied = this.state.downNotes.slice();
+            let time = new Date().getTime();
+
+            const isFirstNote = this.state.recordStartingTime == -1;
+
             copied.push({
-                noteInfo: note,
-                start: new Date().getTime(),
-                length: -1
+                note: note,
+                start: isFirstNote ? 0 : time - this.state.recordStartingTime,
+                length: -1,
             });
-            this.setState({downNotes: copied});
+
+            this.setState({
+                downNotes: copied,
+                recordStartingTime: this.state.recordStartingTime == -1 ? time : this.state.recordStartingTime,
+            });
         }
     }
 
     handleNoteUp(note: INoteInfo) {
         if (this.isNoteDown(note)) {
             const released = this.state.downNotes.filter(item => item.noteInfo.name === note.name)[0];
-
             released.length = new Date().getTime() - released.start;
+
             this.state.downNotes = this.state.downNotes.filter(item => item.noteInfo.name != released.noteInfo.name);
+
+            released.length = new Date().getTime() - released.start - this.state.recordStartingTime;
             this.state.composition.notes.push(released);
 
             this.setState({
                 downNotes: this.state.downNotes,
-                composition: this.state.composition
+                composition: this.state.composition,
             });
         }
     }
 
     handlePlayClick(): void {
         this.setState({
-            stateName: ComposerStateName.Playing
+            stateName: ComposerStateName.Playing,
         });
     }
 
     handleRecordClick(): void {
+    }
+
+    generateNoteInInterface(note: IClickedNote): IClickedNoteLayoutParams {
+        const scale = 50;
+
+        return {
+            nameString: note.note.name,
+            height: "10px",
+            width: note.length * (1 / scale) + "px",
+            offset: note.start * (1 / scale) + "px",
+        };
     }
 
     render() {
@@ -120,7 +141,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                                 return (
                                     <div key={i} style={[
                                         Composer.styles.note,
-                                        downStyle
+                                        downStyle,
                                     ]}>
                                         {note.name}
                                     </div>
@@ -130,9 +151,18 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                     </div>
                     <div style={[Composer.styles.timeSeries]}>
                         {
-                            this.state.composition.notes.map((item, n) => {
-                                return <div key={n}>{item.noteInfo.name} {item.length}ms</div>;
-                            })
+                            this.state.composition
+                                .map(this.generateNoteInInterface)
+                                .map((item, n) => {
+                                    return <div key={n} style={[{
+                                        width: item.width,
+                                        height: item.height,
+                                        marginLeft: item.offset,
+                                        backgroundColor: "orange",
+                                    }]}>
+                                        {item.nameString}
+                                    </div>;
+                                })
                         }
                     </div>
                 </div>
@@ -147,7 +177,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     private static styles = {
         base: {
             width: "100vw",
-            height: "50vh"
+            height: "50vh",
 
         },
         noteContainer: {
@@ -159,27 +189,27 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             flexDirection: "column",
             WebkitUserSelect: "none",
             backgroundColor: "grey",
-            float: "left"
+            float: "left",
         },
         note: {
             width: "100px",
             height: "100px",
             display: "inline-block",
             backgroundColor: "green",
-            margin: "20px"
+            margin: "20px",
         },
         noteDown: {
-            backgroundColor: "red"
+            backgroundColor: "red",
         },
         timeSeries: {
             height: "100%",
             backgroundColor: color("purple").lighten(1).hex(),
-            overflow: "hidden"
+            overflow: "hidden",
         },
         controls: {
             width: "100%",
-            backgroundColor: color("grey").lighten(20).hex()
-        }
+            backgroundColor: color("grey").lighten(20).hex(),
+        },
     };
 }
 
@@ -187,6 +217,19 @@ enum ComposerStateName {
     Idle,
     Recording,
     Playing
+}
+
+export interface IClickedNoteLayoutParams {
+    width: string;
+    height: string;
+    nameString: string;
+    offset: number;
+}
+
+export interface IClickedNote {
+    note: INoteInfo,
+    start: number;
+    length: number;
 }
 
 export interface IComposerProps {
@@ -198,4 +241,7 @@ export interface IComposerState {
     stateName: ComposerStateName;
     downNotes: ICompositionNote[];
     composition: IComposition;
+    downNotes: IClickedNote[];
+    composition: IClickedNote[];
+    recordStartingTime: number;
 }
