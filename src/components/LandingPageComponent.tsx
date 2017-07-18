@@ -8,18 +8,30 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
         return (
             <div style={[
                 LandingPageComponent.styles.base,
-                LandingPageComponent.styles.easeIn,
             ]}>
-                <div style={[LandingPageComponent.styles.title]}>shitty recorder</div>
-                <div style={[LandingPageComponent.styles.video]}></div>
-                <input
-                    style={[
-                        LandingPageComponent.styles.composeButton,
-                        LandingPageComponent.styles.pulse,
-                    ]}
-                    type="button"
-                    value="compose"
-                    onClick={this.onComposeClick.bind(this)}/>
+                <div style={[
+                    LandingPageComponent.styles.title,
+                    LandingPageComponent.styles.easeIn(0),
+                ]}>
+                    shitty recorder
+                </div>
+                <div style={[
+                    LandingPageComponent.styles.video,
+                    LandingPageComponent.styles.easeIn(0.25),
+                ]}></div>
+                <div style={[
+                    LandingPageComponent.styles.easeIn(0.50),
+                ]}>
+                    <input
+                        style={[
+                            LandingPageComponent.styles.composeButton,
+                            LandingPageComponent.styles.pulse(0.50),
+                        ]}
+                        type="button"
+                        value="compose"
+                        onClick={this.onComposeClick.bind(this)}/>
+                </div>
+
             </div>
         );
     }
@@ -29,14 +41,14 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
     }
 
     private static readonly videoAspectRatio = 1920 / 1080;
-    private static readonly videoWidth = 100;
+    private static readonly videoWidth = 200;
 
     private static readonly pulseKeyframes = Radium.keyframes({
         "0%": {
             transform: "scale(1.5)",
         },
         "100%": {
-            transform: "scale(1)",
+            transform: "scale(2)",
         },
     }, "pulse");
 
@@ -85,13 +97,18 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
             backgroundColor: color("white").darken(0.5).hex(),
             margin: "50px",
         },
-        pulse: {
-            animation: "x 500ms 0s infinite alternate",
-            animationName: LandingPageComponent.pulseKeyframes,
+        pulse: (offset: number) => {
+            return {
+                animation: `x 0.75s ${offset}s ease forwards`,
+                animationName: LandingPageComponent.pulseKeyframes,
+            };
         },
-        easeIn: {
-            animation: "x 1s 0s ease",
-            animationName: LandingPageComponent.fadeInKeyframes,
+        easeIn: (offset: number) => {
+            return {
+                opacity: "0",
+                animation: `x 1s ${offset}s ease forwards`,
+                animationName: LandingPageComponent.fadeInKeyframes,
+            };
         },
     };
 }
