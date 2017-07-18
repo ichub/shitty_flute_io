@@ -45,7 +45,7 @@ ApiController.post("/composer/:compositionId", (req: express.Request, res: expre
     returnJson(res,
         SQLiteDataLayer
             .getInstance()
-            .then((dataLayer) => dataLayer.saveComposition(req.params.compositionId, composition)));
+            .then((dataLayer) => dataLayer.saveComposition(req.params.compositionId, composition));
 });
 
 ApiController.get("/composer/:compositionId/data", (req: express.Request, res: express.Response) => {
@@ -54,7 +54,6 @@ ApiController.get("/composer/:compositionId/data", (req: express.Request, res: e
         SQLiteDataLayer
             .getInstance()
             .then((dataLayer) => {
-                console.log("got instance");
                 return dataLayer.getComposition(req.params.compositionId);
             })
     );
