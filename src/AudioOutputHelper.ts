@@ -2,11 +2,13 @@ import {MusicPlayerHelper} from "./MusicPlayerHelper";
 import {INoteInfo} from "./models/INoteInfo";
 import {IComposition} from "./models/IComposition";
 const axios = require("axios");
+const PD = require("probability-distributions");
+
 
 export class AudioOutputHelper {
     private notes: INoteInfo[];
     private audio: AudioContext;
-    private noteToAudioBufferMap: { [name: string]: AudioBuffer }; // TODO: map to array of buffers [normal, shitty1, shitty2, etc... ]
+    private noteToAudioBufferMap: { [name: string]: AudioBuffer[] }; // TODO: map to array of buffers [normal, shitty1, shitty2, etc... ]
 
     private constructor(notes: INoteInfo[]) {
         this.notes = notes;
@@ -14,9 +16,8 @@ export class AudioOutputHelper {
         this.noteToAudioBufferMap = {};
     }
 
-    public static fromNotes(notes: INoteInfo[]): Promise<AudioOutputHelper> {
+    public static getInstance(notes: INoteInfo[]): Promise<AudioOutputHelper> {
         const result = new AudioOutputHelper(notes);
-        window["audio"] = result;
         return result.initializeNotes().then(() => Promise.resolve(result));
     }
 
@@ -25,26 +26,20 @@ export class AudioOutputHelper {
             this.notes.map(note =>
                 this.initializeSingleNote(note)
                     .then((initialized) => {
-                        this.noteToAudioBufferMap[initialized.note.name] = initialized.audioBuffer;
-                    })),
+                        this.noteToAudioBufferMap[initialized.note.name] = initialized.audioBuffers;
+                    }))
         ).then(() => {
             console.log("initialized audio");
             console.log(this.noteToAudioBufferMap);
         });
     }
 
-    private initializeSingleNote(note: INoteInfo): Promise<IInitializedSound> {
-        return new Promise<IInitializedSound>((resolve, reject) => {
-
-            axios.get(note.shittySoundFileUrl, {responseType: "arraybuffer"})
+    private getBufferForFile(soundFileUrl: string): Promise<AudioBuffer> {
+        console.log("retrieving audioBuffer for file " + soundFileUrl);
+        return new Promise<AudioBuffer>((resolve, reject) => {
+            axios.get(soundFileUrl, {responseType: "arraybuffer"})
                 .then(result => {
                     return this.audio.decodeAudioData(result.data);
-                })
-                .then(audioBuffer => {
-                    resolve({
-                        audioBuffer: audioBuffer,
-                        note: note,
-                    });
                 })
                 .catch(err => {
                     console.log(err);
@@ -53,26 +48,52 @@ export class AudioOutputHelper {
         });
     }
 
+    private initializeSingleNote(note: INoteInfo): Promise<IInitializedSound> {
+        return Promise.all(
+            [
+                this.getBufferForFile(note.soundFileUrl),
+                this.getBufferForFile(note.shittySoundFileUrl)
+            ]
+        ).then(audioBuffers => {
+            return Promise.resolve({
+                audioBuffers: audioBuffers,
+                note: note
+            });
+        });
+    }
+
+    private getRandomElement(arr: any[]) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+
     private playNote(note: INoteInfo, duration: number) {
-        const audioBuffer = this.noteToAudioBufferMap[note.name]; // TODO: pick random buffer from array of buffers
+        console.log("attempting to play note");
+        const audioBuffer = this.getRandomElement(this.noteToAudioBufferMap[note.name]); // TODO: pick random buffer from array of buffers
         const source = this.audio.createBufferSource();
         source.buffer = audioBuffer;
 
         const gainNode = this.audio.createGain();
+        const sourceNode = this.audio.createBufferSource();
+
+        let shittiness = 0.05;
 
         // TODO: insert a node that does pitch shifting, look up
         // web sound api to figure out how to do this, also figure out
         // what other nodes
 
-        source.connect(gainNode);
+        source.connect(sourceNode);
+        sourceNode.connect(gainNode);
         gainNode.connect(this.audio.destination);
 
         setTimeout(
             () => {
                 gainNode.gain.exponentialRampToValueAtTime(
                     0.00001,
-                    this.audio.currentTime + 0.04,
+                    this.audio.currentTime + 0.04
                 );
+                if (duration < 1000 && Math.random() < shittiness) {
+                    sourceNode.playbackRate.value = PD.lnorm(1, 0, 0.07)[0];
+                }
             },
             duration); // TODO: if you want to change duration of note this is where you would do that
 
@@ -91,6 +112,6 @@ export class AudioOutputHelper {
 }
 
 interface IInitializedSound {
-    audioBuffer: AudioBuffer;
+    audioBuffers: AudioBuffer[];
     note: INoteInfo;
 }
