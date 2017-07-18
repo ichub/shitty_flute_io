@@ -41,6 +41,10 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         this.helper = AudioOutputHelper.getInstance(this.props.notes);
 
         this.reloadData();
+
+        this.helper.then(() => {
+            this.props.onReady();
+        });
     }
 
     convertMillisecondsToPercentage(milliseconds: number): number {
