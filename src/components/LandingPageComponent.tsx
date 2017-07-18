@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Radium from "radium";
+import * as color from "color";
 
 @Radium
 export class LandingPageComponent extends React.Component<any, ILandingPageComponentState> {
@@ -10,6 +11,7 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                     LandingPageComponent.styles.base,
                 ]}>
                     <div style={[LandingPageComponent.styles.title]}>shitty recorder</div>
+                    <div style={[LandingPageComponent.styles.video]}></div>
                     <input
                         style={[LandingPageComponent.styles.composeButton]}
                         type="button"
@@ -23,6 +25,9 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
     onComposeClick() {
         window.location.href = "/composer";
     }
+
+    private static readonly videoAspectRatio = 1920 / 1080;
+    private static readonly videoWidth = 100;
 
     private static styles = {
         base: {
@@ -41,7 +46,6 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
         },
         composeButton: {
             padding: "10px 5px",
-            margin: "50px",
             backgroundColor: "white",
             color: "black",
             border: "none",
@@ -52,6 +56,12 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                 color: "white",
                 backgroundColor: "black",
             },
+        },
+        video: {
+            width: LandingPageComponent.videoWidth + "px",
+            height: LandingPageComponent.videoWidth * LandingPageComponent.videoAspectRatio + "px",
+            backgroundColor: color("white").darken(0.5).hex(),
+            margin: "50px",
         },
     };
 }
