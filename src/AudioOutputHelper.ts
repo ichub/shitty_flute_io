@@ -6,7 +6,7 @@ const axios = require("axios");
 export class AudioOutputHelper {
     private notes: INoteInfo[];
     private audio: AudioContext;
-    private noteToAudioBufferMap: { [name: string]: AudioBuffer };
+    private noteToAudioBufferMap: { [name: string]: AudioBuffer }; // TODO: map to array of buffers [normal, shitty1, shitty2, etc... ]
 
     private constructor(notes: INoteInfo[]) {
         this.notes = notes;
@@ -54,11 +54,16 @@ export class AudioOutputHelper {
     }
 
     private playNote(note: INoteInfo, duration: number) {
-        const audioBuffer = this.noteToAudioBufferMap[note.name];
+        const audioBuffer = this.noteToAudioBufferMap[note.name]; // TODO: pick random buffer from array of buffers
         const source = this.audio.createBufferSource();
         source.buffer = audioBuffer;
 
         const gainNode = this.audio.createGain();
+
+        // TODO: insert a node that does pitch shifting, look up
+        // web sound api to figure out how to do this, also figure out
+        // what other nodes
+
         source.connect(gainNode);
         gainNode.connect(this.audio.destination);
 
@@ -69,9 +74,9 @@ export class AudioOutputHelper {
                     this.audio.currentTime + 0.04,
                 );
             },
-            duration);
+            duration); // TODO: if you want to change duration of note this is where you would do that
 
-        source.start(0, 0, duration / 1000);
+        source.start(0, 0, duration / 1000/* TODO: also here would be the place to change duration as well, do both */);
     }
 
     public playComposition(composition: IComposition) {
@@ -82,10 +87,6 @@ export class AudioOutputHelper {
                 },
                 note.start);
         }
-    }
-
-    attachToMusicPlayerHelper(helper: MusicPlayerHelper) {
-
     }
 }
 
