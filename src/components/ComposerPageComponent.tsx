@@ -3,10 +3,11 @@ import * as Radium from "radium";
 import {Composer} from "./Composer";
 import {INoteInfo, makeINoteInfo} from "../models/INoteInfo";
 import {SongSelectorComponent} from "./SongSelectorComponent";
+import {LoadingOverlayComponent} from "./LoadingOverlayComponent";
 
 @Radium
-export class PageComponent extends React.Component<IPageComponentProps, IPageComponentState> {
-    public state: IPageComponentState;
+export class ComposerPageComponent extends React.Component<IComposerPageComponentProps, IComposerPageComponentState> {
+    public state: IComposerPageComponentState;
 
     constructor(props) {
         super(props);
@@ -29,7 +30,7 @@ export class PageComponent extends React.Component<IPageComponentProps, IPageCom
         return (
             <div>
                 <div style={[
-                    PageComponent.styles.base,
+                    ComposerPageComponent.styles.base,
                 ]}>
                     <Composer
                         compositionId={this.props.compositionId}
@@ -42,6 +43,8 @@ export class PageComponent extends React.Component<IPageComponentProps, IPageCom
                 <div>
                     <SongSelectorComponent onVideoReady={this._onReady.bind(this)}/>
                 </div>
+
+                <LoadingOverlayComponent visible={true}/>
             </div>
         );
     }
@@ -76,11 +79,11 @@ export class PageComponent extends React.Component<IPageComponentProps, IPageCom
     }
 }
 
-export interface IPageComponentState {
+export interface IComposerPageComponentState {
     notes: INoteInfo[];
     videoPlayer: any;
 }
 
-export interface IPageComponentProps {
+export interface IComposerPageComponentProps {
     compositionId: string;
 }

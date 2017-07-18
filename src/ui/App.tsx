@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as ReactDom from "react-dom";
-import {PageComponent} from "../components/PageComponent";
 import {InitializationState} from "../models/IInitializationState";
 import {LandingPageComponent} from "../components/LandingPageComponent";
+import {ComposerPageComponent} from "../components/ComposerPageComponent";
 import {StyleRoot} from "radium";
 
 declare const initializedState: InitializationState;
@@ -18,7 +18,7 @@ if (initializedState.pageName === "landing") {
 } else if (initializedState.pageName === "composer") {
     ReactDom.render(
         <StyleRoot>
-            <PageComponent compositionId={initializedState.compositionId}/>
+            <ComposerPageComponent compositionId={initializedState.compositionId}/>
         </StyleRoot>,
         document.getElementById("app-container"));
 }
