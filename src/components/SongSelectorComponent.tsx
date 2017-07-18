@@ -5,25 +5,16 @@ const ReactYoutube = require("react-youtube").default as React.Component;
 
 @Radium
 export class SongSelectorComponent extends React.Component<ISongSelectorProps, ISongSelectorState> {
-
     props: ISongSelectorProps;
     state: ISongSelectorState;
-
-
-    constructor(props: ISongSelectorProps) {
-        super(props);
-
-
-    }
-
 
     render() {
         const opts = {
             height: "390",
             width: "640",
             playerVars: { // https://developers.google.com/youtube/player_parameters
-                autoplay: 1
-            }
+                autoplay: 1,
+            },
         };
 
         return (
@@ -35,13 +26,12 @@ export class SongSelectorComponent extends React.Component<ISongSelectorProps, I
         );
     }
 
-
     private static styles = {
         base: {
             width: "100vw",
-            height: "50vh"
+            height: "50vh",
 
-        }
+        },
     };
 }
 

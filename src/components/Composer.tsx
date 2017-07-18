@@ -24,13 +24,15 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     private helper: Promise<AudioOutputHelper>;
 
     constructor(props: IComposerProps) {
-        super(props);
+        super();
+        this.props = props;
+
         console.log("hello");
 
         this.state = {
             stateName: ComposerStateName.Idle,
             downNotes: [],
-            composition: makeNewIComposition("", this.props.compositionId),
+            composition: makeNewIComposition("", props.compositionId),
             recordStartingTime: -1,
             recordVideoStartingTime: -1,
             interval: null,
@@ -38,12 +40,12 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             playingNotes: [],
         };
 
-        this.helper = AudioOutputHelper.getInstance(this.props.notes);
+        this.helper = AudioOutputHelper.getInstance(props.notes);
 
         this.reloadData();
 
         this.helper.then(() => {
-            this.props.onReady();
+            props.onReady();
         });
     }
 

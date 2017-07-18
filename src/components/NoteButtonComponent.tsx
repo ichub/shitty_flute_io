@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Radium from "radium";
-import {INoteInfo, makeINoteInfo} from "../models/INoteInfo";
+import {INoteInfo} from "../models/INoteInfo";
 
 @Radium
 export class NoteButtonComponent extends React.Component<INoteButtonComponentProps, INoteButtonComponentState> {
@@ -8,13 +8,13 @@ export class NoteButtonComponent extends React.Component<INoteButtonComponentPro
     state: INoteButtonComponentState;
 
     constructor(props: INoteButtonComponentProps) {
-        super()
+        super();
     }
 
     render() {
         return (
-            <button style = {[
-                NoteButtonComponent.styles.base
+            <button style={[
+                NoteButtonComponent.styles.base,
             ]}>
                 {this.props.button.name}
             </button>
@@ -23,8 +23,8 @@ export class NoteButtonComponent extends React.Component<INoteButtonComponentPro
 
     private static styles = {
         base: {
-            width: "100%"
-        }
+            width: "100%",
+        },
     };
 
 }

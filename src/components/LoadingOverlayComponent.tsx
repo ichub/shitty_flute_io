@@ -40,7 +40,7 @@ export class LoadingOverlayComponent extends React.Component<ILoadingOverlayComp
             justifyContent: "center",
             width: "100%",
             height: "100%",
-        }
+        },
         visible: (visible: boolean) => {
             return {
                 display: visible ? "initial" : "none",

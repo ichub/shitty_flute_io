@@ -10,7 +10,7 @@ export class ComposerPageComponent extends React.Component<IComposerPageComponen
     public state: IComposerPageComponentState;
 
     constructor(props) {
-        super(props);
+        super();
 
         this.state = {
             notes: [
