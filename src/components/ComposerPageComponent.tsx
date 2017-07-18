@@ -23,6 +23,8 @@ export class ComposerPageComponent extends React.Component<IComposerPageComponen
                 makeINoteInfo("B", "/res/notes/B-Normal.mp3", "/res/notes/B-Shitty.mp3", "J"),
             ],
             videoPlayer: null,
+            totalAsyncComponents: 2,
+            asyncComponentsLoaded: 0,
         };
     }
 
@@ -33,6 +35,7 @@ export class ComposerPageComponent extends React.Component<IComposerPageComponen
                     ComposerPageComponent.styles.base,
                 ]}>
                     <Composer
+                        onReady={this.onComposerReady.bind(this)}
                         compositionId={this.props.compositionId}
                         notes={this.state.notes}
                         playVideo={this.playVideo.bind(this)}
@@ -41,10 +44,10 @@ export class ComposerPageComponent extends React.Component<IComposerPageComponen
                         setVideoTime={this.setVideoTime.bind(this)}/>
                 </div>
                 <div>
-                    <SongSelectorComponent onVideoReady={this._onReady.bind(this)}/>
+                    <SongSelectorComponent onVideoReady={this.onVideoReady.bind(this)}/>
                 </div>
 
-                <LoadingOverlayComponent visible={true}/>
+                <LoadingOverlayComponent visible={!this.isReady()}/>
             </div>
         );
     }
@@ -52,6 +55,20 @@ export class ComposerPageComponent extends React.Component<IComposerPageComponen
     private static styles = {
         base: {},
     };
+
+    isReady() {
+        return this.state.asyncComponentsLoaded >= this.state.totalAsyncComponents;
+    }
+
+    incrementReadyState() {
+        this.setState({
+            asyncComponentsLoaded: this.state.asyncComponentsLoaded + 1,
+        });
+    }
+
+    private onComposerReady() {
+        this.incrementReadyState();
+    }
 
     public playVideo() {
         this.state.videoPlayer.playVideo();
@@ -69,11 +86,13 @@ export class ComposerPageComponent extends React.Component<IComposerPageComponen
         this.state.videoPlayer.seekTo(time);
     }
 
-    public _onReady(event) {
+    public onVideoReady(event) {
         // access to player in all event handlers via event.target
         this.setState({
             videoPlayer: event.target,
         });
+
+        this.incrementReadyState();
 
         event.target.pauseVideo();
     }
@@ -82,6 +101,8 @@ export class ComposerPageComponent extends React.Component<IComposerPageComponen
 export interface IComposerPageComponentState {
     notes: INoteInfo[];
     videoPlayer: any;
+    totalAsyncComponents: number;
+    asyncComponentsLoaded: number;
 }
 
 export interface IComposerPageComponentProps {

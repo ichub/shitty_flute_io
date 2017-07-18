@@ -34,7 +34,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             recordVideoStartingTime: -1,
             interval: null,
             player: null,
-            playingNotes: []
+            playingNotes: [],
         };
 
         this.helper = AudioOutputHelper.getInstance(this.props.notes);
@@ -51,7 +51,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         axios.get(`/composer/${this.props.compositionId}/data`)
             .then((response) => {
                 this.setState({
-                    composition: response.data
+                    composition: response.data,
                 });
             });
     }
@@ -110,13 +110,13 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             copied.push({
                 noteInfo: note,
                 start: isFirstNote ? 0 : time - this.state.recordStartingTime,
-                length: -1
+                length: -1,
             });
 
             this.setState({
                 downNotes: copied,
                 recordStartingTime: this.state.recordStartingTime == -1 ? time : this.state.recordStartingTime,
-                recordVideoStartingTime: this.props.getVideoTime()
+                recordVideoStartingTime: this.props.getVideoTime(),
             });
         }
     }
@@ -133,7 +133,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
             this.setState({
                 downNotes: this.state.downNotes,
-                composition: this.state.composition
+                composition: this.state.composition,
             });
         }
     }
@@ -141,7 +141,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     play(): void {
         if (this.state.stateName === ComposerStateName.Idle) {
             this.setState({
-                stateName: ComposerStateName.Playing
+                stateName: ComposerStateName.Playing,
             }, () => {
                 this.startScrubTimer();
                 this.helper.then(player => player.playComposition(this.state.composition));
@@ -163,7 +163,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
             this.setState({
                 stateName: ComposerStateName.Idle,
-                playingNotes: []
+                playingNotes: [],
             });
         }
     }
@@ -172,7 +172,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         if (this.state.stateName === ComposerStateName.Idle) {
             this.handleResetClick();
             this.setState({
-                stateName: ComposerStateName.Recording
+                stateName: ComposerStateName.Recording,
             }, () => {
                 this.props.playVideo();
             });
@@ -183,7 +183,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         this.startScrubTimer();
 
         this.setState({
-            recordStartingTime: new Date().getTime()
+            recordStartingTime: new Date().getTime(),
         }, () => {
             const updateTimer = () => {
                 const seconds = (new Date().getTime() - this.state.recordStartingTime) / 1000;
@@ -201,7 +201,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
             if (this.state.interval === null) {
                 this.setState({
-                    interval: setInterval(updateTimer, 10)
+                    interval: setInterval(updateTimer, 10),
                 });
             }
         });
@@ -236,7 +236,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
         this.setState({
             stateName: ComposerStateName.Idle,
-            downNotes: []
+            downNotes: [],
         });
     }
 
@@ -247,7 +247,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             nameString: note.noteInfo.name,
             height: "10px",
             width: this.convertMillisecondsToPercentage(note.length) + "%",
-            offset: this.convertMillisecondsToPercentage(note.start) + "%"
+            offset: this.convertMillisecondsToPercentage(note.start) + "%",
         };
     }
 
@@ -264,7 +264,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                                 return (
                                     <div key={i} style={[
                                         Composer.styles.note,
-                                        downStyle
+                                        downStyle,
                                     ]}>
                                         {note.name}
                                     </div>
@@ -287,7 +287,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                                                             width: int.width,
                                                             height: int.height,
                                                             left: int.offset,
-                                                            backgroundColor: "orange"
+                                                            backgroundColor: "orange",
                                                         }]}>
                                                         {int.nameString}
                                                     </div>
@@ -348,7 +348,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                 composition: this.state.composition,
                 stateName: ComposerStateName.Idle,
                 downNotes: [],
-                recordStartingTime: -1
+                recordStartingTime: -1,
             });
         }
     }
@@ -356,7 +356,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     private static styles = {
         base: {
             width: "100vw",
-            height: "50vh"
+            height: "50vh",
 
         },
         noteContainer: {
@@ -368,43 +368,43 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             flexDirection: "column",
             WebkitUserSelect: "none",
             backgroundColor: "grey",
-            float: "left"
+            float: "left",
         },
         note: {
             width: "100px",
             height: "100px",
             display: "inline-block",
             backgroundColor: "green",
-            margin: "20px"
+            margin: "20px",
         },
         noteDown: {
-            backgroundColor: "red"
+            backgroundColor: "red",
         },
         timeSeries: {
             height: "100%",
             backgroundColor: color("purple").lighten(1).hex(),
             overflow: "hidden",
-            position: "relative"
+            position: "relative",
         },
         controls: {
             width: "100%",
-            backgroundColor: color("grey").lighten(20).hex()
+            backgroundColor: color("grey").lighten(20).hex(),
         },
         noteRow: {
             width: "100%",
             position: "relative",
-            height: "20px"
+            height: "20px",
         },
         compositionNote: {
-            position: "absolute"
+            position: "absolute",
         },
         scrubBar: {
             position: "absolute",
             width: "2px",
             height: "100%",
             backgroundColor: "blue",
-            top: "0px"
-        }
+            top: "0px",
+        },
     };
 }
 
@@ -428,6 +428,7 @@ export interface IComposerProps {
     pauseVideo: () => void;
     getVideoTime: () => number;
     setVideoTime: (time: number) => void;
+    onReady: () => void;
 }
 
 export interface IComposerState {
