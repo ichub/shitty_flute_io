@@ -1,9 +1,7 @@
-import {MusicPlayerHelper} from "./MusicPlayerHelper";
 import {INoteInfo} from "./models/INoteInfo";
 import {IComposition} from "./models/IComposition";
 const axios = require("axios");
 const PD = require("probability-distributions");
-
 
 export class AudioOutputHelper {
     private notes: INoteInfo[];
@@ -18,7 +16,11 @@ export class AudioOutputHelper {
 
     public static getInstance(notes: INoteInfo[]): Promise<AudioOutputHelper> {
         const result = new AudioOutputHelper(notes);
-        return result.initializeNotes().then(() => Promise.resolve(result));
+        return result.initializeNotes()
+            .then(() => {
+                console.log("initialize notes resolves");
+            })
+            .then(() => Promise.resolve(result));
     }
 
     private initializeNotes(): Promise<void> {
@@ -31,6 +33,9 @@ export class AudioOutputHelper {
         ).then(() => {
             console.log("initialized audio");
             console.log(this.noteToAudioBufferMap);
+        }).catch(err => {
+            console.log(err);
+            Promise.reject(err);
         });
     }
 
@@ -39,7 +44,9 @@ export class AudioOutputHelper {
         return new Promise<AudioBuffer>((resolve, reject) => {
             axios.get(soundFileUrl, {responseType: "arraybuffer"})
                 .then(result => {
-                    return this.audio.decodeAudioData(result.data);
+                    this.audio.decodeAudioData(result.data)
+                        .then(data => resolve(data))
+                        .catch(err => reject(err));
                 })
                 .catch(err => {
                     console.log(err);
@@ -73,17 +80,25 @@ export class AudioOutputHelper {
         source.buffer = audioBuffer;
 
         const gainNode = this.audio.createGain();
-        const sourceNode = this.audio.createBufferSource();
+        const delayNode =this.audio.createDelay(2.);
 
-        let shittiness = 0.05;
+        let shittiness = 0.25;
 
         // TODO: insert a node that does pitch shifting, look up
         // web sound api to figure out how to do this, also figure out
         // what other nodes
 
-        source.connect(sourceNode);
-        sourceNode.connect(gainNode);
-        gainNode.connect(this.audio.destination);
+        source.connect(gainNode);
+        gainNode.connect(delayNode);
+        delayNode.connect(this.audio.destination);
+
+        let delay = 0.;
+
+        if (duration < 1000 && Math.random() < shittiness) {
+            // source.playbackRate.value = PD.rnorm(1, 1, 0.07)[0];
+            delay = Math.abs(PD.rnorm(1, 0, 0.5)[0])
+            delayNode.delayTime.value = delay;
+        }
 
         setTimeout(
             () => {
@@ -91,19 +106,17 @@ export class AudioOutputHelper {
                     0.00001,
                     this.audio.currentTime + 0.04
                 );
-                if (duration < 1000 && Math.random() < shittiness) {
-                    sourceNode.playbackRate.value = PD.lnorm(1, 0, 0.07)[0];
-                }
             },
-            duration); // TODO: if you want to change duration of note this is where you would do that
+            duration + 1000 * delay); // TODO: if you want to change duration of note this is where you would do that
 
-        source.start(0, 0, duration / 1000/* TODO: also here would be the place to change duration as well, do both */);
+        source.start(delay, 0, (duration / 1000) + delay /* TODO: also here would be the place to change duration as well, do both */);
     }
 
     public playComposition(composition: IComposition) {
         for (let note of composition.notes) {
             setTimeout(
                 () => {
+                    console.log("adding note to play queue");
                     this.playNote(note.noteInfo, note.length);
                 },
                 note.start);

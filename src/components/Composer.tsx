@@ -24,6 +24,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
     constructor(props: IComposerProps) {
         super(props);
+        console.log("hello");
 
         this.state = {
             stateName: ComposerStateName.Idle,
@@ -49,9 +50,6 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     reloadData() {
         axios.get(`/composer/${this.props.compositionId}/data`)
             .then((response) => {
-                console.log("the loaded composition state is:");
-                console.log(response.data);
-
                 this.setState({
                     composition: response.data
                 });
