@@ -8,6 +8,7 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
         return (
             <div style={[
                 LandingPageComponent.styles.base,
+                LandingPageComponent.styles.easeIn,
             ]}>
                 <div style={[LandingPageComponent.styles.title]}>shitty recorder</div>
                 <div style={[LandingPageComponent.styles.video]}></div>
@@ -38,6 +39,17 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
             transform: "scale(1)",
         },
     }, "pulse");
+
+    private static readonly fadeInKeyframes = Radium.keyframes({
+        "0%": {
+            opacity: "0",
+            transform: "translatey(-10px)",
+        },
+        "100%": {
+            opacity: "1",
+            transform: "translatey(0px  )",
+        },
+    }, "fadeIn");
 
     private static styles = {
         base: {
@@ -76,6 +88,10 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
         pulse: {
             animation: "x 500ms 0s infinite alternate",
             animationName: LandingPageComponent.pulseKeyframes,
+        },
+        easeIn: {
+            animation: "x 1s 0s ease",
+            animationName: LandingPageComponent.fadeInKeyframes,
         },
     };
 }
