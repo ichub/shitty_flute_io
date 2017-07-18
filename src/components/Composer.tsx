@@ -117,7 +117,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             this.setState({
                 downNotes: copied,
                 recordStartingTime: this.state.recordStartingTime == -1 ? time : this.state.recordStartingTime,
-                recordVideoStartingTime: this.props.getVideoTime(),
+                recordVideoStartingTime: this.state.recordStartingTime == -1 ? this.props.getVideoTime() : this.state.recordStartingTime,
             });
         }
     }
@@ -173,6 +173,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             this.handleResetClick();
             this.setState({
                 stateName: ComposerStateName.Recording,
+                recordStartingTime: -1,
             }, () => {
                 this.props.playVideo();
             });

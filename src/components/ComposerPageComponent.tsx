@@ -83,7 +83,8 @@ export class ComposerPageComponent extends React.Component<IComposerPageComponen
     }
 
     public setVideoTime(time: number) {
-        this.state.videoPlayer.seekTo(time);
+        console.log(time);
+        this.state.videoPlayer.seekTo(time, true);
     }
 
     public onVideoReady(event) {
