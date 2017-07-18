@@ -64,11 +64,11 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
 
     private static readonly fadeInKeyframes = Radium.keyframes({
         "0%": {
-            opacity: "0",
+            opacity: 0,
             transform: "translatey(-10px)",
         },
         "100%": {
-            opacity: "1",
+            opacity: 1,
             transform: "translatey(0px  )",
         },
     }, "fadeIn");
@@ -119,7 +119,7 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
         },
         easeIn: (offset: number) => {
             return {
-                opacity: "0",
+                opacity: 0,
                 animation: `x 1s ${offset}s ease forwards`,
                 animationName: LandingPageComponent.fadeInKeyframes,
             };

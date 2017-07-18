@@ -7,9 +7,7 @@ import * as path from "path";
 import {generateToken} from "./ComposerTokenLoader";
 import {htmlDir} from "./Server";
 import {IComposition} from "../models/IComposition";
-import {FSDataLayer} from "./FSDataLayer";
 import {SQLiteDataLayer} from "./SQLiteDataLayer";
-import {IDataLayer} from "./IDataLayer";
 
 export const ApiController = express.Router();
 export const rootPath = path.join(__dirname, "../../");
@@ -34,7 +32,7 @@ ApiController.get("/composer/:compositionId", (req: express.Request, res: expres
     const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
     const initializedState = {
         pageName: "composer",
-        compositionId: req.params.compositionId
+        compositionId: req.params.compositionId,
     };
 
     res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
@@ -55,6 +53,6 @@ ApiController.get("/composer/:compositionId/data", (req: express.Request, res: e
             .getInstance()
             .then((dataLayer) => {
                 return dataLayer.getComposition(req.params.compositionId);
-            })
+            }),
     );
 });

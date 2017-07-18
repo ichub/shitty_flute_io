@@ -52,9 +52,9 @@ export class SQLiteDataLayer implements IDataLayer {
 
     createTables(): Promise<void> {
         return this.execRunWithPromise(
-            "CREATE TABLE compositions " +
-            "(id VARCHAR(100)," +
-            "name VARCHAR(100))")
+                "CREATE TABLE compositions " +
+                "(id VARCHAR(100)," +
+                "name VARCHAR(100))")
             .then(() => {
                 return this.execRunWithPromise(
                     "CREATE TABLE compositions_notes_map " +
@@ -78,6 +78,8 @@ export class SQLiteDataLayer implements IDataLayer {
                     "(id VARCHAR(100)," +
                     "data TEXT," +
                     "PRIMARY KEY (id))");
+            })
+            .then(() => {
             });
     }
 
@@ -86,7 +88,7 @@ export class SQLiteDataLayer implements IDataLayer {
             "INSERT OR IGNORE INTO composition_json_table (id, data) VALUES (?, ?)",
             [compositionId, JSON.stringify(makeNewIComposition("", compositionId))])
             .then(() => {
-            return this.execGetWithPromise(
+                return this.execGetWithPromise(
                     "SELECT data from composition_json_table WHERE id=?",
                     [compositionId]);
             })
@@ -100,7 +102,9 @@ export class SQLiteDataLayer implements IDataLayer {
         const data = JSON.stringify(composition);
         return this.execRunWithPromise(
             "INSERT INTO composition_json_table (id, data) VALUES (?,?)",
-            [compositionId, data]);
+            [compositionId, data])
+            .then(() => {
+            });
     }
 
     static getInstance(): Promise<SQLiteDataLayer> {

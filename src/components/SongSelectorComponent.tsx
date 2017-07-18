@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Radium from "radium";
 const axios = require("axios");
-const ReactYoutube = require("react-youtube").default as React.Component;
+const ReactYoutube = require("react-youtube").default as any;
 
 @Radium
 export class SongSelectorComponent extends React.Component<ISongSelectorProps, ISongSelectorState> {
