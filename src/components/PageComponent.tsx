@@ -19,7 +19,7 @@ export class PageComponent extends React.Component<IPageComponentProps, IPageCom
                 makeINoteInfo("F", "/res/notes/F-Normal.mp3", "/res/notes/F-Shitty.mp3", "F"),
                 makeINoteInfo("G", "/res/notes/G-Normal.mp3", "/res/notes/G-Shitty.mp3", "G"),
                 makeINoteInfo("A", "/res/notes/A-Normal.mp3", "/res/notes/A-Shitty.mp3", "H"),
-                makeINoteInfo("B", "/res/notes/B-Normal.mp3", "/res/notes/B-Shitty.mp3", "J")
+                makeINoteInfo("B", "/res/notes/B-Normal.mp3", "/res/notes/B-Shitty.mp3", "J"),
             ],
             videoPlayer: null,
         };
@@ -29,9 +29,15 @@ export class PageComponent extends React.Component<IPageComponentProps, IPageCom
         return (
             <div>
                 <div style={[
-                    PageComponent.styles.base
+                    PageComponent.styles.base,
                 ]}>
-                    <Composer compositionId={this.props.compositionId} notes={this.state.notes} playVideo={this.playVideo.bind(this)}/>
+                    <Composer
+                        compositionId={this.props.compositionId}
+                        notes={this.state.notes}
+                        playVideo={this.playVideo.bind(this)}
+                        pauseVideo={this.pauseVideo.bind(this)}
+                        getVideoTime={this.getVideoTime.bind(this)}
+                        setVideoTime={this.setVideoTime.bind(this)}/>
                 </div>
                 <div>
                     <SongSelectorComponent onVideoReady={this._onReady.bind(this)}/>
@@ -41,18 +47,31 @@ export class PageComponent extends React.Component<IPageComponentProps, IPageCom
     }
 
     private static styles = {
-        base: {}
+        base: {},
     };
 
     public playVideo() {
         this.state.videoPlayer.playVideo();
     }
 
+    public pauseVideo() {
+        this.state.videoPlayer.pauseVideo();
+    }
+
+    public getVideoTime() {
+        return this.state.videoPlayer.getCurrentTime();
+    }
+
+    public setVideoTime(time: number) {
+        this.state.videoPlayer.seekTo(time);
+    }
+
     public _onReady(event) {
         // access to player in all event handlers via event.target
         this.setState({
-            videoPlayer: event.target
-        })
+            videoPlayer: event.target,
+        });
+
         event.target.pauseVideo();
     }
 }
