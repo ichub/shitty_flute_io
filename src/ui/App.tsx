@@ -3,16 +3,23 @@ import * as ReactDom from "react-dom";
 import {PageComponent} from "../components/PageComponent";
 import {InitializationState} from "../models/IInitializationState";
 import {LandingPageComponent} from "../components/LandingPageComponent";
+import {StyleRoot} from "radium";
 
 declare const initializedState: InitializationState;
 
 if (initializedState.pageName === "landing") {
-    ReactDom.render(<LandingPageComponent/>, document.getElementById("app-container"));
+    ReactDom.render(
+        <StyleRoot>
+            <LandingPageComponent/>
+        </StyleRoot>,
+        document.getElementById("app-container"));
 } else if (initializedState.pageName === "composerSelect") {
 
 } else if (initializedState.pageName === "composer") {
     ReactDom.render(
-        <PageComponent compositionId={initializedState.compositionId}/>,
+        <StyleRoot>
+            <PageComponent compositionId={initializedState.compositionId}/>
+        </StyleRoot>,
         document.getElementById("app-container"));
 }
 

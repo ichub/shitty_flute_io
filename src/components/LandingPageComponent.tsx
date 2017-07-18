@@ -6,18 +6,19 @@ import * as color from "color";
 export class LandingPageComponent extends React.Component<any, ILandingPageComponentState> {
     public render() {
         return (
-            <div>
-                <div style={[
-                    LandingPageComponent.styles.base,
-                ]}>
-                    <div style={[LandingPageComponent.styles.title]}>shitty recorder</div>
-                    <div style={[LandingPageComponent.styles.video]}></div>
-                    <input
-                        style={[LandingPageComponent.styles.composeButton]}
-                        type="button"
-                        value="compose"
-                        onClick={this.onComposeClick.bind(this)}/>
-                </div>
+            <div style={[
+                LandingPageComponent.styles.base,
+            ]}>
+                <div style={[LandingPageComponent.styles.title]}>shitty recorder</div>
+                <div style={[LandingPageComponent.styles.video]}></div>
+                <input
+                    style={[
+                        LandingPageComponent.styles.composeButton,
+                        LandingPageComponent.styles.pulse,
+                    ]}
+                    type="button"
+                    value="compose"
+                    onClick={this.onComposeClick.bind(this)}/>
             </div>
         );
     }
@@ -28,6 +29,15 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
 
     private static readonly videoAspectRatio = 1920 / 1080;
     private static readonly videoWidth = 100;
+
+    private static readonly pulseKeyframes = Radium.keyframes({
+        "0%": {
+            transform: "scale(1.5)",
+        },
+        "100%": {
+            transform: "scale(1)",
+        },
+    }, "pulse");
 
     private static styles = {
         base: {
@@ -62,6 +72,10 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
             height: LandingPageComponent.videoWidth * LandingPageComponent.videoAspectRatio + "px",
             backgroundColor: color("white").darken(0.5).hex(),
             margin: "50px",
+        },
+        pulse: {
+            animation: "x 500ms 0s infinite alternate",
+            animationName: LandingPageComponent.pulseKeyframes,
         },
     };
 }
