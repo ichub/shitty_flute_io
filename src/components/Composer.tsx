@@ -159,7 +159,6 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     stopPlaying(): void {
         console.log("stop playing");
         if (this.state.stateName === ComposerStateName.Playing) {
-            this.state.player.stop();
             this.props.pauseVideo();
 
             this.setState({
