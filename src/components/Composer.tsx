@@ -6,6 +6,7 @@ import {IComposition, makeNewIComposition} from "../models/IComposition";
 import {ICompositionNote} from "../models/ICompositionNote";
 import {MusicPlayerHelper} from "../MusicPlayerHelper";
 import {AudioOutputHelper} from "../AudioOutputHelper";
+import {GlobalFont} from "../styles/GlobalStyles";
 const axios = require("axios");
 
 @Radium
@@ -255,7 +256,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         window["state"] = this.state.composition;
         return (
             <div>
-                <div style={[Composer.styles.base]}>
+                <div style={[GlobalFont, Composer.styles.base]}>
                     <div style={[Composer.styles.noteContainer]}>
                         {
                             this.props.notes.map((note, i) => {

@@ -7,3 +7,7 @@ export const CardStyle = {
 export const BigText = {
     fontSize: "2em",
 };
+
+export const GlobalFont = {
+    fontFamily: "'Oswald', sans-serif",
+};

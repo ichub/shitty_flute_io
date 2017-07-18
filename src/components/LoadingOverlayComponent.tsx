@@ -1,23 +1,25 @@
 import * as React from "react";
 import * as Radium from "radium";
 import * as color from "color";
+import {GlobalFont} from "../styles/GlobalStyles";
 
 @Radium
 export class LoadingOverlayComponent extends React.Component<ILoadingOverlayComponentProps, ILoadingOverlayComponentState> {
     props: ILoadingOverlayComponentProps;
     state: ILoadingOverlayComponentState;
 
-    constructor(props: ILoadingOverlayComponentProps) {
-        super();
-    }
-
     render() {
         return (
             <div style={[
+                GlobalFont,
                 LoadingOverlayComponent.styles.base,
                 LoadingOverlayComponent.styles.visible(this.props.visible),
             ]}>
-                LoadingOverlayComponent
+                <div style={[
+                    LoadingOverlayComponent.styles.flex,
+                ]}>
+                    Loading...
+                </div>
             </div>
         );
     }
@@ -30,8 +32,15 @@ export class LoadingOverlayComponent extends React.Component<ILoadingOverlayComp
             zIndex: "100",
             top: "0",
             left: "0",
-            backgroundColor: color("white").alpha(0.5),
+            backgroundColor: color("white").alpha(0.8),
         },
+        flex: {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            height: "100%",
+        }
         visible: (visible: boolean) => {
             return {
                 display: visible ? "initial" : "none",
