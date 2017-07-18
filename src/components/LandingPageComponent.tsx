@@ -16,9 +16,19 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                     shitty recorder
                 </div>
                 <div style={[
-                    LandingPageComponent.styles.video,
+                    LandingPageComponent.styles.videoContainer,
                     LandingPageComponent.styles.easeIn(0.25),
-                ]}></div>
+                ]}>
+                    <video style={[
+                        LandingPageComponent.styles.videoElement,
+                    ]}
+                           muted={true}
+                           autoPlay={true}
+                           controls={false}
+                           loop={true}>
+                        <source src="/res/videos/dance.mp4"/>
+                    </video>
+                </div>
                 <div style={[
                     LandingPageComponent.styles.easeIn(0.50),
                 ]}>
@@ -91,11 +101,15 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                 backgroundColor: "black",
             },
         },
-        video: {
+        videoContainer: {
             width: LandingPageComponent.videoWidth + "px",
             height: LandingPageComponent.videoWidth * LandingPageComponent.videoAspectRatio + "px",
             backgroundColor: color("white").darken(0.5).hex(),
             margin: "50px",
+        },
+        videoElement: {
+            width: "100%",
+            height: "100%",
         },
         pulse: (offset: number) => {
             return {
