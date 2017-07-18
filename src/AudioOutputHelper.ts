@@ -36,7 +36,7 @@ export class AudioOutputHelper {
     private initializeSingleNote(note: INoteInfo): Promise<IInitializedSound> {
         return new Promise<IInitializedSound>((resolve, reject) => {
 
-            axios.get(note.soundFileUrl, {responseType: "arraybuffer"})
+            axios.get(note.shittySoundFileUrl, {responseType: "arraybuffer"})
                 .then(result => {
                     return this.audio.decodeAudioData(result.data);
                 })
