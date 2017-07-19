@@ -138,9 +138,7 @@ export class AudioOutputHelper {
         }
     }
 
-    public playListOfNotes(notes: ICompletedNote[]) {
-        const offset = notes[0].start;
-
+    public playListOfNotes(offset: number, notes: ICompletedNote[]) {
         for (let completedNote of notes) {
             setTimeout(
                 () => {

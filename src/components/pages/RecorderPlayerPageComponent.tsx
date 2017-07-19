@@ -33,7 +33,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             recordingYoutubeStartTime: 0,
             recordingYoutubeEndTime: 0,
             hasRecorded: false,
-            recording: []
+            recording: [],
+            startRecordingDateTime: 0,
         };
 
         this.audioOutputHelper = AudioOutputHelper.getInstance(NoteInfoList.notes);
@@ -84,6 +85,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         record end: {this.state.recordingYoutubeEndTime} <br/>
                         has recorded: {this.state.hasRecorded.toString()} <br/>
                         notes recorded: {this.state.recording.length} <br/>
+                        start offset: {this.state.startRecordingDateTime} <br/>
                     </div>
 
                     <br/>
@@ -142,7 +144,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 recordingYoutubeEndTime: 0,
                 stateName: RecorderStateName.FreePlay,
                 hasRecorded: false,
-                recording: []
+                recording: [],
+                startRecordingDateTime: 0,
             });
         }
     }
@@ -152,7 +155,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             this.reset();
             this.setState({
                 stateName: RecorderStateName.Recording,
-                recordingYoutubeStartTime: this.video.getCurrentTime()
+                recordingYoutubeStartTime: this.video.getCurrentTime(),
+                startRecordingDateTime: new Date().getTime()
             });
             this.video.playVideo();
         }
@@ -186,7 +190,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             this.video.playVideo();
 
             this.audioOutputHelper.then(helper => {
-                helper.playListOfNotes(this.state.recording);
+                helper.playListOfNotes(this.state.startRecordingDateTime, this.state.recording);
             });
         }
     }
@@ -223,6 +227,7 @@ export interface IRecorderPlayerPageComponentState {
     noteState: ITotalNoteState;
     recordingYoutubeStartTime: number;
     recordingYoutubeEndTime: number;
+    startRecordingDateTime: number;
     hasRecorded: boolean;
     recording: ICompletedNote[];
 }
