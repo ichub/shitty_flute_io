@@ -1,8 +1,8 @@
 import * as React from "react";
 import * as ReactDom from "react-dom";
 import {InitializationState} from "../models/IInitializationState";
-import {LandingPageComponent} from "../components/LandingPageComponent";
-import {ComposerPageComponent} from "../components/ComposerPageComponent";
+import {LandingPageComponent} from "../components/pages/LandingPageComponent";
+import {ComposerPageComponent} from "../components/pages/ComposerPageComponent";
 import {StyleRoot} from "radium";
 
 declare const initializedState: InitializationState;

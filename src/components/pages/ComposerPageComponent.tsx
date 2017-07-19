@@ -1,9 +1,9 @@
 import * as React from "react";
 import * as Radium from "radium";
-import {Composer} from "./Composer";
-import {INoteInfo, makeINoteInfo} from "../models/INoteInfo";
-import {SongSelectorComponent} from "./SongSelectorComponent";
-import {LoadingOverlayComponent} from "./LoadingOverlayComponent";
+import {Composer} from "../Composer";
+import {INoteInfo, makeINoteInfo} from "../../models/INoteInfo";
+import {SongSelectorComponent} from "../SongSelectorComponent";
+import {LoadingOverlayComponent} from "../LoadingOverlayComponent";
 
 @Radium
 export class ComposerPageComponent extends React.Component<IComposerPageComponentProps, IComposerPageComponentState> {
