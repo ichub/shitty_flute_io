@@ -31,7 +31,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 played: [],
             },
             youtubeVideoId: "HQnC1UHBvWA",
-            stateName: RecorderStateName.FreePlay,
+            stateName: RecorderStateName.Loading,
             recordingYoutubeStartTime: 0,
             recordingYoutubeEndTime: 0,
             hasRecorded: false,
@@ -63,6 +63,10 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 noteState: state,
             });
         });
+
+        setTimeout(() => {
+            this.loadData();
+        }, 0);
     }
 
     private isNoteDown(note: INoteInfo): boolean {
@@ -218,11 +222,31 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     });
                 })
                 .catch((err) => {
+                    console.log(err);
                     this.setState({
-                        error: err
+                        error: err as any
                     })
                 });
         }
+    }
+
+    private loadData() {
+        axios.get(`/recorder/${this.props.editToken}/data`)
+            .then((result) => {
+                console.log("load complete");
+                console.log(result);
+                console.log(result.data);
+                this.setState({
+                    stateName: RecorderStateName.FreePlay
+                });
+                this.setState(result.data || {err: null});
+            })
+            .catch((err) => {
+                console.log(err);
+                this.setState({
+                    error: err as any
+                })
+            });
     }
 
     private getUploadableComposition() {
@@ -272,6 +296,7 @@ export enum RecorderStateName {
     Recording = "recording",
     Playing = "playing",
     Saving = "saving",
+    Loading = "loading",
 }
 
 export interface IRecorderComposition {

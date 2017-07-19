@@ -9,10 +9,13 @@ import {htmlDir} from "./Server";
 import {SQLiteDataLayer} from "./SQLiteDataLayer";
 import {YoutubeApi} from "./YoutubeApi";
 import {ICompositionState} from "../models/ICompositionState";
+import {InMemoryDataLayer} from "./InMemoryDataLayer";
 
 export const ApiController = express.Router();
 export const rootPath = path.join(__dirname, "../../");
 const fs = require("fs");
+
+const dataStore = new InMemoryDataLayer();
 
 function returnJson(res: express.Response, promise: Promise<any>): void {
     promise.then(data => res.json(data)).catch(err => {
@@ -23,9 +26,23 @@ function returnJson(res: express.Response, promise: Promise<any>): void {
     });
 }
 
+ApiController.get("/all-recordings", (req: express.Request, res: express.Response) => {
+    res.json(dataStore);
+});
+
 ApiController.get("/recorder", (req: express.Request, res: express.Response) => {
     let token = generateToken();
     res.redirect(302, "/recorder/" + token);
+});
+
+ApiController.get("/recorder/:editToken/data", (req: express.Request, res: express.Response) => {
+    res.json(dataStore.get(req.params.editToken));
+});
+
+ApiController.post("/recorder/:editToken/save", (req: express.Request, res: express.Response) => {
+    dataStore.save(req.params.editToken, req.body);
+    res.status(200);
+    res.json({});
 });
 
 ApiController.get("/recorder/:editToken", (req: express.Request, res: express.Response) => {
