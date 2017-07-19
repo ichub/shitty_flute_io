@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Radium from "radium";
 import {Composer} from "../Composer";
-import {INoteInfo, makeINoteInfo} from "../../models/INoteInfo";
+import {INoteInfo} from "../../models/INoteInfo";
 import {SongSelectorComponent} from "../SongSelectorComponent";
 import {LoadingOverlayComponent} from "../LoadingOverlayComponent";
 import {NoteInfoList} from "../../models/NoteInfoList";
