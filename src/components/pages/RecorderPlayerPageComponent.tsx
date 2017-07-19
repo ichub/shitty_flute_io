@@ -26,7 +26,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 down: [],
                 played: [],
             },
-            youtubeVideoId: "HQnC1UHBvWA"
+            youtubeVideoId: "HQnC1UHBvWA",
+            stateName: RecorderStateName.FreePlay
         };
 
         this.audioOutputHelper = AudioOutputHelper.getInstance(NoteInfoList.notes);
@@ -78,7 +79,11 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     }
                 </div>
                 <div>
-                    <VideoPlayer videoId={this.state.youtubeVideoId} onVideoReady={this.onVideoReady.bind(this)}/>
+                    <VideoPlayer
+                        videoId={this.state.youtubeVideoId}
+                        onVideoReady={this.onVideoReady.bind(this)}
+                        canInteract={this.state.stateName == RecorderStateName.FreePlay}
+                    />
                 </div>
             </div>
         );
@@ -96,6 +101,13 @@ export interface IRecorderPlayerPageComponentProps {
 }
 
 export interface IRecorderPlayerPageComponentState {
+    stateName: RecorderStateName;
     youtubeVideoId: string;
     noteState: ITotalNoteState;
+}
+
+export enum RecorderStateName {
+    FreePlay,
+    Recording,
+    Playing
 }

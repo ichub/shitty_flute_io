@@ -16,7 +16,7 @@ export class VideoPlayer extends React.Component<IVideoPlayerProps, IVideoPlayer
             width: VideoPlayer.width,
             playerVars: { // https://developers.google.com/youtube/player_parameters
                 autoplay: 1,
-                controls: 0,
+                //controls: 0,
                 disablekb: 1,
                 modestbranding: 1,
                 rel: 0,
@@ -32,9 +32,13 @@ export class VideoPlayer extends React.Component<IVideoPlayerProps, IVideoPlayer
                         opts={opts}
                         onReady={this.props.onVideoReady}
                     />
-                    <div style={[VideoPlayer.styles.overlay]}>
+                    {
+                        !this.props.canInteract ?
+                            <div style={[VideoPlayer.styles.overlay]}>
 
-                    </div>
+                            </div> :
+                            null
+                    }
                 </div>
                 <div style={[
                     GlobalFont,
@@ -78,10 +82,10 @@ export class VideoPlayer extends React.Component<IVideoPlayerProps, IVideoPlayer
 export interface IVideoPlayerProps {
     onVideoReady: () => void;
     videoId: string;
+    canInteract: boolean;
 }
 
 export interface IVideoPlayerState {
-
 }
 
 export interface IYoutubeVideoPlayer {
