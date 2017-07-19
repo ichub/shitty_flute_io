@@ -80,9 +80,9 @@ export class AudioOutputHelper {
         source.buffer = audioBuffer;
 
         const gainNode = this.audio.createGain();
-        const delayNode =this.audio.createDelay(2.);
+        const delayNode =this.audio.createDelay(1.);
 
-        let shittiness = 0.25;
+        let shittiness = 0.1;
 
         // TODO: insert a node that does pitch shifting, look up
         // web sound api to figure out how to do this, also figure out
@@ -95,8 +95,8 @@ export class AudioOutputHelper {
         let delay = 0.;
 
         if (duration < 1000 && Math.random() < shittiness) {
-            // source.playbackRate.value = PD.rnorm(1, 1, 0.07)[0];
-            delay = Math.abs(PD.rnorm(1, 0, 0.5)[0])
+            source.playbackRate.value = PD.rnorm(1, 1, 0.07)[0];
+            delay = Math.abs(PD.rnorm(1, 0, 0.25)[0])
             delayNode.delayTime.value = delay;
         }
 
