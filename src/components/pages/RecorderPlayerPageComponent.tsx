@@ -35,7 +35,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 down: [],
                 played: [],
             },
-            youtubeVideoId: "HQnC1UHBvWA",
+            youtubeVideoId: "",
             stateName: RecorderStateName.Loading,
             recordingYoutubeStartTime: 0,
             recordingYoutubeEndTime: 0,
@@ -168,7 +168,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     }
 
     private handleVideoIdChange() {
-        if (this.state.stateName !== RecorderStateName.FreePlay) {
+        if (this.state.stateName === RecorderStateName.FreePlay) {
+            console.log("changing state");
             this.setState({
                 youtubeVideoId: this.refs.youtubeInput.value
             });
