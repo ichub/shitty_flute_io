@@ -13,7 +13,7 @@ export class SongSelectorComponent extends React.Component<ISongSelectorProps, I
             height: SongSelectorComponent.height,
             width: SongSelectorComponent.width,
             playerVars: { // https://developers.google.com/youtube/player_parameters
-                autoplay: 0,
+                autoplay: 1,
                 controls: 0,
                 disablekb: 1,
                 modestbranding: 1,
