@@ -218,7 +218,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 }
 
 export interface IRecorderPlayerPageComponentProps {
-
+    editToken: string;
 }
 
 export interface IRecorderPlayerPageComponentState {

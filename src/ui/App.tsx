@@ -27,7 +27,7 @@ if (initializedState.pageName === "landing") {
 } else if (initializedState.pageName === "recorder") {
     ReactDom.render(
         <StyleRoot>
-            <RecorderPlayerPageComponent />
+            <RecorderPlayerPageComponent editToken={initializedState.editToken}/>
         </StyleRoot>,
         document.getElementById("app-container"));
 }

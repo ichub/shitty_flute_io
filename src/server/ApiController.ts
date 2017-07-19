@@ -13,7 +13,6 @@ import {ICompositionState} from "../models/ICompositionState";
 export const ApiController = express.Router();
 export const rootPath = path.join(__dirname, "../../");
 const fs = require("fs");
-// export const dataLayer: IDataLayer = new MockDataLayer();
 
 function returnJson(res: express.Response, promise: Promise<any>): void {
     promise.then(data => res.json(data)).catch(err => {
@@ -25,10 +24,16 @@ function returnJson(res: express.Response, promise: Promise<any>): void {
 }
 
 ApiController.get("/recorder", (req: express.Request, res: express.Response) => {
+    let token = generateToken();
+    res.redirect(302, "/recorder/" + token);
+});
+
+ApiController.get("/recorder/:editToken", (req: express.Request, res: express.Response) => {
     const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
 
     const initializedState = {
         pageName: "recorder",
+        editToken: req.params.editToken,
     };
 
     res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
