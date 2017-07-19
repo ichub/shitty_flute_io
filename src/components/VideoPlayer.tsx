@@ -15,7 +15,7 @@ export class VideoPlayer extends React.Component<IVideoPlayerProps, IVideoPlayer
             height: VideoPlayer.height,
             width: VideoPlayer.width,
             playerVars: { // https://developers.google.com/youtube/player_parameters
-                autoplay: 1,
+                autoplay: 0,
                 //controls: 0,
                 disablekb: 1,
                 modestbranding: 1,
