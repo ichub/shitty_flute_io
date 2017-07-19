@@ -36,8 +36,8 @@ export class SongSelectorComponent extends React.Component<ISongSelectorProps, I
         );
     }
 
-    private static readonly width = 640;
-    private static readonly height = 390;
+    private static readonly width = 320;
+    private static readonly height = 195;
 
     private static styles = {
         container: {
