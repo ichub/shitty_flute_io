@@ -38,6 +38,16 @@ ApiController.get("/composer/:compositionId", (req: express.Request, res: expres
     res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
 });
 
+ApiController.get("/composer/view/:viewToken", (req: express.Request, res: express.Response) => {
+    const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
+    const initializedState = {
+        pageName: "composer-view",
+        viewToken: req.params.viewToken
+    };
+
+    res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
+});
+
 ApiController.post("/composer/:compositionId", (req: express.Request, res: express.Response) => {
     let composition = req.body as IComposition;
     returnJson(res,

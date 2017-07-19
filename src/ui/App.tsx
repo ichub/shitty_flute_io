@@ -21,6 +21,8 @@ if (initializedState.pageName === "landing") {
             <ComposerPageComponent compositionId={initializedState.compositionId}/>
         </StyleRoot>,
         document.getElementById("app-container"));
+} else if (initializationState.pageName === "composer-view") {
+
 }
 
 console.log(`the current page is: ${initializedState.pageName}`);
