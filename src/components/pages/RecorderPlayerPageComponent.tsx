@@ -184,6 +184,10 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
             this.video.seekTo(this.state.recordingYoutubeStartTime);
             this.video.playVideo();
+
+            this.audioOutputHelper.then(helper => {
+                helper.playListOfNotes(this.state.recording);
+            });
         }
     }
 

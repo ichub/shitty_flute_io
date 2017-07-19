@@ -1,6 +1,8 @@
 import {INoteInfo} from "./models/INoteInfo";
 import {IComposition} from "./models/IComposition";
 import {ICompositionState} from "./models/ICompositionState";
+import {ICompletedNote} from "./NoteKeyboardManager";
+
 const axios = require("axios");
 const PD = require("probability-distributions");
 
@@ -133,6 +135,18 @@ export class AudioOutputHelper {
                     this.playNote(note.noteInfo, false, note.length);
                 },
                 note.start);
+        }
+    }
+
+    public playListOfNotes(notes: ICompletedNote[]) {
+        const offset = notes[0].start;
+
+        for (let completedNote of notes) {
+            setTimeout(
+                () => {
+                    this.playNote(completedNote.note, false, completedNote.end - completedNote.start);
+                },
+                completedNote.start - offset);
         }
     }
 }
