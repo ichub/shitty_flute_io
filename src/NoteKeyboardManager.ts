@@ -22,13 +22,16 @@ export class NoteKeyboardManager extends EventEmitter {
         return note.keyboardCharacter.toLowerCase() === e.key.toLowerCase();
     }
 
-    private addDownNote(note: INoteInfo) {
+    private addDownNote(note: INoteInfo): boolean {
         if (!this.down.filter(down => note.name === down.note.name)[0]) {
             this.down.push({
                 note: note,
                 start: new Date().getTime(),
             });
+            return true;
         }
+
+        return false;
     }
 
     private removeDownNote(note: INoteInfo) {
@@ -49,9 +52,10 @@ export class NoteKeyboardManager extends EventEmitter {
         document.addEventListener("keydown", (e: KeyboardEvent) => {
             for (let note of this.notes) {
                 if (NoteKeyboardManager.isKeyboardEventForNote(note, e)) {
-                    this.addDownNote(note);
-                    this.emit(NoteKeyboardManager.NOTE_START, note);
-                    this.emitStateChanged();
+                    if (this.addDownNote(note)) {
+                        this.emit(NoteKeyboardManager.NOTE_START, note);
+                        this.emitStateChanged();
+                    }
                 }
             }
         });
