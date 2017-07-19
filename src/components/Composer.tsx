@@ -271,6 +271,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             stateName: ComposerStateName.Idle,
             downNotes: [],
         });
+        console.log(JSON.stringify(this.state.compositionState));
     }
 
     generateNoteInInterface(note: ICompositionNote): IClickedNoteLayoutParams {

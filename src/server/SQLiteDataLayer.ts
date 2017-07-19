@@ -42,23 +42,23 @@ export class SQLiteDataLayer implements IDataLayer {
 
     createTables(): Promise<void> {
         return this.execRunWithPromise(
+
+            // TODO: FIGURE OUT WHY id ISN'T ACTUALLY AUTOINCREMENTING (it's always null when not specified in the INSERT???)
             "CREATE TABLE compositions " +
-            "(id INT AUTO_INCREMENT," +
-            "edit_token VARCHAR(100)," +
+            "(edit_token VARCHAR(100)," +
             "view_token VARCHAR(100)," +
             "name VARCHAR(100)," +
             "youtube_id VARCHAR(100)," +
-            "PRIMARY KEY (id)," +
-            "UNIQUE (edit_token)," +
+            "PRIMARY KEY (edit_token)," +
             "UNIQUE (view_token))")
             .then(() => {
                 return this.execRunWithPromise(
                     "CREATE TABLE compositions_notes_map " +
-                    "(composition_id INT," +
+                    "(composition_edit_token INT," +
                     "note_id INT," +
                     "start INT," +
                     "length INT" +
-                    "FOREIGN KEY composition_id REFERENCES compositions(id))");
+                    "FOREIGN KEY composition_edit_token REFERENCES compositions(edit_token))");
             })
             .then(() => {
                 return this.execRunWithPromise(
@@ -85,15 +85,14 @@ export class SQLiteDataLayer implements IDataLayer {
     }
 
     getCompositionFromRow(row: RunResult): Promise<IComposition> {
-        let id = (row as any).id;
-        let editToken = (row as any).editToken;
-        let viewToken = (row as any).viewToken;
+        let editToken = (row as any).edit_token;
+        let viewToken = (row as any).view_token;
         let name = (row as any).id;
         let youtubeId = (row as any).youtube_id;
 
         return this.execAllWithPromise(
-            "SELECT * from compositions_notes_map WHERE composition_id=?",
-            [id])
+            "SELECT * from compositions_notes_map WHERE composition_edit_token=?",
+            [editToken])
             .then(noteMapRows => {
                 let notes: ICompositionNote[] = [];
                 for (let noteMapRow of noteMapRows) {
@@ -105,7 +104,7 @@ export class SQLiteDataLayer implements IDataLayer {
                     notes.push(compositionNote);
                 }
                 let compositionState = makeICompositionState(name, youtubeId, notes);
-                let composition = makeIComposition(id, editToken, viewToken, compositionState);
+                let composition = makeIComposition(editToken, viewToken, compositionState);
                 return composition;
             });
     }
@@ -124,6 +123,7 @@ export class SQLiteDataLayer implements IDataLayer {
                     [editToken]);
             })
             .then(row => {
+                console.log(row);
                 return this.getCompositionFromRow(row);
             });
     }
@@ -172,25 +172,25 @@ export class SQLiteDataLayer implements IDataLayer {
     }
 
     saveComposition(editToken: string, compositionState: ICompositionState): Promise<void> {
+        // TODO: FIX SAVE ROUTE
         // remove everything in compositions_notes_map for this composition
-        let compId: number;
         console.log("trying to get row for save operation");
         return this.execGetWithPromise(
-            "SELECT id from compositions WHERE edit_token=?",
+            "SELECT * from compositions WHERE edit_token=?",
             [editToken])
             .then(row => {
                 console.log("successfully found row");
-                compId = (row as any).id;
+                console.log(row);
                 return this.execRunWithPromise(
-                    "DELETE FROM compositions_notes_map WHERE composition_id=?",
-                    [compId]);
+                    "DELETE FROM compositions_notes_map WHERE composition_edit_token=?",
+                    [editToken]);
             })
             .then(() => {
                 return Promise.all(
                     compositionState.notes.map(note => {
                             this.execRunWithPromise(
-                                "INSERT INTO compositions_notes_map (composition_id, note_id, start, length) VALUES (?, ?, ?, ?)",
-                                [compId, note.noteInfo.noteId, note.start, note.length]
+                                "INSERT INTO compositions_notes_map (composition_edit_token, note_id, start, length) VALUES (?, ?, ?, ?)",
+                                [editToken, note.noteInfo.noteId, note.start, note.length]
                             );
                         }
                     )
@@ -198,8 +198,8 @@ export class SQLiteDataLayer implements IDataLayer {
             })
             .then(() => {
                 return this.execRunWithPromise(
-                    "UPDATE compositions SET name=?, youtube_id=? WHERE id=?",
-                    [compositionState.compName, compositionState.youtubeId, compId]
+                    "UPDATE compositions SET name=?, youtube_id=? WHERE editToken=?",
+                    [compositionState.compName, compositionState.youtubeId, editToken]
                 );
             })
             .then(() => {})
