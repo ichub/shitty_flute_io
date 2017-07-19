@@ -421,12 +421,14 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         },
         compositionNote: {
             position: "absolute",
-            height: "100%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "black",
             color: "white",
+            flex: 1,
+            marginTop: "10px",
+            marginBottom: "10px",
         },
         scrubBar: {
             position: "absolute",
