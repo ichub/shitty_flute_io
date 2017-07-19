@@ -21,7 +21,7 @@ if (initializedState.pageName === "landing") {
             <ComposerPageComponent compositionId={initializedState.compositionId}/>
         </StyleRoot>,
         document.getElementById("app-container"));
-} else if (initializationState.pageName === "composer-view") {
+} else if (initializedState.pageName === "composer-view") {
 
 }
 
