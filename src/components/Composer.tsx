@@ -55,6 +55,10 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         return milliseconds / totalMilliseconds * 100;
     }
 
+    hasRecorded(): boolean {
+        return this.state.recordVideoStartingTime != -1;
+    }
+
     reloadData() {
         axios.get(`/composer/${this.props.compositionId}/data`)
             .then((response) => {
@@ -323,7 +327,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                         type="button"
                         value="play"
                         onClick={this.play.bind(this)}
-                        disabled={this.state.stateName !== ComposerStateName.Idle}/>
+                        disabled={this.state.stateName !== ComposerStateName.Idle || !this.hasRecorded()}/>
                     <input
                         type="button"
                         value="record"
