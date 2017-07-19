@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Radium from "radium";
+import {GlobalFont} from "../styles/GlobalStyles";
 const axios = require("axios");
 const ReactYoutube = require("react-youtube").default as any;
 
@@ -23,14 +24,22 @@ export class SongSelectorComponent extends React.Component<ISongSelectorProps, I
         };
 
         return (
-            <div style={[SongSelectorComponent.styles.container]}>
-                <ReactYoutube
-                    videoId="HQnC1UHBvWA"
-                    opts={opts}
-                    onReady={this.props.onVideoReady}
-                />
-                <div style={[SongSelectorComponent.styles.overlay]}>
+            <div style={[SongSelectorComponent.styles.base]}>
+                <div style={[SongSelectorComponent.styles.videoContainer]}>
+                    <ReactYoutube
+                        videoId="HQnC1UHBvWA"
+                        opts={opts}
+                        onReady={this.props.onVideoReady}
+                    />
+                    <div style={[SongSelectorComponent.styles.overlay]}>
 
+                    </div>
+                </div>
+                <div style={[
+                    GlobalFont,
+                    SongSelectorComponent.styles.videoTitle,
+                ]}>
+                    {this.props.videoTitle}
                 </div>
             </div>
         );
@@ -40,7 +49,11 @@ export class SongSelectorComponent extends React.Component<ISongSelectorProps, I
     private static readonly height = 195;
 
     private static styles = {
-        container: {
+        base: {
+            width: SongSelectorComponent.width,
+            margin: "50px",
+        },
+        videoContainer: {
             width: SongSelectorComponent.width + "px",
             height: SongSelectorComponent.height + "px",
             position: "relative",
@@ -52,11 +65,19 @@ export class SongSelectorComponent extends React.Component<ISongSelectorProps, I
             top: 0,
             left: 0,
         },
+        videoTitle: {
+            fontSize: "0.9em",
+            fontWeight: "bold",
+            marginTop: "5px",
+            width: "100%",
+            textAlign: "center",
+        },
     };
 }
 
 export interface ISongSelectorProps {
     onVideoReady: () => void;
+    videoTitle: string;
 }
 
 export interface ISongSelectorState {

@@ -25,6 +25,7 @@ export class ComposerPageComponent extends React.Component<IComposerPageComponen
             videoPlayer: null,
             totalAsyncComponents: 2,
             asyncComponentsLoaded: 0,
+            videoTitle: "",
         };
     }
 
@@ -45,7 +46,9 @@ export class ComposerPageComponent extends React.Component<IComposerPageComponen
                         setVideoTime={this.setVideoTime.bind(this)}/>
                 </div>
                 <div>
-                    <SongSelectorComponent onVideoReady={this.onVideoReady.bind(this)}/>
+                    <SongSelectorComponent
+                        onVideoReady={this.onVideoReady.bind(this)}
+                        videoTitle={this.state.videoTitle}/>
                 </div>
 
                 <LoadingOverlayComponent visible={!this.isReady()}/>
@@ -58,7 +61,9 @@ export class ComposerPageComponent extends React.Component<IComposerPageComponen
     };
 
     setVideoTitle(title: string) {
-        console.log(title);
+        this.setState({
+            videoTitle: title,
+        });
     }
 
     isReady() {
@@ -109,6 +114,7 @@ export interface IComposerPageComponentState {
     videoPlayer: any;
     totalAsyncComponents: number;
     asyncComponentsLoaded: number;
+    videoTitle: string;
 }
 
 export interface IComposerPageComponentProps {
