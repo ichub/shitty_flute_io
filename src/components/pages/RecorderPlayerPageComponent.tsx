@@ -180,9 +180,10 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             this.stopPlayingTimeout = setTimeout(() => {
                 this.stopPlayingTimeout = null;
                 this.stopPlayback();
-            }, this.state.recordingYoutubeEndTime - this.state.recordingYoutubeStartTime);
+            }, (this.state.recordingYoutubeEndTime - this.state.recordingYoutubeStartTime) * 1000);
 
             this.video.seekTo(this.state.recordingYoutubeStartTime);
+            this.video.playVideo();
         }
     }
 
