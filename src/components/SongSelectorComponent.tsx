@@ -52,6 +52,7 @@ export class SongSelectorComponent extends React.Component<ISongSelectorProps, I
         base: {
             width: SongSelectorComponent.width,
             margin: "50px",
+            display: "none",
         },
         videoContainer: {
             width: SongSelectorComponent.width + "px",
