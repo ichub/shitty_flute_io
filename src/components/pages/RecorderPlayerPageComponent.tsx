@@ -45,7 +45,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         });
 
         this.noteKeyboardManager.on(NoteKeyboardManager.STATE_CHANGED, (state: ITotalNoteState) => {
-            console.log(state);
             this.setState({
                 noteState: state,
             });

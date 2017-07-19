@@ -5,8 +5,6 @@ export class SingleNotePlayer {
     private noteStopMap = {};
 
     playNote(audio: AudioOutputHelper, note: INoteInfo) {
-        console.log("playing note");
-
         if (!this.noteStopMap[note.name]) {
             this.noteStopMap[note.name] = audio.playNote(note, true, 100000);
         }
