@@ -8,6 +8,7 @@ import {generateToken} from "./ComposerTokenLoader";
 import {htmlDir} from "./Server";
 import {IComposition} from "../models/IComposition";
 import {SQLiteDataLayer} from "./SQLiteDataLayer";
+import {YoutubeApi} from "./YoutubeApi";
 
 export const ApiController = express.Router();
 export const rootPath = path.join(__dirname, "../../");
@@ -42,7 +43,7 @@ ApiController.get("/composer/view/:viewToken", (req: express.Request, res: expre
     const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
     const initializedState = {
         pageName: "composer-view",
-        viewToken: req.params.viewToken
+        viewToken: req.params.viewToken,
     };
 
     res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
@@ -76,4 +77,13 @@ ApiController.get("/composer/view/:viewToken/data", (req: express.Request, res: 
                 return dataLayer.getCompositionView(req.params.viewToken);
             }),
     );
+});
+
+ApiController.get("/video-title/:youtubeVideoId", (req: express.Request, res: express.Response) => {
+    returnJson(res,
+        YoutubeApi.getInfoOnVideo(req.params.youtubeVideoId)
+            .then(info => {
+                return Promise.resolve({title: info.items[0].snippet.title});
+            }));
+
 });

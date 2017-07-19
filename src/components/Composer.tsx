@@ -38,6 +38,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             interval: null,
             player: null,
             playingNotes: [],
+            videoTitle: "",
         };
 
         this.helper = AudioOutputHelper.getInstance(props.notes);
@@ -59,8 +60,19 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             .then((response) => {
                 this.setState({
                     composition: response.data,
+                }, () => {
+                    axios.get(`/video-title/${this.state.composition.youtubeId}`)
+                        .then((response) => {
+                            this.setState({
+                                videoTitle: response.data.title,
+                            });
+
+                            this.props.setVideoTitle(response.data.title);
+                        });
+
                 });
             });
+
     }
 
     componentDidMount() {
@@ -436,6 +448,7 @@ export interface IComposerProps {
     pauseVideo: () => void;
     getVideoTime: () => number;
     setVideoTime: (time: number) => void;
+    setVideoTitle: (title: string) => void;
     onReady: () => void;
 }
 
@@ -448,4 +461,5 @@ export interface IComposerState {
     recordVideoStartingTime: number;
     interval: NodeJS.Timer;
     player: MusicPlayerHelper;
+    videoTitle: string;
 }

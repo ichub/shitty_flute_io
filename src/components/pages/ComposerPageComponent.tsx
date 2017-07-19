@@ -38,6 +38,7 @@ export class ComposerPageComponent extends React.Component<IComposerPageComponen
                         onReady={this.onComposerReady.bind(this)}
                         compositionId={this.props.compositionId}
                         notes={this.state.notes}
+                        setVideoTitle={this.setVideoTitle.bind(this)}
                         playVideo={this.playVideo.bind(this)}
                         pauseVideo={this.pauseVideo.bind(this)}
                         getVideoTime={this.getVideoTime.bind(this)}
@@ -55,6 +56,10 @@ export class ComposerPageComponent extends React.Component<IComposerPageComponen
     private static styles = {
         base: {},
     };
+
+    setVideoTitle(title: string) {
+        console.log(title);
+    }
 
     isReady() {
         return this.state.asyncComponentsLoaded >= this.state.totalAsyncComponents;
