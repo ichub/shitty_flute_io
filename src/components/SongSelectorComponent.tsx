@@ -14,6 +14,11 @@ export class SongSelectorComponent extends React.Component<ISongSelectorProps, I
             width: "640",
             playerVars: { // https://developers.google.com/youtube/player_parameters
                 autoplay: 1,
+                controls: 0,
+                disablekb: 1,
+                modestbranding: 1,
+                rel: 0,
+                showinfo: 0
             },
         };
 
