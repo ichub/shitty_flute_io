@@ -8,6 +8,8 @@ import {SingleNotePlayer} from "../../SingleNotePlayer";
 import {ICompletedNote, ITotalNoteState, NoteKeyboardManager} from "../../NoteKeyboardManager";
 import {INoteInfo} from "../../models/INoteInfo";
 
+const axios = require("axios");
+
 @Radium
 export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayerPageComponentProps, IRecorderPlayerPageComponentState> {
     props: IRecorderPlayerPageComponentProps;
@@ -35,6 +37,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             hasRecorded: false,
             recording: [],
             startRecordingDateTime: 0,
+            err: null
         };
 
         this.audioOutputHelper = AudioOutputHelper.getInstance(NoteInfoList.notes);
@@ -115,6 +118,12 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         value="reset"
                         onClick={this.reset.bind(this)}
                         disabled={this.state.stateName !== RecorderStateName.FreePlay}/>
+                    <input
+                        type="button"
+                        value="save"
+                        onClick={this.save.bind(this)}
+                        disabled={this.state.stateName !== RecorderStateName.FreePlay}/>
+
                 </div>
 
                 <br/>
@@ -195,6 +204,31 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         }
     }
 
+    private save() {
+        if (this.state.stateName == RecorderStateName.FreePlay) {
+            this.setState({
+                stateName: RecorderStateName.Saving
+            });
+
+            axios.post(`/recorder/${this.props.editToken}/save`, this.getUploadableComposition())
+                .then((result) => {
+                    console.log("save complete");
+                    this.setState({
+                        stateName: RecorderStateName.FreePlay
+                    });
+                })
+                .catch((err) => {
+                    this.setState({
+                        error: err
+                    })
+                });
+        }
+    }
+
+    private getUploadableComposition() {
+        return this.state;
+    }
+
     private stopPlayback() {
         if (this.state.stateName === RecorderStateName.Playing) {
             this.setState({
@@ -230,10 +264,20 @@ export interface IRecorderPlayerPageComponentState {
     startRecordingDateTime: number;
     hasRecorded: boolean;
     recording: ICompletedNote[];
+    err: Error;
 }
 
 export enum RecorderStateName {
     FreePlay = "free_play",
     Recording = "recording",
-    Playing = "playing"
+    Playing = "playing",
+    Saving = "saving",
+}
+
+export interface IRecorderComposition {
+    recording: ICompletedNote[];
+    recordingYoutubeStartTime: number;
+    recordingYoutubeEndTime: number;
+    startRecordingDateTime: number;
+    youtubeVideoId: string;
 }
