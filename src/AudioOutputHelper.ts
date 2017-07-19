@@ -73,7 +73,7 @@ export class AudioOutputHelper {
         return arr[Math.floor(Math.random() * arr.length)];
     }
 
-    private playNote(note: INoteInfo, duration: number) {
+    public playNote(note: INoteInfo, loop: boolean, duration: number) {
         console.log("attempting to play note");
         const audioBuffer = this.getRandomElement(this.noteToAudioBufferMap[note.name]); // TODO: pick random buffer from array of buffers
         const source = this.audio.createBufferSource();
@@ -94,22 +94,37 @@ export class AudioOutputHelper {
 
         let delay = 0.;
 
-        if (duration < 1000 && Math.random() < shittiness) {
-            source.playbackRate.value = PD.rnorm(1, 1, 0.07)[0];
-            delay = Math.abs(PD.rnorm(1, 0, 0.25)[0]);
-            delayNode.delayTime.value = delay;
+        if (!loop) {
+            if (duration < 1000 && Math.random() < shittiness) {
+                source.playbackRate.value = PD.rnorm(1, 1, 0.07)[0];
+                delay = Math.abs(PD.rnorm(1, 0, 0.25)[0]);
+                delayNode.delayTime.value = delay;
+            }
+
+            setTimeout(
+                () => {
+                    gainNode.gain.exponentialRampToValueAtTime(
+                        0.00001,
+                        this.audio.currentTime + 0.04,
+                    );
+                },
+                duration + 1000 * delay); // TODO: if you want to change duration of note this is where you would do that
         }
 
-        setTimeout(
-            () => {
+        if (loop) {
+            source.start();
+        } else {
+            source.start(delay, 0, (duration / 1000) + delay);
+        }
+
+        return {
+            stop: () => {
                 gainNode.gain.exponentialRampToValueAtTime(
                     0.00001,
                     this.audio.currentTime + 0.04,
                 );
             },
-            duration + 1000 * delay); // TODO: if you want to change duration of note this is where you would do that
-
-        source.start(delay, 0, (duration / 1000) + delay /* TODO: also here would be the place to change duration as well, do both */);
+        };
     }
 
     public playComposition(composition: IComposition) {
@@ -117,7 +132,7 @@ export class AudioOutputHelper {
             setTimeout(
                 () => {
                     console.log("adding note to play queue");
-                    this.playNote(note.noteInfo, note.length);
+                    this.playNote(note.noteInfo, false, note.length);
                 },
                 note.start);
         }

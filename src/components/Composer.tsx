@@ -22,6 +22,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     };
 
     private helper: Promise<AudioOutputHelper>;
+    private soundCancellationMap = {};
 
     constructor(props: IComposerProps) {
         super();
@@ -85,9 +86,13 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
     attachKeyboardEventListeners() {
         document.addEventListener("keydown", (e: KeyboardEvent) => {
-            if (this.state.stateName == ComposerStateName.Recording) {
-                for (let i = 0; i < this.props.notes.length; i++) {
-                    if (this.isKeyboardEventForNote(this.props.notes[i], e)) {
+            for (let i = 0; i < this.props.notes.length; i++) {
+                if (this.isKeyboardEventForNote(this.props.notes[i], e)) {
+                    if (!this.soundCancellationMap[this.props.notes[i].name]) {
+                        this.soundCancellationMap[this.props.notes[i].name] = this.helper.then(helper => Promise.resolve(helper.playNote(this.props.notes[i], true, -1)));
+                    }
+
+                    if (this.state.stateName == ComposerStateName.Recording) {
                         this.handleNoteDown(this.props.notes[i]);
                     }
                 }
@@ -95,9 +100,14 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         });
 
         document.addEventListener("keyup", (e: KeyboardEvent) => {
-            if (this.state.stateName == ComposerStateName.Recording) {
-                for (let i = 0; i < this.props.notes.length; i++) {
-                    if (this.isKeyboardEventForNote(this.props.notes[i], e)) {
+            for (let i = 0; i < this.props.notes.length; i++) {
+                if (this.isKeyboardEventForNote(this.props.notes[i], e)) {
+                    this.soundCancellationMap[this.props.notes[i].name].then((c) => {
+                        c.stop();
+                        this.soundCancellationMap[this.props.notes[i].name] = null;
+                    });
+
+                    if (this.state.stateName == ComposerStateName.Recording) {
                         this.handleNoteUp(this.props.notes[i]);
                     }
                 }
@@ -121,6 +131,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
     handleNoteDown(note: INoteInfo) {
         if (!this.isNoteDown(note)) {
+
             const copied = this.state.downNotes.slice();
             let time = new Date().getTime();
 
