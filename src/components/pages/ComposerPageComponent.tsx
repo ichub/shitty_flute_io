@@ -2,7 +2,8 @@ import * as React from "react";
 import * as Radium from "radium";
 import {Composer} from "../Composer";
 import {INoteInfo} from "../../models/INoteInfo";
-import {SongSelectorComponent} from "../SongSelectorComponent";
+import {INoteInfo, makeINoteInfo} from "../../models/INoteInfo";
+import {VideoPlayer} from "../VideoPlayer";
 import {LoadingOverlayComponent} from "../LoadingOverlayComponent";
 import {NoteInfoList} from "../../models/NoteInfoList";
 
@@ -39,7 +40,7 @@ export class ComposerPageComponent extends React.Component<IComposerPageComponen
                         setVideoTime={this.setVideoTime.bind(this)}/>
                 </div>
                 <div>
-                    <SongSelectorComponent
+                    <VideoPlayer
                         onVideoReady={this.onVideoReady.bind(this)}
                         videoTitle={this.state.videoTitle}/>
                 </div>

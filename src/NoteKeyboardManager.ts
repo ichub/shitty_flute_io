@@ -70,6 +70,10 @@ export class NoteKeyboardManager extends EventEmitter {
             }
         });
     }
+
+    public clearPlayedNotes(): void {
+        this.played = [];
+    }
 }
 
 export interface IDownNote {

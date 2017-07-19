@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Radium from "radium";
 import {RecorderNote} from "../RecorderNote";
+import {IYoutubeVideoPlayer, VideoPlayer} from "../VideoPlayer";
 import {AudioOutputHelper} from "../../AudioOutputHelper";
 import {NoteInfoList} from "../../models/NoteInfoList";
 import {SingleNotePlayer} from "../../SingleNotePlayer";
@@ -15,6 +16,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     audioOutputHelper: Promise<AudioOutputHelper>;
     singleNotePlayer: SingleNotePlayer;
     noteKeyboardManager: NoteKeyboardManager;
+    video: IYoutubeVideoPlayer;
 
     constructor(props: IRecorderPlayerPageComponentProps) {
         super();
@@ -24,6 +26,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 down: [],
                 played: [],
             },
+            youtubeVideoId: "HQnC1UHBvWA"
         };
 
         this.audioOutputHelper = AudioOutputHelper.getInstance(NoteInfoList.notes);
@@ -51,8 +54,15 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         });
     }
 
-    isNoteDown(note: INoteInfo): boolean {
+    private isNoteDown(note: INoteInfo): boolean {
         return this.state.noteState.down.filter(down => down.note.name === note.name).length === 1;
+    }
+
+    private onVideoReady(event) {
+        console.log("video ready");
+
+        this.video = event.target as IYoutubeVideoPlayer;
+        this.video.pauseVideo();
     }
 
     render() {
@@ -60,11 +70,16 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             <div style={[
                 RecorderPlayerPageComponent.styles.base,
             ]}>
-                {
-                    NoteInfoList.notes.map((note, i) => {
-                        return <RecorderNote key={i} note={note} isDown={this.isNoteDown(note)}/>;
-                    })
-                }
+                <div>
+                    {
+                        NoteInfoList.notes.map((note, i) => {
+                            return <RecorderNote key={i} note={note} isDown={this.isNoteDown(note)}/>;
+                        })
+                    }
+                </div>
+                <div>
+                    <VideoPlayer videoId={this.state.youtubeVideoId} onVideoReady={this.onVideoReady.bind(this)}/>
+                </div>
             </div>
         );
     }
@@ -81,5 +96,6 @@ export interface IRecorderPlayerPageComponentProps {
 }
 
 export interface IRecorderPlayerPageComponentState {
+    youtubeVideoId: string;
     noteState: ITotalNoteState;
 }

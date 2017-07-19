@@ -1,18 +1,19 @@
 import * as React from "react";
 import * as Radium from "radium";
 import {GlobalFont} from "../styles/GlobalStyles";
+
 const axios = require("axios");
 const ReactYoutube = require("react-youtube").default as any;
 
 @Radium
-export class SongSelectorComponent extends React.Component<ISongSelectorProps, ISongSelectorState> {
-    props: ISongSelectorProps;
-    state: ISongSelectorState;
+export class VideoPlayer extends React.Component<IVideoPlayerProps, IVideoPlayerState> {
+    props: IVideoPlayerProps;
+    state: IVideoPlayerState;
 
     render() {
         const opts = {
-            height: SongSelectorComponent.height,
-            width: SongSelectorComponent.width,
+            height: VideoPlayer.height,
+            width: VideoPlayer.width,
             playerVars: { // https://developers.google.com/youtube/player_parameters
                 autoplay: 1,
                 controls: 0,
@@ -24,22 +25,21 @@ export class SongSelectorComponent extends React.Component<ISongSelectorProps, I
         };
 
         return (
-            <div style={[SongSelectorComponent.styles.base]}>
-                <div style={[SongSelectorComponent.styles.videoContainer]}>
+            <div style={[VideoPlayer.styles.base]}>
+                <div style={[VideoPlayer.styles.videoContainer]}>
                     <ReactYoutube
-                        videoId="HQnC1UHBvWA"
+                        videoId={this.props.videoId}
                         opts={opts}
                         onReady={this.props.onVideoReady}
                     />
-                    <div style={[SongSelectorComponent.styles.overlay]}>
+                    <div style={[VideoPlayer.styles.overlay]}>
 
                     </div>
                 </div>
                 <div style={[
                     GlobalFont,
-                    SongSelectorComponent.styles.videoTitle,
+                    VideoPlayer.styles.videoTitle,
                 ]}>
-                    {this.props.videoTitle}
                 </div>
             </div>
         );
@@ -50,18 +50,17 @@ export class SongSelectorComponent extends React.Component<ISongSelectorProps, I
 
     private static styles = {
         base: {
-            width: SongSelectorComponent.width,
+            width: VideoPlayer.width,
             margin: "50px",
-            display: "none",
         },
         videoContainer: {
-            width: SongSelectorComponent.width + "px",
-            height: SongSelectorComponent.height + "px",
+            width: VideoPlayer.width + "px",
+            height: VideoPlayer.height + "px",
             position: "relative",
         },
         overlay: {
-            width: SongSelectorComponent.width + "px",
-            height: SongSelectorComponent.height + "px",
+            width: VideoPlayer.width + "px",
+            height: VideoPlayer.height + "px",
             position: "absolute",
             top: 0,
             left: 0,
@@ -76,11 +75,17 @@ export class SongSelectorComponent extends React.Component<ISongSelectorProps, I
     };
 }
 
-export interface ISongSelectorProps {
+export interface IVideoPlayerProps {
     onVideoReady: () => void;
-    videoTitle: string;
+    videoId: string;
 }
 
-export interface ISongSelectorState {
+export interface IVideoPlayerState {
 
+}
+
+export interface IYoutubeVideoPlayer {
+    pauseVideo(): void;
+
+    playVideo(): void;
 }
