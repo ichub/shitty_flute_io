@@ -252,7 +252,6 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
         return {
             nameString: note.noteInfo.name,
-            height: "10px",
             width: this.convertMillisecondsToPercentage(note.length) + "%",
             offset: this.convertMillisecondsToPercentage(note.start) + "%",
         };
@@ -292,7 +291,6 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                                                         Composer.styles.compositionNote,
                                                         {
                                                             width: int.width,
-                                                            height: int.height,
                                                             left: int.offset,
                                                             backgroundColor: "orange",
                                                         }]}>
@@ -392,6 +390,8 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             backgroundColor: color("purple").lighten(1).hex(),
             overflow: "hidden",
             position: "relative",
+            display: "flex",
+            flexDirection: "column",
         },
         controls: {
             width: "100%",
@@ -400,10 +400,12 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         noteRow: {
             width: "100%",
             position: "relative",
-            height: "20px",
+            height: "100px",
+            backgroundColor: "white",
         },
         compositionNote: {
             position: "absolute",
+            height: "100%",
         },
         scrubBar: {
             position: "absolute",
@@ -423,7 +425,6 @@ enum ComposerStateName {
 
 export interface IClickedNoteLayoutParams {
     width: string;
-    height: string;
     nameString: string;
     offset: string;
 }
