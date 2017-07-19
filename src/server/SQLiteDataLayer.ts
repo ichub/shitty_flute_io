@@ -198,7 +198,7 @@ export class SQLiteDataLayer implements IDataLayer {
             })
             .then(() => {
                 return this.execRunWithPromise(
-                    "UPDATE compositions SET name=?, youtube_id=? WHERE editToken=?",
+                    "UPDATE compositions SET name=?, youtube_id=? WHERE edit_token=?",
                     [compositionState.compName, compositionState.youtubeId, editToken]
                 );
             })
