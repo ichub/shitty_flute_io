@@ -5,7 +5,7 @@ import {IYoutubeVideoPlayer, VideoPlayer} from "../VideoPlayer";
 import {AudioOutputHelper} from "../../AudioOutputHelper";
 import {NoteInfoList} from "../../models/NoteInfoList";
 import {SingleNotePlayer} from "../../SingleNotePlayer";
-import {ITotalNoteState, NoteKeyboardManager} from "../../NoteKeyboardManager";
+import {ICompletedNote, ITotalNoteState, NoteKeyboardManager} from "../../NoteKeyboardManager";
 import {INoteInfo} from "../../models/INoteInfo";
 
 @Radium
@@ -17,6 +17,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     singleNotePlayer: SingleNotePlayer;
     noteKeyboardManager: NoteKeyboardManager;
     video: IYoutubeVideoPlayer;
+
+    stopPlayingTimeout: NodeJS.Timer;
 
     constructor(props: IRecorderPlayerPageComponentProps) {
         super();
@@ -31,6 +33,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             recordingYoutubeStartTime: 0,
             recordingYoutubeEndTime: 0,
             hasRecorded: false,
+            recording: []
         };
 
         this.audioOutputHelper = AudioOutputHelper.getInstance(NoteInfoList.notes);
@@ -79,7 +82,11 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         state: {this.state.stateName} <br/>
                         record start: {this.state.recordingYoutubeStartTime} <br/>
                         record end: {this.state.recordingYoutubeEndTime} <br/>
+                        has recorded: {this.state.hasRecorded.toString()} <br/>
+                        notes recorded: {this.state.recording.length} <br/>
                     </div>
+
+                    <br/>
 
                     <input
                         type="button"
@@ -107,6 +114,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         onClick={this.reset.bind(this)}
                         disabled={this.state.stateName !== RecorderStateName.FreePlay}/>
                 </div>
+
+                <br/>
                 <div>
                     {
                         NoteInfoList.notes.map((note, i) => {
@@ -133,6 +142,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 recordingYoutubeEndTime: 0,
                 stateName: RecorderStateName.FreePlay,
                 hasRecorded: false,
+                recording: []
             });
         }
     }
@@ -144,6 +154,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 stateName: RecorderStateName.Recording,
                 recordingYoutubeStartTime: this.video.getCurrentTime()
             });
+            this.video.playVideo();
         }
     }
 
@@ -153,7 +164,10 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 stateName: RecorderStateName.FreePlay,
                 recordingYoutubeEndTime: this.video.getCurrentTime(),
                 hasRecorded: true,
+                recording: this.state.noteState.played.slice()
             });
+            this.video.pauseVideo();
+            this.video.seekTo(this.state.recordingYoutubeStartTime);
         }
     }
 
@@ -162,14 +176,28 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             this.setState({
                 stateName: RecorderStateName.Playing
             });
+
+            this.stopPlayingTimeout = setTimeout(() => {
+                this.stopPlayingTimeout = null;
+                this.stopPlayback();
+            }, this.state.recordingYoutubeEndTime - this.state.recordingYoutubeStartTime);
+
+            this.video.seekTo(this.state.recordingYoutubeStartTime);
         }
     }
 
     private stopPlayback() {
         if (this.state.stateName === RecorderStateName.Playing) {
             this.setState({
-                stateName: RecorderStateName.FreePlay
+                stateName: RecorderStateName.FreePlay,
             });
+
+            this.video.seekTo(this.state.recordingYoutubeStartTime);
+            this.video.pauseVideo();
+
+            if (this.stopPlayingTimeout) {
+                clearTimeout(this.stopPlayingTimeout);
+            }
         }
     }
 
@@ -191,6 +219,7 @@ export interface IRecorderPlayerPageComponentState {
     recordingYoutubeStartTime: number;
     recordingYoutubeEndTime: number;
     hasRecorded: boolean;
+    recording: ICompletedNote[];
 }
 
 export enum RecorderStateName {

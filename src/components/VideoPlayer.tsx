@@ -94,4 +94,6 @@ export interface IYoutubeVideoPlayer {
     playVideo(): void;
 
     getCurrentTime(): number;
+
+    seekTo(time: number);
 }
