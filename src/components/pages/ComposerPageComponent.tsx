@@ -4,6 +4,7 @@ import {Composer} from "../Composer";
 import {INoteInfo, makeINoteInfo} from "../../models/INoteInfo";
 import {SongSelectorComponent} from "../SongSelectorComponent";
 import {LoadingOverlayComponent} from "../LoadingOverlayComponent";
+import {NoteInfoList} from "../../models/NoteInfoList";
 
 @Radium
 export class ComposerPageComponent extends React.Component<IComposerPageComponentProps, IComposerPageComponentState> {
@@ -13,15 +14,7 @@ export class ComposerPageComponent extends React.Component<IComposerPageComponen
         super();
 
         this.state = {
-            notes: [
-                makeINoteInfo("C", "/res/notes/C-Normal.mp3", "/res/notes/C-Shitty.mp3", "A"),
-                makeINoteInfo("D", "/res/notes/D-Normal.mp3", "/res/notes/D-Shitty.mp3", "S"),
-                makeINoteInfo("E", "/res/notes/E-Normal.mp3", "/res/notes/E-Shitty.mp3", "D"),
-                makeINoteInfo("F", "/res/notes/F-Normal.mp3", "/res/notes/F-Shitty.mp3", "F"),
-                makeINoteInfo("G", "/res/notes/G-Normal.mp3", "/res/notes/G-Shitty.mp3", "G"),
-                makeINoteInfo("A", "/res/notes/A-Normal.mp3", "/res/notes/A-Shitty.mp3", "H"),
-                makeINoteInfo("B", "/res/notes/B-Normal.mp3", "/res/notes/B-Shitty.mp3", "J"),
-            ],
+            notes: NoteInfoList.notes,
             videoPlayer: null,
             totalAsyncComponents: 2,
             asyncComponentsLoaded: 0,

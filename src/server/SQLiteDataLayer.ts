@@ -1,8 +1,11 @@
 import {IDataLayer} from "./IDataLayer";
-import {IComposition, makeNewIComposition} from "../models/IComposition";
+import {IComposition, makeIComposition} from "../models/IComposition";
 import * as sqlite3 from "sqlite3";
 import {RunResult} from "sqlite3";
 import {generateToken} from "./ComposerTokenLoader";
+import {ICompositionNote, makeICompositionNote} from "../models/ICompositionNote";
+import {NoteInfoList} from "../models/NoteInfoList";
+import {ICompositionState, makeICompositionState} from "../models/ICompositionState";
 
 export class SQLiteDataLayer implements IDataLayer {
     private static instancePromise: Promise<SQLiteDataLayer> = null;
@@ -16,18 +19,7 @@ export class SQLiteDataLayer implements IDataLayer {
     execRunWithPromise(query: string, params: any[] = []): Promise<RunResult> {
         return new Promise<RunResult>((resolve, reject) => {
             this.db.run(query, params, (err, result) => {
-                // console.log(query);
-                // console.log(params);
-
-                if (err) {
-                    // console.log(`failed to run query: ${query}`);
-                    // console.log(err);
-                    reject(err);
-                } else {
-                    // console.log(`succeeded running query: ${query}`);
-                    // console.log(result);
-                    resolve(result);
-                }
+                return (err ? reject(err) : resolve(result));
             });
         });
     }
@@ -35,34 +27,38 @@ export class SQLiteDataLayer implements IDataLayer {
     execGetWithPromise(query: string, params: any[] = []): Promise<RunResult> {
         return new Promise<RunResult>((resolve, reject) => {
             this.db.get(query, params, (err, result) => {
-                // console.log(query);
-                // console.log(params);
+                return (err ? reject(err) : resolve(result));
+            });
+        });
+    }
 
-                if (err) {
-                    // console.log(`failed to run query: ${query}`);
-                    // console.log(err);
-                    reject(err);
-                } else {
-                    // console.log(`succeeded running query: ${query}`);
-                    // console.log(result);
-                    resolve(result);
-                }
+    execAllWithPromise(query: string, params: any[] = []): Promise<RunResult[]> {
+        return new Promise<RunResult[]>((resolve, reject) => {
+            this.db.all(query, params, (err, result) => {
+                return (err ? reject(err) : resolve(result));
             });
         });
     }
 
     createTables(): Promise<void> {
         return this.execRunWithPromise(
-                "CREATE TABLE compositions " +
-                "(id VARCHAR(100)," +
-                "name VARCHAR(100))")
+            "CREATE TABLE compositions " +
+            "(id INT AUTO_INCREMENT," +
+            "edit_token VARCHAR(100)," +
+            "view_token VARCHAR(100)," +
+            "name VARCHAR(100)," +
+            "youtube_id VARCHAR(100)," +
+            "PRIMARY KEY (id)," +
+            "UNIQUE (edit_token)," +
+            "UNIQUE (view_token))")
             .then(() => {
                 return this.execRunWithPromise(
                     "CREATE TABLE compositions_notes_map " +
-                    "(id VARCHAR(100)," +
+                    "(composition_id INT," +
                     "note_id INT," +
-                    "start BIGINT," +
-                    "length BIGINT)");
+                    "start INT," +
+                    "length INT" +
+                    "FOREIGN KEY composition_id REFERENCES compositions(id))");
             })
             .then(() => {
                 return this.execRunWithPromise(
@@ -76,65 +72,136 @@ export class SQLiteDataLayer implements IDataLayer {
             .then(() => {
                 return this.execRunWithPromise(
                     "CREATE TABLE composition_json_table " +
-                    "(id VARCHAR(100)," +
+                    "(id INT AUTO_INCREMENT," +
+                    "edit_token VARCHAR(100)," +
                     "view_token VARCHAR(100)," +
                     "data TEXT," +
-                    "PRIMARY KEY (id))");
+                    "PRIMARY KEY (id)," +
+                    "UNIQUE (edit_token)," +
+                    "UNIQUE (view_token))");
             })
             .then(() => {
             });
     }
 
-    getCompositionEdit(compositionId: string): Promise<IComposition> {
+    getCompositionFromRow(row: RunResult): Promise<IComposition> {
+        let id = (row as any).id;
+        let editToken = (row as any).editToken;
+        let viewToken = (row as any).viewToken;
+        let name = (row as any).id;
+        let youtubeId = (row as any).youtube_id;
+
+        return this.execAllWithPromise(
+            "SELECT * from compositions_notes_map WHERE id=?",
+            [id])
+            .then(noteMapRows => {
+                let notes: ICompositionNote[] = [];
+                for (let noteMapRow of noteMapRows) {
+                    let noteInfoId = (noteMapRow as any).note_id;
+                    let noteInfo = NoteInfoList.notes[noteInfoId];
+                    let start = (noteMapRow as any).start;
+                    let length = (noteMapRow as any).length;
+                    let compositionNote = makeICompositionNote(noteInfo, start, length);
+                    notes.push(compositionNote);
+                }
+                let compositionState = makeICompositionState(name, youtubeId, notes);
+                let composition = makeIComposition(id, editToken, viewToken, compositionState);
+                return composition;
+            });
+    }
+
+    getCompositionEdit(editToken: string): Promise<IComposition> {
         let viewTokenIfNoneExists = generateToken();
         return this.execRunWithPromise(
-            "INSERT OR IGNORE INTO composition_json_table (id, view_token, data) VALUES (?, ?, ?)",
-            [compositionId, viewTokenIfNoneExists, JSON.stringify(makeNewIComposition("", compositionId))])
+            // command in SQL is INSERT IGNORE
+            // in SQLite it is INSERT OR IGNORE
+            "INSERT OR IGNORE INTO compositions (edit_token, view_token, name, youtube_id) VALUES (?, ?, ?, ?)",
+            [editToken, viewTokenIfNoneExists, "", ""])
             .then(() => {
                 return this.execGetWithPromise(
-                    "SELECT data from composition_json_table WHERE id=?",
-                    [compositionId]);
+                    "SELECT * from compositions WHERE edit_token=?",
+                    [editToken]);
             })
             .then(row => {
-                console.log(JSON.parse((row as any).data) as IComposition);
-                return Promise.resolve(JSON.parse((row as any).data) as IComposition);
+                return this.getCompositionFromRow(row);
             });
     }
 
-    getCompositionView(viewToken: string): Promise<IComposition> {
-        return this.execRunWithPromise(
-            "SELECT data from composition_json_table WHERE view_token=?",
+    // getCompositionEdit(editToken: string): Promise<IComposition> {
+    //     return this.execRunWithPromise(
+    //         // command in SQL is INSERT IGNORE
+    //         // in SQLite it is INSERT OR IGNORE
+    //         "INSERT OR IGNORE INTO composition_json_table (id, view_token, data) VALUES (?, ?, ?)",
+    //         [compositionId, viewTokenIfNoneExists, JSON.stringify(makeNewIComposition("", compositionId))])
+    //         .then(() => {
+    //             return this.execGetWithPromise(
+    //                 "SELECT data from composition_json_table WHERE id=?",
+    //                 [compositionId]);
+    //         })
+    //         .then(row => {
+    //             console.log(JSON.parse((row as any).data) as IComposition);
+    //             return Promise.resolve(JSON.parse((row as any).data) as IComposition);
+    //         });
+    // }
+
+    getCompositionView(viewToken: string): Promise<ICompositionState> {
+        return this.execGetWithPromise(
+            "SELECT * from compositions WHERE view_token=?",
             [viewToken])
             .then(row => {
-                return Promise.resolve(JSON.parse((row as any).data) as IComposition);
+                return this.getCompositionFromRow(row);
             })
-            .catch(err => {
-                console.log("No composition with such view ID exists (" + viewToken + ")");
-                return Promise.reject("No composition with such view ID exists.");
-            })
+            .then((composition: IComposition) => {
+                return composition.state;
+            });
     }
 
-    getViewToken(compositionId: string): Promise<string> {
-        return this.execRunWithPromise(
-            "SELECT view_token from composition_json_table WHERE id=?",
-            [compositionId])
+    getViewToken(editToken: string): Promise<string> {
+        return this.execGetWithPromise(
+            "SELECT view_token from compositions WHERE edit_token=?",
+            [editToken])
             .then(row => {
-                return Promise.resolve(JSON.parse((row as any).data) as IComposition);
+                return Promise.resolve(JSON.parse((row as any).view_token) as string);
             })
             .catch(err => {
-                console.log("No composition with such ID exists (" + compositionId + ")");
-                return Promise.reject("No composition with such ID exists");
-            })
+                console.log(err);
+                console.log("No composition with such edit token exists (" + editToken + ")");
+                return Promise.reject("No composition with such edit token exists");
+            });
     }
 
-    saveComposition(compositionId: string, composition: IComposition): Promise<void> {
-        const data = JSON.stringify(composition);
-        return this.execRunWithPromise(
-            "UPDATE composition_json_table SET data=? WHERE id=?",
-            [data, compositionId])
-            .catch(err => {
-                console.log("An error occurred.");
-                return Promise.reject(err);
+    saveComposition(editToken: string, state: ICompositionState): Promise<void> {
+        // remove everything in compositions_notes_map for this composition
+        let compId: number;
+        return this.execGetWithPromise(
+            "SELECT id from compositions WHERE edit_token=?",
+            [editToken])
+            .then(row => {
+                compId = (row as any).id;
+                return this.execRunWithPromise(
+                    "DELETE FROM compositions_notes_map WHERE composition_id=?",
+                    [compId]);
+            })
+            .then(() => {
+                return Promise.all(
+                    state.notes.map(note => {
+                            this.execRunWithPromise(
+                                "INSERT INTO compositions_notes_map (composition_id, note_id, start, length) VALUES (?, ?, ?, ?)",
+                                [compId, note.noteInfo.noteId, note.start, note.length]
+                            );
+                        }
+                    )
+                );
+            })
+            .then(() => {
+                return this.execRunWithPromise(
+                    "UPDATE compositions SET name=?, youtube_id=? WHERE id=?",
+                    [state.compName, state.youtubeId, compId]
+                );
+            })
+            .catch((err) => {
+                console.log("Something went wrong in saving composition. You should probably check database integrity.");
+                Promise.reject(err);
             });
     }
 

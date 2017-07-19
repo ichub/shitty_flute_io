@@ -9,7 +9,7 @@
         "shittySoundFileUrl": "/res/notes/C-Shitty.mp3",
         "keyboardCharacter": "A"
       },
-      "start": 1500249617852,
+      "start": 0,
       "length": 105
     },
     {
@@ -19,7 +19,7 @@
         "shittySoundFileUrl": "/res/notes/D-Shitty.mp3",
         "keyboardCharacter": "S"
       },
-      "start": 1500249617868,
+      "start": 100,
       "length": 96
     },
     {
@@ -29,7 +29,7 @@
         "shittySoundFileUrl": "/res/notes/E-Shitty.mp3",
         "keyboardCharacter": "D"
       },
-      "start": 1500249617940,
+      "start": 200,
       "length": 135
     },
     {
@@ -39,7 +39,7 @@
         "shittySoundFileUrl": "/res/notes/C-Shitty.mp3",
         "keyboardCharacter": "A"
       },
-      "start": 1500249618061,
+      "start": 1300,
       "length": 112
     },
     {
@@ -49,7 +49,7 @@
         "shittySoundFileUrl": "/res/notes/D-Shitty.mp3",
         "keyboardCharacter": "S"
       },
-      "start": 1500249618083,
+      "start": 500,
       "length": 104
     },
     {
@@ -59,7 +59,7 @@
         "shittySoundFileUrl": "/res/notes/E-Shitty.mp3",
         "keyboardCharacter": "D"
       },
-      "start": 1500249618156,
+      "start": 3000,
       "length": 128
     },
     {
@@ -69,7 +69,7 @@
         "shittySoundFileUrl": "/res/notes/C-Shitty.mp3",
         "keyboardCharacter": "A"
       },
-      "start": 1500249618268,
+      "start": 8268,
       "length": 119
     },
     {
@@ -79,7 +79,7 @@
         "shittySoundFileUrl": "/res/notes/D-Shitty.mp3",
         "keyboardCharacter": "S"
       },
-      "start": 1500249618290,
+      "start": 5290,
       "length": 112
     },
     {
@@ -89,7 +89,7 @@
         "shittySoundFileUrl": "/res/notes/E-Shitty.mp3",
         "keyboardCharacter": "D"
       },
-      "start": 1500249618372,
+      "start": 7372,
       "length": 136
     },
     {
@@ -99,7 +99,7 @@
         "shittySoundFileUrl": "/res/notes/C-Shitty.mp3",
         "keyboardCharacter": "A"
       },
-      "start": 1500249618500,
+      "start": 5500,
       "length": 119
     },
     {
@@ -109,7 +109,7 @@
         "shittySoundFileUrl": "/res/notes/D-Shitty.mp3",
         "keyboardCharacter": "S"
       },
-      "start": 1500249618533,
+      "start": 8533,
       "length": 126
     },
     {
@@ -119,7 +119,7 @@
         "shittySoundFileUrl": "/res/notes/E-Shitty.mp3",
         "keyboardCharacter": "D"
       },
-      "start": 1500249618612,
+      "start": 8612,
       "length": 128
     },
     {
@@ -129,7 +129,7 @@
         "shittySoundFileUrl": "/res/notes/E-Shitty.mp3",
         "keyboardCharacter": "D"
       },
-      "start": 1500249618804,
+      "start": 8804,
       "length": 95
     },
     {
@@ -139,7 +139,7 @@
         "shittySoundFileUrl": "/res/notes/E-Shitty.mp3",
         "keyboardCharacter": "D"
       },
-      "start": 1500249618971,
+      "start": 8971,
       "length": 81
     },
     {
@@ -149,7 +149,7 @@
         "shittySoundFileUrl": "/res/notes/E-Shitty.mp3",
         "keyboardCharacter": "D"
       },
-      "start": 1500249619124,
+      "start": 9124,
       "length": 63
     },
     {
@@ -159,7 +159,7 @@
         "shittySoundFileUrl": "/res/notes/E-Shitty.mp3",
         "keyboardCharacter": "D"
       },
-      "start": 1500249619260,
+      "start": 9260,
       "length": 128
     }
   ]

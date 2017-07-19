@@ -63,6 +63,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     reloadData() {
         axios.get(`/composer/${this.props.compositionId}/data`)
             .then((response) => {
+                console.log(response);
                 this.setState({
                     composition: response.data,
                 }, () => {
