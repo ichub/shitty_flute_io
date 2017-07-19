@@ -9,7 +9,6 @@ export class YoutubeApi {
         return axios.get(
             `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet&key=AIzaSyDXOagMe4Ozv3D3iFbtGxSiO4J82IcGXJo`)
             .then((result) => {
-                console.log(result.data);
                 return Promise.resolve(result.data);
             });
     }

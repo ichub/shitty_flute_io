@@ -343,7 +343,6 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                                                         {
                                                             width: int.width,
                                                             left: int.offset,
-                                                            backgroundColor: "orange",
                                                         }]}>
                                                         {int.nameString}
                                                     </div>
@@ -423,6 +422,11 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         compositionNote: {
             position: "absolute",
             height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "black",
+            color: "white",
         },
         scrubBar: {
             position: "absolute",
