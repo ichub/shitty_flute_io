@@ -7,6 +7,7 @@ import {NoteInfoList} from "../../models/NoteInfoList";
 import {SingleNotePlayer} from "../../SingleNotePlayer";
 import {ICompletedNote, ITotalNoteState, NoteKeyboardManager} from "../../NoteKeyboardManager";
 import {INoteInfo} from "../../models/INoteInfo";
+import {ChangeEvent} from "react";
 
 const axios = require("axios");
 
@@ -21,6 +22,10 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     video: IYoutubeVideoPlayer;
 
     stopPlayingTimeout: NodeJS.Timer;
+
+    refs: {
+        youtubeInput: HTMLInputElement
+    };
 
     constructor(props: IRecorderPlayerPageComponentProps) {
         super();
@@ -87,6 +92,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             ]}>
                 <div>
                     <div>
+                        youtubeVideoId: {this.state.youtubeVideoId} <br/>
                         state: {this.state.stateName} <br/>
                         record start: {this.state.recordingYoutubeStartTime} <br/>
                         record end: {this.state.recordingYoutubeEndTime} <br/>
@@ -138,6 +144,18 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         })
                     }
                 </div>
+                <br/>
+                <div>
+                    <label>
+                        <span>current youtube id: {this.state.youtubeVideoId}</span>
+                        <input ref="youtubeInput"
+                               type="text"/>
+                        <input type="button"
+                               value="change video id"
+                               disabled={this.state.stateName !== RecorderStateName.FreePlay}
+                               onClick={this.handleVideoIdChange.bind(this)}/>
+                    </label>
+                </div>
                 <div>
                     <VideoPlayer
                         videoId={this.state.youtubeVideoId}
@@ -147,6 +165,14 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 </div>
             </div>
         );
+    }
+
+    private handleVideoIdChange() {
+        if (this.state.stateName !== RecorderStateName.FreePlay) {
+            this.setState({
+                youtubeVideoId: this.refs.youtubeInput.value
+            });
+        }
     }
 
     private reset() {
