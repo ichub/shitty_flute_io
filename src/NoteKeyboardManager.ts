@@ -73,6 +73,7 @@ export class NoteKeyboardManager extends EventEmitter {
 
     public clearPlayedNotes(): void {
         this.played = [];
+        this.emitStateChanged();
     }
 }
 

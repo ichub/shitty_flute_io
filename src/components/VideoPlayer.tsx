@@ -92,4 +92,6 @@ export interface IYoutubeVideoPlayer {
     pauseVideo(): void;
 
     playVideo(): void;
+
+    getCurrentTime(): number;
 }
