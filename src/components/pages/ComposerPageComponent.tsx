@@ -30,7 +30,7 @@ export class ComposerPageComponent extends React.Component<IComposerPageComponen
                 ]}>
                     <Composer
                         onReady={this.onComposerReady.bind(this)}
-                        compositionId={this.props.compositionId}
+                        editToken={this.props.editToken}
                         notes={this.state.notes}
                         setVideoTitle={this.setVideoTitle.bind(this)}
                         playVideo={this.playVideo.bind(this)}
@@ -111,5 +111,5 @@ export interface IComposerPageComponentState {
 }
 
 export interface IComposerPageComponentProps {
-    compositionId: string;
+    editToken: string;
 }

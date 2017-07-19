@@ -9,6 +9,7 @@ import {htmlDir} from "./Server";
 import {IComposition} from "../models/IComposition";
 import {SQLiteDataLayer} from "./SQLiteDataLayer";
 import {YoutubeApi} from "./YoutubeApi";
+import {ICompositionState} from "../models/ICompositionState";
 
 export const ApiController = express.Router();
 export const rootPath = path.join(__dirname, "../../");
@@ -29,11 +30,11 @@ ApiController.get("/composer", (req: express.Request, res: express.Response) => 
     res.redirect(302, "/composer/" + token);
 });
 
-ApiController.get("/composer/:compositionId", (req: express.Request, res: express.Response) => {
+ApiController.get("/composer/:editToken", (req: express.Request, res: express.Response) => {
     const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
     const initializedState = {
         pageName: "composer",
-        compositionId: req.params.compositionId,
+        editToken: req.params.editToken,
     };
 
     res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
@@ -49,21 +50,21 @@ ApiController.get("/composer/view/:viewToken", (req: express.Request, res: expre
     res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
 });
 
-ApiController.post("/composer/:compositionId", (req: express.Request, res: express.Response) => {
-    let composition = req.body as IComposition;
+ApiController.post("/composer/:editToken", (req: express.Request, res: express.Response) => {
+    let compositionState = req.body as ICompositionState;
     returnJson(res,
         SQLiteDataLayer
             .getInstance()
-            .then((dataLayer) => dataLayer.saveComposition(req.params.compositionId, composition)));
+            .then((dataLayer) => dataLayer.saveComposition(req.params.editToken, compositionState)));
 });
 
-ApiController.get("/composer/:compositionId/data", (req: express.Request, res: express.Response) => {
+ApiController.get("/composer/:editToken/data", (req: express.Request, res: express.Response) => {
     returnJson(
         res,
         SQLiteDataLayer
             .getInstance()
             .then((dataLayer) => {
-                return dataLayer.getCompositionEdit(req.params.compositionId);
+                return dataLayer.getCompositionEdit(req.params.editToken);
             }),
     );
 });

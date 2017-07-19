@@ -6,8 +6,8 @@ import {IComposition} from "../models/IComposition";
 import {ICompositionState} from "../models/ICompositionState";
 
 export interface IDataLayer {
-    getCompositionEdit(compositionId: string): Promise<IComposition>;
+    getCompositionEdit(editToken: string): Promise<IComposition>;
     getCompositionView(viewToken: string): Promise<ICompositionState>;
-    getViewToken(compositionId: string): Promise<string>;
-    saveComposition(compositionId: string, compositionState: ICompositionState): Promise<void>;
+    getViewToken(editToken: string): Promise<string>;
+    saveComposition(editToken: string, compositionState: ICompositionState): Promise<void>;
 }

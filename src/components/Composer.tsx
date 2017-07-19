@@ -2,11 +2,11 @@ import * as React from "react";
 import * as Radium from "radium";
 import * as color from "color";
 import {INoteInfo} from "../models/INoteInfo";
-import {IComposition, makeNewIComposition} from "../models/IComposition";
 import {ICompositionNote} from "../models/ICompositionNote";
 import {MusicPlayerHelper} from "../MusicPlayerHelper";
 import {AudioOutputHelper} from "../AudioOutputHelper";
 import {GlobalFont} from "../styles/GlobalStyles";
+import {ICompositionState, makeNewICompositionState} from "../models/ICompositionState";
 const axios = require("axios");
 
 @Radium
@@ -28,12 +28,10 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         super();
         this.props = props;
 
-        console.log("hello");
-
         this.state = {
             stateName: ComposerStateName.Idle,
             downNotes: [],
-            composition: makeNewIComposition("", props.compositionId),
+            compositionState: makeNewICompositionState(),
             recordStartingTime: -1,
             recordVideoStartingTime: -1,
             interval: null,
@@ -61,13 +59,12 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     }
 
     reloadData() {
-        axios.get(`/composer/${this.props.compositionId}/data`)
+        axios.get(`/composer/${this.props.editToken}/data`)
             .then((response) => {
-                console.log(response);
                 this.setState({
-                    composition: response.data,
+                    compositionState: response.data.state,
                 }, () => {
-                    axios.get(`/video-title/${this.state.composition.youtubeId}`)
+                    axios.get(`/video-title/${this.state.compositionState.youtubeId}`)
                         .then((response) => {
                             this.setState({
                                 videoTitle: response.data.title,
@@ -164,11 +161,11 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             this.state.downNotes = this.state.downNotes.filter(item => item.noteInfo.name != released.noteInfo.name);
 
             released.length = new Date().getTime() - released.start - this.state.recordStartingTime;
-            this.state.composition.notes.push(released);
+            this.state.compositionState.notes.push(released);
 
             this.setState({
                 downNotes: this.state.downNotes,
-                composition: this.state.composition,
+                compositionState: this.state.compositionState,
             });
         }
     }
@@ -179,7 +176,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                 stateName: ComposerStateName.Playing,
             }, () => {
                 this.startScrubTimer();
-                this.helper.then(player => player.playComposition(this.state.composition));
+                this.helper.then(player => player.playComposition(this.state.compositionState));
                 this.props.setVideoTime(this.state.recordVideoStartingTime);
                 this.props.playVideo();
 
@@ -209,6 +206,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                 stateName: ComposerStateName.Recording,
                 recordStartingTime: -1,
             }, () => {
+                this.props.setVideoTime(this.state.recordVideoStartingTime);
                 this.props.playVideo();
             });
         }
@@ -286,7 +284,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     }
 
     render() {
-        window["state"] = this.state.composition;
+        window["state"] = this.state.compositionState;
         return (
             <div>
                 <div style={[Composer.styles.controls]}>
@@ -344,7 +342,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                     <div style={[Composer.styles.timeSeries]}>
                         {
                             this.props.notes.map((note, i) => {
-                                const matching = this.state.composition.notes.filter(compNote => compNote.noteInfo.name == note.name);
+                                const matching = this.state.compositionState.notes.filter(compNote => compNote.noteInfo.name == note.name);
                                 return (
                                     <div key={i} style={[Composer.styles.noteRow]}>
                                         {
@@ -375,10 +373,10 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
     handleResetClick() {
         if (this.state.stateName === ComposerStateName.Idle) {
-            this.state.composition.notes = [];
+            this.state.compositionState.notes = [];
 
             this.setState({
-                composition: this.state.composition,
+                compositionState: this.state.compositionState,
                 stateName: ComposerStateName.Idle,
                 downNotes: [],
                 recordStartingTime: -1,
@@ -466,7 +464,7 @@ export interface IClickedNoteLayoutParams {
 
 export interface IComposerProps {
     notes: INoteInfo[];
-    compositionId: string;
+    editToken: string;
     playVideo: () => void;
     pauseVideo: () => void;
     getVideoTime: () => number;
@@ -479,7 +477,7 @@ export interface IComposerState {
     stateName: ComposerStateName;
     downNotes: ICompositionNote[];
     playingNotes: ICompositionNote[];
-    composition: IComposition;
+    compositionState: ICompositionState;
     recordStartingTime: number;
     recordVideoStartingTime: number;
     interval: NodeJS.Timer;

@@ -1,5 +1,6 @@
 import {INoteInfo} from "./models/INoteInfo";
 import {IComposition} from "./models/IComposition";
+import {ICompositionState} from "./models/ICompositionState";
 const axios = require("axios");
 const PD = require("probability-distributions");
 
@@ -40,7 +41,6 @@ export class AudioOutputHelper {
     }
 
     private getBufferForFile(soundFileUrl: string): Promise<AudioBuffer> {
-        console.log("retrieving audioBuffer for file " + soundFileUrl);
         return new Promise<AudioBuffer>((resolve, reject) => {
             axios.get(soundFileUrl, {responseType: "arraybuffer"})
                 .then(result => {
@@ -74,7 +74,6 @@ export class AudioOutputHelper {
     }
 
     public playNote(note: INoteInfo, loop: boolean, duration: number) {
-        console.log("attempting to play note");
         const audioBuffer = this.getRandomElement(this.noteToAudioBufferMap[note.name]); // TODO: pick random buffer from array of buffers
         const source = this.audio.createBufferSource();
         source.buffer = audioBuffer;
@@ -127,11 +126,10 @@ export class AudioOutputHelper {
         };
     }
 
-    public playComposition(composition: IComposition) {
-        for (let note of composition.notes) {
+    public playComposition(compositionState: ICompositionState) {
+        for (let note of compositionState.notes) {
             setTimeout(
                 () => {
-                    console.log("adding note to play queue");
                     this.playNote(note.noteInfo, false, note.length);
                 },
                 note.start);

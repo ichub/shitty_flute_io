@@ -18,7 +18,7 @@ if (initializedState.pageName === "landing") {
 } else if (initializedState.pageName === "composer") {
     ReactDom.render(
         <StyleRoot>
-            <ComposerPageComponent compositionId={initializedState.compositionId}/>
+            <ComposerPageComponent editToken={initializedState.editToken}/>
         </StyleRoot>,
         document.getElementById("app-container"));
 } else if (initializedState.pageName === "composer-view") {

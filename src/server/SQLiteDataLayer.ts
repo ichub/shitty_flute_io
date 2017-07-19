@@ -92,7 +92,7 @@ export class SQLiteDataLayer implements IDataLayer {
         let youtubeId = (row as any).youtube_id;
 
         return this.execAllWithPromise(
-            "SELECT * from compositions_notes_map WHERE id=?",
+            "SELECT * from compositions_notes_map WHERE composition_id=?",
             [id])
             .then(noteMapRows => {
                 let notes: ICompositionNote[] = [];
@@ -111,6 +111,7 @@ export class SQLiteDataLayer implements IDataLayer {
     }
 
     getCompositionEdit(editToken: string): Promise<IComposition> {
+        console.log("attempting to getCompositionEdit");
         let viewTokenIfNoneExists = generateToken();
         return this.execRunWithPromise(
             // command in SQL is INSERT IGNORE
@@ -170,13 +171,15 @@ export class SQLiteDataLayer implements IDataLayer {
             });
     }
 
-    saveComposition(editToken: string, state: ICompositionState): Promise<void> {
+    saveComposition(editToken: string, compositionState: ICompositionState): Promise<void> {
         // remove everything in compositions_notes_map for this composition
         let compId: number;
+        console.log("trying to get row for save operation");
         return this.execGetWithPromise(
             "SELECT id from compositions WHERE edit_token=?",
             [editToken])
             .then(row => {
+                console.log("successfully found row");
                 compId = (row as any).id;
                 return this.execRunWithPromise(
                     "DELETE FROM compositions_notes_map WHERE composition_id=?",
@@ -184,7 +187,7 @@ export class SQLiteDataLayer implements IDataLayer {
             })
             .then(() => {
                 return Promise.all(
-                    state.notes.map(note => {
+                    compositionState.notes.map(note => {
                             this.execRunWithPromise(
                                 "INSERT INTO compositions_notes_map (composition_id, note_id, start, length) VALUES (?, ?, ?, ?)",
                                 [compId, note.noteInfo.noteId, note.start, note.length]
@@ -196,9 +199,10 @@ export class SQLiteDataLayer implements IDataLayer {
             .then(() => {
                 return this.execRunWithPromise(
                     "UPDATE compositions SET name=?, youtube_id=? WHERE id=?",
-                    [state.compName, state.youtubeId, compId]
+                    [compositionState.compName, compositionState.youtubeId, compId]
                 );
             })
+            .then(() => {})
             .catch((err) => {
                 console.log("Something went wrong in saving composition. You should probably check database integrity.");
                 Promise.reject(err);

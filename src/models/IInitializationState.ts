@@ -1,5 +1,5 @@
 export interface InitializationState {
     pageName: string
-    compositionId?: string
+    editToken?: string
     viewToken?: string
 }
