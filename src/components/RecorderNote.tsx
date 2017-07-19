@@ -15,6 +15,7 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
         return (
             <div style={[
                 RecorderNote.styles.base,
+                RecorderNote.styles.downState(this.props.isDown),
             ]}>
                 note: {this.props.note.name}
             </div>
@@ -25,11 +26,21 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
         base: {
             width: "100%",
         },
+        downState: (isDown: boolean) => {
+            if (isDown) {
+                return {
+                    backgroundColor: "red",
+                };
+            }
+
+            return {};
+        },
     };
 }
 
 export interface IRecorderNoteProps {
     note: INoteInfo;
+    isDown: boolean;
 }
 
 export interface IRecorderNoteState {

@@ -23,10 +23,12 @@ export class NoteKeyboardManager extends EventEmitter {
     }
 
     private addDownNote(note: INoteInfo) {
-        this.down.push({
-            note: note,
-            start: new Date().getTime(),
-        });
+        if (!this.down.filter(down => note.name === down.note.name)[0]) {
+            this.down.push({
+                note: note,
+                start: new Date().getTime(),
+            });
+        }
     }
 
     private removeDownNote(note: INoteInfo) {
@@ -37,9 +39,9 @@ export class NoteKeyboardManager extends EventEmitter {
     }
 
     private emitStateChanged() {
-        this.emit(NoteKeyboardManager.STATE_CHANGED, {
-            down: this.down.slice(0),
-            played: this.played.slice(0),
+        this.emit(NoteKeyboardManager.STATE_CHANGED, <ITotalNoteState> {
+            down: this.down.slice(),
+            played: this.played.slice(),
         });
     }
 

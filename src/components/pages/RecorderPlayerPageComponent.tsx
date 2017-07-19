@@ -4,7 +4,7 @@ import {RecorderNote} from "../RecorderNote";
 import {AudioOutputHelper} from "../../AudioOutputHelper";
 import {NoteInfoList} from "../../models/NoteInfoList";
 import {SingleNotePlayer} from "../../SingleNotePlayer";
-import {NoteKeyboardManager} from "../../NoteKeyboardManager";
+import {ITotalNoteState, NoteKeyboardManager} from "../../NoteKeyboardManager";
 import {INoteInfo} from "../../models/INoteInfo";
 
 @Radium
@@ -18,6 +18,13 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     constructor(props: IRecorderPlayerPageComponentProps) {
         super();
+
+        this.state = {
+            noteState: {
+                down: [],
+                played: [],
+            },
+        };
 
         this.audioOutputHelper = AudioOutputHelper.getInstance(NoteInfoList.notes);
         this.singleNotePlayer = new SingleNotePlayer();
@@ -36,6 +43,17 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 this.singleNotePlayer.stopNote(helper, note);
             });
         });
+
+        this.noteKeyboardManager.on(NoteKeyboardManager.STATE_CHANGED, (state: ITotalNoteState) => {
+            console.log(state);
+            this.setState({
+                noteState: state,
+            });
+        });
+    }
+
+    isNoteDown(note: INoteInfo): boolean {
+        return this.state.noteState.down.filter(down => down.note.name === note.name).length === 1;
     }
 
     render() {
@@ -45,7 +63,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             ]}>
                 {
                     NoteInfoList.notes.map((note, i) => {
-                        return <RecorderNote key={i} note={note}/>;
+                        return <RecorderNote key={i} note={note} isDown={this.isNoteDown(note)}/>;
                     })
                 }
             </div>
@@ -64,5 +82,5 @@ export interface IRecorderPlayerPageComponentProps {
 }
 
 export interface IRecorderPlayerPageComponentState {
-
+    noteState: ITotalNoteState;
 }
