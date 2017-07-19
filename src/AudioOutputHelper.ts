@@ -29,7 +29,7 @@ export class AudioOutputHelper {
                 this.initializeSingleNote(note)
                     .then((initialized) => {
                         this.noteToAudioBufferMap[initialized.note.name] = initialized.audioBuffers;
-                    }))
+                    })),
         ).then(() => {
             console.log("initialized audio");
             console.log(this.noteToAudioBufferMap);
@@ -59,12 +59,12 @@ export class AudioOutputHelper {
         return Promise.all(
             [
                 this.getBufferForFile(note.soundFileUrl),
-                this.getBufferForFile(note.shittySoundFileUrl)
-            ]
+                this.getBufferForFile(note.shittySoundFileUrl),
+            ],
         ).then(audioBuffers => {
             return Promise.resolve({
                 audioBuffers: audioBuffers,
-                note: note
+                note: note,
             });
         });
     }
@@ -80,7 +80,7 @@ export class AudioOutputHelper {
         source.buffer = audioBuffer;
 
         const gainNode = this.audio.createGain();
-        const delayNode =this.audio.createDelay(1.);
+        const delayNode = this.audio.createDelay(1.);
 
         let shittiness = 0.1;
 
@@ -96,7 +96,7 @@ export class AudioOutputHelper {
 
         if (duration < 1000 && Math.random() < shittiness) {
             source.playbackRate.value = PD.rnorm(1, 1, 0.07)[0];
-            delay = Math.abs(PD.rnorm(1, 0, 0.25)[0])
+            delay = Math.abs(PD.rnorm(1, 0, 0.25)[0]);
             delayNode.delayTime.value = delay;
         }
 
@@ -104,7 +104,7 @@ export class AudioOutputHelper {
             () => {
                 gainNode.gain.exponentialRampToValueAtTime(
                     0.00001,
-                    this.audio.currentTime + 0.04
+                    this.audio.currentTime + 0.04,
                 );
             },
             duration + 1000 * delay); // TODO: if you want to change duration of note this is where you would do that
