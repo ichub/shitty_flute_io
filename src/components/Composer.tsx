@@ -277,6 +277,41 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         window["state"] = this.state.composition;
         return (
             <div>
+                <div style={[Composer.styles.controls]}>
+                    <input
+                        type="button"
+                        value="play"
+                        onClick={this.play.bind(this)}
+                        disabled={this.state.stateName !== ComposerStateName.Idle || !this.hasRecorded()}/>
+                    <input
+                        type="button"
+                        value="record"
+                        onClick={this.record.bind(this)}
+                        disabled={this.state.stateName !== ComposerStateName.Idle}/>
+                    <input
+                        type="button"
+                        value="reset"
+                        onClick={this.handleResetClick.bind(this)}
+                        disabled={this.state.stateName !== ComposerStateName.Idle}/>
+
+                    <span>
+                        {
+                            ((state: ComposerStateName) => {
+                                switch (state) {
+                                    case ComposerStateName.Recording :
+                                        return "recording";
+                                    case ComposerStateName.Idle :
+                                        return "idle";
+                                    case ComposerStateName.Playing :
+                                        return "playing";
+                                }
+                            })(this.state.stateName)
+                        }
+                    </span>
+                    <span ref="milliseconds">
+
+                    </span>
+                </div>
                 <div style={[GlobalFont, Composer.styles.base]}>
                     <div style={[Composer.styles.noteContainer]}>
                         {
@@ -322,41 +357,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                         <div ref="scrubBar" style={[Composer.styles.scrubBar]}></div>
                     </div>
                 </div>
-                <div style={[Composer.styles.controls]}>
-                    <input
-                        type="button"
-                        value="play"
-                        onClick={this.play.bind(this)}
-                        disabled={this.state.stateName !== ComposerStateName.Idle || !this.hasRecorded()}/>
-                    <input
-                        type="button"
-                        value="record"
-                        onClick={this.record.bind(this)}
-                        disabled={this.state.stateName !== ComposerStateName.Idle}/>
-                    <input
-                        type="button"
-                        value="reset"
-                        onClick={this.handleResetClick.bind(this)}
-                        disabled={this.state.stateName !== ComposerStateName.Idle}/>
 
-                    <span>
-                        {
-                            ((state: ComposerStateName) => {
-                                switch (state) {
-                                    case ComposerStateName.Recording :
-                                        return "recording";
-                                    case ComposerStateName.Idle :
-                                        return "idle";
-                                    case ComposerStateName.Playing :
-                                        return "playing";
-                                }
-                            })(this.state.stateName)
-                        }
-                    </span>
-                    <span ref="milliseconds">
-
-                    </span>
-                </div>
             </div>
         );
     }
@@ -377,8 +378,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
     private static styles = {
         base: {
             width: "100vw",
-            height: "50vh",
-
+            height: "100vh",
         },
         noteContainer: {
             height: "100%",
@@ -418,6 +418,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
             position: "relative",
             height: "100px",
             backgroundColor: "white",
+            flex: 1,
         },
         compositionNote: {
             position: "absolute",
