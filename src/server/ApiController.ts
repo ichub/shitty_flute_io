@@ -6,7 +6,6 @@ import * as express from "express";
 import * as path from "path";
 import {generateToken} from "./ComposerTokenLoader";
 import {htmlDir} from "./Server";
-import {IComposition} from "../models/IComposition";
 import {SQLiteDataLayer} from "./SQLiteDataLayer";
 import {YoutubeApi} from "./YoutubeApi";
 import {ICompositionState} from "../models/ICompositionState";
@@ -25,6 +24,16 @@ function returnJson(res: express.Response, promise: Promise<any>): void {
     });
 }
 
+ApiController.get("/recorder", (req: express.Request, res: express.Response) => {
+    const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
+
+    const initializedState = {
+        pageName: "recorder",
+    };
+
+    res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
+});
+
 ApiController.get("/composer", (req: express.Request, res: express.Response) => {
     let token = generateToken();
     res.redirect(302, "/composer/" + token);
@@ -32,6 +41,7 @@ ApiController.get("/composer", (req: express.Request, res: express.Response) => 
 
 ApiController.get("/composer/:editToken", (req: express.Request, res: express.Response) => {
     const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
+
     const initializedState = {
         pageName: "composer",
         editToken: req.params.editToken,

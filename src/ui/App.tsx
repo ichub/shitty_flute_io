@@ -3,6 +3,7 @@ import * as ReactDom from "react-dom";
 import {InitializationState} from "../models/IInitializationState";
 import {LandingPageComponent} from "../components/pages/LandingPageComponent";
 import {ComposerPageComponent} from "../components/pages/ComposerPageComponent";
+import {RecorderPlayerPageComponent} from "../components/pages/RecorderPlayerPageComponent";
 import {StyleRoot} from "radium";
 
 declare const initializedState: InitializationState;
@@ -23,6 +24,12 @@ if (initializedState.pageName === "landing") {
         document.getElementById("app-container"));
 } else if (initializedState.pageName === "composer-view") {
 
+} else if (initializedState.pageName === "recorder") {
+    ReactDom.render(
+        <StyleRoot>
+            <RecorderPlayerPageComponent />
+        </StyleRoot>,
+        document.getElementById("app-container"));
 }
 
 console.log(`the current page is: ${initializedState.pageName}`);

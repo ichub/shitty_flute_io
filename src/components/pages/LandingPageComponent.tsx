@@ -47,7 +47,7 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
     }
 
     onComposeClick() {
-        window.location.href = "/composer";
+        window.location.href = "/recorder";
     }
 
     private static readonly videoAspectRatio = 1920 / 1080;

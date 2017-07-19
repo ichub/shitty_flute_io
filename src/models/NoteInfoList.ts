@@ -1,7 +1,4 @@
 import {INoteInfo, makeINoteInfo} from "./INoteInfo";
-/**
- * Created by bgu on 7/18/17.
- */
 
 export class NoteInfoList {
     static readonly notes: INoteInfo[] = [
