@@ -2,6 +2,7 @@ import {IDataLayer} from "./IDataLayer";
 import {IComposition, makeNewIComposition} from "../models/IComposition";
 import * as sqlite3 from "sqlite3";
 import {RunResult} from "sqlite3";
+import {generateToken} from "./ComposerTokenLoader";
 
 export class SQLiteDataLayer implements IDataLayer {
     private static instancePromise: Promise<SQLiteDataLayer> = null;
@@ -76,6 +77,7 @@ export class SQLiteDataLayer implements IDataLayer {
                 return this.execRunWithPromise(
                     "CREATE TABLE composition_json_table " +
                     "(id VARCHAR(100)," +
+                    "view_token VARCHAR(100)," +
                     "data TEXT," +
                     "PRIMARY KEY (id))");
             })
@@ -83,10 +85,11 @@ export class SQLiteDataLayer implements IDataLayer {
             });
     }
 
-    getComposition(compositionId: string): Promise<IComposition> {
+    getCompositionEdit(compositionId: string): Promise<IComposition> {
+        let viewTokenIfNoneExists = generateToken();
         return this.execRunWithPromise(
-            "INSERT OR IGNORE INTO composition_json_table (id, data) VALUES (?, ?)",
-            [compositionId, JSON.stringify(makeNewIComposition("", compositionId))])
+            "INSERT OR IGNORE INTO composition_json_table (id, view_token, data) VALUES (?, ?, ?)",
+            [compositionId, viewTokenIfNoneExists, JSON.stringify(makeNewIComposition("", compositionId))])
             .then(() => {
                 return this.execGetWithPromise(
                     "SELECT data from composition_json_table WHERE id=?",
@@ -98,12 +101,40 @@ export class SQLiteDataLayer implements IDataLayer {
             });
     }
 
+    getCompositionView(viewToken: string): Promise<IComposition> {
+        return this.execRunWithPromise(
+            "SELECT data from composition_json_table WHERE view_token=?",
+            [viewToken])
+            .then(row => {
+                return Promise.resolve(JSON.parse((row as any).data) as IComposition);
+            })
+            .catch(err => {
+                console.log("No composition with such view ID exists (" + viewToken + ")");
+                return Promise.reject("No composition with such view ID exists.");
+            })
+    }
+
+    getViewToken(compositionId: string): Promise<string> {
+        return this.execRunWithPromise(
+            "SELECT view_token from composition_json_table WHERE id=?",
+            [compositionId])
+            .then(row => {
+                return Promise.resolve(JSON.parse((row as any).data) as IComposition);
+            })
+            .catch(err => {
+                console.log("No composition with such ID exists (" + compositionId + ")");
+                return Promise.reject("No composition with such ID exists");
+            })
+    }
+
     saveComposition(compositionId: string, composition: IComposition): Promise<void> {
         const data = JSON.stringify(composition);
         return this.execRunWithPromise(
-            "INSERT INTO composition_json_table (id, data) VALUES (?,?)",
-            [compositionId, data])
-            .then(() => {
+            "UPDATE composition_json_table SET data=? WHERE id=?",
+            [data, compositionId])
+            .catch(err => {
+                console.log("An error occurred.");
+                return Promise.reject(err);
             });
     }
 

@@ -52,7 +52,18 @@ ApiController.get("/composer/:compositionId/data", (req: express.Request, res: e
         SQLiteDataLayer
             .getInstance()
             .then((dataLayer) => {
-                return dataLayer.getComposition(req.params.compositionId);
+                return dataLayer.getCompositionEdit(req.params.compositionId);
+            }),
+    );
+});
+
+ApiController.get("/composer/view/:viewToken/data", (req: express.Request, res: express.Response) => {
+    returnJson(
+        res,
+        SQLiteDataLayer
+            .getInstance()
+            .then((dataLayer) => {
+                return dataLayer.getCompositionView(req.params.viewToken);
             }),
     );
 });
