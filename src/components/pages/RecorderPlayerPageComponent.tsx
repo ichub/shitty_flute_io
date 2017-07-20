@@ -153,7 +153,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 </div>
 
                 <br/>
-                <div>
+                <div style={[RecorderPlayerPageComponent.styles.noteContainer]}>
                     {
                         NoteInfoList.notes.map((note, i) => {
                             return <RecorderNote key={i} note={note} isDown={this.isNoteDown(note)}/>;
@@ -331,8 +331,15 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     private static styles = {
         base: {
-            width: "100%"
-        }
+            width: "100%",
+        },
+        noteContainer: {
+            width: "100%",
+            height: "100px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+        },
     };
 }
 
