@@ -116,7 +116,7 @@ export class AudioOutputHelper {
         if (loop) {
             source.start();
         } else {
-            source.start(delay, 0, (duration / 1000) + delay);
+            source.start(0, 0, (duration / 1000) + delay);
         }
 
         return {
