@@ -30,20 +30,7 @@ let htmlGlob = "./index.html";
 
 
 gulp.task("default", ["serve"]);
-
-gulp.task("browserify", ["ts"], function () {
-    gulp.src(["./dist/ui/App.js", "!./dist/tests/*"])
-        .pipe(browserify({
-            insertGlobals: false,
-            debug: true,
-            outfile: tsWatchedGlob
-        }))
-        .pipe(rename("bundle.js"))
-        .pipe(gulp.dest("dist/bundle"))
-        .pipe(uglify({}))
-        .pipe(rename("bundle.min.js"))
-        .pipe(gulp.dest("dist/bundle"));
-});
+gulp.task("build", ["sass", "webpack"]);
 
 gulp.task("webpack", ["ts"], function () {
     return gulp.src('dist/ui/App.js')
