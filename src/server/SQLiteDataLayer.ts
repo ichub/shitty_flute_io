@@ -8,6 +8,7 @@ import {NoteInfoList} from "../models/NoteInfoList";
 import {ICompositionState, makeICompositionState} from "../models/ICompositionState";
 import * as path from "path";
 import {rootPath} from "./Server";
+import {INoteInfo} from "../models/INoteInfo";
 
 var fs = require('fs');
 
@@ -95,7 +96,7 @@ export class SQLiteDataLayer implements IDataLayer {
                 let notes: ICompositionNote[] = [];
                 for (let noteMapRow of noteMapRows) {
                     let noteInfoId = (noteMapRow as any).note_id;
-                    let noteInfo = NoteInfoList.notes[noteInfoId];
+                    let noteInfo = this.getNoteWithId(noteInfoId);
                     let start = (noteMapRow as any).start;
                     let end = (noteMapRow as any).end;
                     let compositionNote = makeICompositionNote(noteInfo, start, end);
@@ -112,6 +113,14 @@ export class SQLiteDataLayer implements IDataLayer {
                 let composition = makeIComposition(editToken, viewToken, compositionState);
                 return composition;
             });
+    }
+
+    getNoteWithId(noteInfoId: number): INoteInfo {
+        for (let note of NoteInfoList.notes) {
+            if (note.noteId == noteInfoId) {
+                return note;
+            }
+        }
     }
 
     createCompositionIfNoneExists(editToken: string): Promise<void> {

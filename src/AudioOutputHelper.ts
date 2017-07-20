@@ -1,6 +1,7 @@
 import {INoteInfo} from "./models/INoteInfo";
 import {ICompositionState} from "./models/ICompositionState";
 import {ICompositionNote} from "./models/ICompositionNote";
+import {NoteType} from "./models/NoteInfoList";
 
 const axios = require("axios");
 const PD = require("probability-distributions");
@@ -8,7 +9,7 @@ const PD = require("probability-distributions");
 export class AudioOutputHelper {
     private notes: INoteInfo[];
     private audio: AudioContext;
-    private noteToAudioBufferMap: { [name: string]: AudioBuffer[] }; // TODO: map to array of buffers [normal, shitty1, shitty2, etc... ]
+    private noteToAudioBufferMap: { [name: string]: AudioBuffer[] };
 
     private constructor(notes: INoteInfo[]) {
         this.notes = notes;
@@ -27,11 +28,12 @@ export class AudioOutputHelper {
 
     private initializeNotes(): Promise<void> {
         return Promise.all(
-            this.notes.map(note =>
+            this.notes.filter(note => note.type != NoteType.Dummy).map(note => {
                 this.initializeSingleNote(note)
                     .then((initialized) => {
                         this.noteToAudioBufferMap[initialized.note.name] = initialized.audioBuffers;
-                    })),
+                    });
+            })
         ).then(() => {
             console.log("initialized audio");
             console.log(this.noteToAudioBufferMap);
@@ -60,13 +62,17 @@ export class AudioOutputHelper {
         return Promise.all(
             [
                 this.getBufferForFile(note.soundFileUrl),
-                this.getBufferForFile(note.shittySoundFileUrl),
-            ],
+                this.getBufferForFile(note.shittySoundFileUrl)
+            ]
         ).then(audioBuffers => {
-            return Promise.resolve({
+            console.log("got buffers for note " + note.name);
+            let initializedSound: IInitializedSound = {
                 audioBuffers: audioBuffers,
-                note: note,
-            });
+                note: note
+            };
+            return initializedSound;
+        }).catch(err => {
+            console.log(err);
         });
     }
 
@@ -107,7 +113,7 @@ export class AudioOutputHelper {
                 () => {
                     gainNode.gain.exponentialRampToValueAtTime(
                         0.00001,
-                        this.audio.currentTime + 0.04 + delay,
+                        this.audio.currentTime + 0.04 + delay
                     );
                 },
                 duration + 1000 * delay); // TODO: if you want to change duration of note this is where you would do that
@@ -123,9 +129,9 @@ export class AudioOutputHelper {
             stop: () => {
                 gainNode.gain.exponentialRampToValueAtTime(
                     0.00001,
-                    this.audio.currentTime + 0.04,
+                    this.audio.currentTime + 0.04
                 );
-            },
+            }
         };
     }
 
