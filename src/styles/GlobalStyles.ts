@@ -11,3 +11,11 @@ export const BigText = {
 export const GlobalFont = {
     fontFamily: "'Oswald', sans-serif",
 };
+
+export const TitleFont = {
+    fontFamily: "'Reenie Beanie', cursive",
+};
+
+export const ButtonFont = {
+    fontFamily: "'Cabin Sketch', cursive"
+};

@@ -11,7 +11,7 @@ import {ChangeEvent} from "react";
 import {ICompositionNote} from "../../models/ICompositionNote";
 import {ICompositionState} from "../../models/ICompositionState";
 import {IComposition} from "../../models/IComposition";
-import {GlobalFont} from "../../styles/GlobalStyles";
+import {ButtonFont, GlobalFont} from "../../styles/GlobalStyles";
 
 const axios = require("axios");
 
@@ -127,7 +127,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
                         <input
                             style={[
-                                GlobalFont,
+                                ButtonFont,
                                 RecorderPlayerPageComponent.styles.flex,
                                 RecorderPlayerPageComponent.styles.button
                             ]}
@@ -137,7 +137,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}/>
                         <input
                             style={[
-                                GlobalFont,
+                                ButtonFont,
                                 RecorderPlayerPageComponent.styles.flex,
                                 RecorderPlayerPageComponent.styles.button
                             ]}
@@ -147,7 +147,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.Recording}/>
                         <input
                             style={[
-                                GlobalFont,
+                                ButtonFont,
                                 RecorderPlayerPageComponent.styles.flex,
                                 RecorderPlayerPageComponent.styles.button
                             ]}
@@ -157,7 +157,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             disabled={this.state.stateName !== RecorderStateName.FreePlay || !this.state.hasRecorded}/>
                         <input
                             style={[
-                                GlobalFont,
+                                ButtonFont,
                                 RecorderPlayerPageComponent.styles.flex,
                                 RecorderPlayerPageComponent.styles.button
                             ]}
@@ -167,7 +167,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             disabled={this.state.stateName !== RecorderStateName.Playing}/>
                         <input
                             style={[
-                                GlobalFont,
+                                ButtonFont,
                                 RecorderPlayerPageComponent.styles.flex,
                                 RecorderPlayerPageComponent.styles.button
                             ]}
@@ -177,7 +177,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}/>
                         <input
                             style={[
-                                GlobalFont,
+                                ButtonFont,
                                 RecorderPlayerPageComponent.styles.flex,
                                 RecorderPlayerPageComponent.styles.button
                             ]}

@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Radium from "radium";
 import * as color from "color";
+import {ButtonFont, TitleFont} from "../../styles/GlobalStyles";
 
 @Radium
 export class LandingPageComponent extends React.Component<any, ILandingPageComponentState> {
@@ -10,6 +11,7 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                 LandingPageComponent.styles.base,
             ]}>
                 <div style={[
+                    TitleFont,
                     LandingPageComponent.styles.title,
                     LandingPageComponent.styles.easeIn(0),
                 ]}>
@@ -34,11 +36,12 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                 ]}>
                     <input
                         style={[
+                            ButtonFont,
                             LandingPageComponent.styles.composeButton,
                             LandingPageComponent.styles.pulse(0.50),
                         ]}
                         type="button"
-                        value="compose"
+                        value="COMPOSE"
                         onClick={this.onComposeClick.bind(this)}/>
                 </div>
 
@@ -75,7 +78,6 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
 
     private static styles = {
         base: {
-            fontFamily: "'Oswald', sans-serif",
             width: "100vw",
             height: "100vh",
             display: "flex",
@@ -85,20 +87,16 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
         },
         title: {
             fontSize: "4em",
-            color: "white",
-            backgroundColor: "black",
         },
         composeButton: {
-            padding: "10px 5px",
+            padding: "10px 5px 10px 5px",
             backgroundColor: "white",
             color: "black",
             border: "none",
-            fontFamily: "inherit",
-            textDecoration: "underline",
             cursor: "pointer",
+            transition: "200ms",
             ":hover": {
-                color: "white",
-                backgroundColor: "black",
+                textDecoration: "underline",
             },
         },
         videoContainer: {
