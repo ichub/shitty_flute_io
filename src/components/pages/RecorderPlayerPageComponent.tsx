@@ -134,7 +134,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             type="button"
                             value="record"
                             onClick={this.record.bind(this)}
-                            disabled={this.state.stateName !== RecorderStateName.FreePlay}/>
+                            disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}/>
                         <input
                             style={[
                                 GlobalFont,
@@ -144,7 +144,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             type="button"
                             value="stop recording"
                             onClick={this.stopRecording.bind(this)}
-                            disabled={this.state.stateName !== RecorderStateName.Recording}/>
+                            disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.Recording}/>
                         <input
                             style={[
                                 GlobalFont,
@@ -174,7 +174,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             type="button"
                             value="reset"
                             onClick={this.reset.bind(this)}
-                            disabled={this.state.stateName !== RecorderStateName.FreePlay}/>
+                            disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}/>
                         <input
                             style={[
                                 GlobalFont,
@@ -184,14 +184,14 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             type="button"
                             value="save"
                             onClick={this.save.bind(this)}
-                            disabled={this.state.stateName !== RecorderStateName.FreePlay}/>
+                            disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}/>
 
                     </div>
 
                     <br/>
                     <div style={[
                         RecorderPlayerPageComponent.styles.flex,
-                        RecorderPlayerPageComponent.styles.noteContainer,
+                        RecorderPlayerPageComponent.styles.noteContainer
                     ]}>
                         {
                             NoteInfoList.notes.map((note, i) => {
@@ -320,9 +320,17 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     }
 
     private loadData() {
-        axios.get(`/recorder/${this.props.editToken}/data`)
+        let query: string = "";
+        if (this.props.viewOnly) {
+            query = `/recorder/view/${this.props.viewToken}/data`;
+        } else {
+            query = `/recorder/${this.props.editToken}/data`;
+        }
+        axios.get(query)
             .then((result) => {
-                let compositionState = (result.data as IComposition).state;
+                console.log("here's the result i got back:");
+                console.log(result);
+                let compositionState = result.data as ICompositionState;
                 console.log("load complete");
                 console.log(result);
                 console.log(compositionState);
@@ -377,33 +385,34 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     private static styles = {
         base: {
             width: "100vw",
-            height: "100vh",
+            height: "100vh"
         },
         flex: {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            flexDirection: "row",
+            flexDirection: "row"
         },
         noteContainer: {
             width: "100%",
-            height: "100px",
+            height: "100px"
         },
         buttonContainer: {
-            width: "100%",
+            width: "100%"
         },
         button: {
             border: "none",
             padding: "20px",
             margin: "20px",
-            fontSize: "1.5em",
+            fontSize: "1.5em"
         },
         youtubeIdInput: {}
     };
 }
 
 export interface IRecorderPlayerPageComponentProps {
-    editToken: string;
+    editToken?: string;
+    viewToken?: string;
     viewOnly: boolean;
 }
 

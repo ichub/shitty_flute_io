@@ -40,7 +40,7 @@ ApiController.get("/recorder/:editToken", (req: express.Request, res: express.Re
 
     const initializedState = {
         pageName: "recorder",
-        editToken: req.params.editToken,
+        editToken: req.params.editToken
     };
 
     res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
@@ -50,7 +50,7 @@ ApiController.get("/recorder/view/:viewToken", (req: express.Request, res: expre
     const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
     const initializedState = {
         pageName: "recorder-view",
-        viewToken: req.params.viewToken,
+        viewToken: req.params.viewToken
     };
 
     res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
@@ -71,7 +71,7 @@ ApiController.get("/recorder/:editToken/data", (req: express.Request, res: expre
             .getInstance()
             .then((dataLayer) => {
                 return dataLayer.getCompositionEdit(req.params.editToken);
-            }),
+            })
     );
 });
 
@@ -82,7 +82,7 @@ ApiController.get("/recorder/view/:viewToken/data", (req: express.Request, res: 
             .getInstance()
             .then((dataLayer) => {
                 return dataLayer.getCompositionView(req.params.viewToken);
-            }),
+            })
     );
 });
 
@@ -93,7 +93,7 @@ ApiController.get("/recorder/:editToken/viewToken", (req: express.Request, res: 
             .getInstance()
             .then((dataLayer) => {
                 return dataLayer.getViewToken(req.params.editToken);
-            }),
+            })
     );
 });
 
@@ -102,6 +102,6 @@ ApiController.get("/video-title/:youtubeVideoId", (req: express.Request, res: ex
         YoutubeApi.getInfoOnVideo(req.params.youtubeVideoId)
             .then(info => {
                 return Promise.resolve({title: info.items[0].snippet.title});
-            }));
-
+            })
+    );
 });

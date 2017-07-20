@@ -27,7 +27,13 @@ if (initializedState.pageName === "landing") {
 } else if (initializedState.pageName === "recorder") {
     ReactDom.render(
         <StyleRoot>
-            <RecorderPlayerPageComponent editToken={initializedState.editToken}/>
+            <RecorderPlayerPageComponent editToken={initializedState.editToken} viewOnly={false}/>
+        </StyleRoot>,
+        document.getElementById("app-container"));
+} else if (initializedState.pageName === "recorder-view") {
+    ReactDom.render(
+        <StyleRoot>
+            <RecorderPlayerPageComponent viewToken={initializedState.viewToken} viewOnly={true}/>
         </StyleRoot>,
         document.getElementById("app-container"));
 }

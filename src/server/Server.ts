@@ -28,6 +28,7 @@ app.get("/", (req, res) => {
     const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
     initializedState = {
         pageName: "landing",
+        viewOnly: true
     };
     res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
 });

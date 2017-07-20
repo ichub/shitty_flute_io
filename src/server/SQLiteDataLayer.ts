@@ -101,9 +101,10 @@ export class SQLiteDataLayer implements IDataLayer {
             });
     }
 
-    getCompositionEdit(editToken: string): Promise<IComposition> {
+    getCompositionEdit(editToken: string): Promise<ICompositionState> {
         console.log("attempting to getCompositionEdit");
         let viewTokenIfNoneExists = generateToken();
+        console.log("view token set (if none already exists) as: " + viewTokenIfNoneExists);
         return this.execRunWithPromise(
             // command in SQL is INSERT IGNORE
             // in SQLite it is INSERT OR IGNORE
@@ -124,8 +125,11 @@ export class SQLiteDataLayer implements IDataLayer {
                     [editToken]);
             })
             .then(row => {
-                console.log(row);
                 return this.getCompositionFromRow(row);
+            })
+            .then((composition: IComposition) => {
+                console.log(composition.state);
+                return composition.state;
             });
     }
 
@@ -154,6 +158,7 @@ export class SQLiteDataLayer implements IDataLayer {
                 return this.getCompositionFromRow(row);
             })
             .then((composition: IComposition) => {
+                console.log(composition.state);
                 return composition.state;
             });
     }
