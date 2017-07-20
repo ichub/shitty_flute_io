@@ -197,12 +197,22 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     </div>
 
                     <br/>
-                        <div style={[
+                    <div style={[
                         RecorderPlayerPageComponent.styles.flex,
                         RecorderPlayerPageComponent.styles.noteContainer
                     ]}>
                         {
-                            NoteInfoList.notes.map((note, i) => {
+                            NoteInfoList.notes.filter(note => note.isFlat).map((note, i) => {
+                                return <RecorderNote key={i} note={note} isDown={this.isNoteDown(note)}/>;
+                            })
+                        }
+                    </div>
+                    <div style={[
+                        RecorderPlayerPageComponent.styles.flex,
+                        RecorderPlayerPageComponent.styles.noteContainer
+                    ]}>
+                        {
+                            NoteInfoList.notes.filter(note => !note.isFlat).map((note, i) => {
                                 return <RecorderNote key={i} note={note} isDown={this.isNoteDown(note)}/>;
                             })
                         }
