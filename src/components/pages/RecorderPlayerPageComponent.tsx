@@ -13,6 +13,7 @@ import {ICompositionState} from "../../models/ICompositionState";
 import {IComposition} from "../../models/IComposition";
 import {ButtonFont, GlobalFont} from "../../styles/GlobalStyles";
 import * as color from "color";
+import {ShareComponent} from "../ShareComponent";
 
 const axios = require("axios");
 
@@ -250,6 +251,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             onStateChange={this.onStateChange.bind(this)}
                             canInteract={this.state.stateName == RecorderStateName.FreePlay}
                         />
+                    </div>
+                    <div style={[RecorderPlayerPageComponent.styles.flex]}>
+                        <ShareComponent viewToken={this.props.viewToken}/>
                     </div>
                 </div>
             </div>
