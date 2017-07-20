@@ -9,14 +9,24 @@ import {ICompositionState, makeICompositionState} from "../models/ICompositionSt
 import * as path from "path";
 import {rootPath} from "./Server";
 
+var fs = require('fs');
+
 export class SQLiteDataLayer implements IDataLayer {
     private static instancePromise: Promise<SQLiteDataLayer> = null;
     private db: sqlite3.Database;
 
     private constructor() {
+        this.makeDirIfNotExists(path.join(rootPath, "data"));
+        this.makeDirIfNotExists(path.join(rootPath, "data", "db"));
         sqlite3.verbose();
-        const dbPath = path.join("data", "db", "prod_db")
+        const dbPath = path.join(rootPath, "data", "db", "prod_db")
         this.db = new sqlite3.Database(dbPath);
+    }
+
+    private makeDirIfNotExists(path: string) {
+        if (!fs.existsSync(path)) {
+            fs.mkdirSync(path);
+        }
     }
 
     execRunWithPromise(query: string, params: any[] = []): Promise<RunResult> {
