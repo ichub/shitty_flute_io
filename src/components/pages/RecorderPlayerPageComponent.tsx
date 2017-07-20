@@ -200,7 +200,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         }
                     </div>
                     <br/>
-                    <div>
+                    <div style={[
+                        RecorderPlayerPageComponent.styles.flex
+                    ]}>
                         <label>
                             <span>current youtube id: {this.state.youtubeVideoId}</span>
                             <input style={[RecorderPlayerPageComponent.styles.youtubeIdInput]}
@@ -212,7 +214,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                                    onClick={this.handleVideoIdChange.bind(this)}/>
                         </label>
                     </div>
-                    <div>
+                    <div style={[
+                        RecorderPlayerPageComponent.styles.flex
+                    ]}>
                         <VideoPlayer
                             videoId={this.state.youtubeVideoId}
                             onVideoReady={this.onVideoReady.bind(this)}
