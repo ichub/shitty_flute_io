@@ -28,7 +28,7 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                            autoPlay={true}
                            controls={false}
                            loop={true}>
-                        <source src="/res/videos/out.mp4"/>
+                        <source src="/res/videos/floot.mp4"/>
                     </video>
                 </div>
                 <div style={[
