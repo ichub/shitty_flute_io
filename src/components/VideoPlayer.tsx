@@ -31,6 +31,7 @@ export class VideoPlayer extends React.Component<IVideoPlayerProps, IVideoPlayer
                         videoId={this.props.videoId}
                         opts={opts}
                         onReady={this.props.onVideoReady}
+                        onStateChange={this.props.onStateChange}
                     />
                     {
                         !this.props.canInteract ?
@@ -81,6 +82,7 @@ export class VideoPlayer extends React.Component<IVideoPlayerProps, IVideoPlayer
 
 export interface IVideoPlayerProps {
     onVideoReady: () => void;
+    onStateChange: () => void;
     videoId: string;
     canInteract: boolean;
 }

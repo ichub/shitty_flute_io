@@ -36,7 +36,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         this.state = {
             noteState: {
                 down: [],
-                played: [],
+                played: []
             },
             youtubeVideoId: "",
             stateName: RecorderStateName.Loading,
@@ -68,7 +68,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
         this.noteKeyboardManager.on(NoteKeyboardManager.STATE_CHANGED, (state: ITotalNoteState) => {
             this.setState({
-                noteState: state,
+                noteState: state
             });
         });
 
@@ -86,8 +86,17 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         console.log("video ready");
 
         this.video = event.target as IYoutubeVideoPlayer;
-        this.video.playVideo();
-        this.video.pauseVideo();
+    }
+
+    private onStateChange(event) {
+        console.log(event);
+        if (event.data == -1) {
+            this.video.playVideo();
+            setTimeout(() => {
+                this.video.pauseVideo();
+                console.log("I should play and pause");
+            }, 1);
+        }
     }
 
     render() {
@@ -95,7 +104,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         console.log(this.state);
         return (
             <div style={[
-                RecorderPlayerPageComponent.styles.base,
+                RecorderPlayerPageComponent.styles.base
             ]}>
                 <div>
                     <div>
@@ -167,6 +176,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     <VideoPlayer
                         videoId={this.state.youtubeVideoId}
                         onVideoReady={this.onVideoReady.bind(this)}
+                        onStateChange={this.onStateChange.bind(this)}
                         canInteract={this.state.stateName == RecorderStateName.FreePlay}
                     />
                 </div>
@@ -192,7 +202,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 stateName: RecorderStateName.FreePlay,
                 hasRecorded: false,
                 recording: [],
-                startRecordingDateTime: 0,
+                startRecordingDateTime: 0
             });
         }
     }
@@ -259,7 +269,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     console.log(err);
                     this.setState({
                         err: err as any
-                    })
+                    });
                 });
         }
     }
@@ -287,7 +297,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 console.log(err);
                 this.setState({
                     err: err as any
-                })
+                });
             });
     }
 
@@ -307,7 +317,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     private stopPlayback() {
         if (this.state.stateName === RecorderStateName.Playing) {
             this.setState({
-                stateName: RecorderStateName.FreePlay,
+                stateName: RecorderStateName.FreePlay
             });
 
             this.video.seekTo(this.state.recordingYoutubeStartTime);
@@ -321,13 +331,14 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     private static styles = {
         base: {
-            width: "100%",
-        },
+            width: "100%"
+        }
     };
 }
 
 export interface IRecorderPlayerPageComponentProps {
     editToken: string;
+    viewOnly: boolean;
 }
 
 export interface IRecorderPlayerPageComponentState {

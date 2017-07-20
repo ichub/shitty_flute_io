@@ -42,7 +42,6 @@ export class SQLiteDataLayer implements IDataLayer {
 
     createTables(): Promise<void> {
         return this.execRunWithPromise(
-            // TODO: FIGURE OUT WHY id ISN'T ACTUALLY AUTOINCREMENTING (it's always null when not specified in the INSERT???)
             "CREATE TABLE compositions " +
             "(edit_token VARCHAR(100), " +
             "view_token VARCHAR(100), " +
@@ -61,15 +60,6 @@ export class SQLiteDataLayer implements IDataLayer {
                     "note_id INT, " +
                     "start INT, " +
                     "end INT)");
-            })
-            .then(() => {
-                return this.execRunWithPromise(
-                    "CREATE TABLE note_info " +
-                    "(id INT, " +
-                    "name VARCHAR(100), " +
-                    "sound_file VARCHAR(100), " +
-                    "shitty_sound_file VARCHAR(100), " +
-                    "keyboard_character VARCHAR(1)) ");
             })
             .then(() => {
             });
