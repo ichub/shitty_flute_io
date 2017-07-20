@@ -6,6 +6,8 @@ import {generateToken} from "./ComposerTokenLoader";
 import {ICompositionNote, makeICompositionNote} from "../models/ICompositionNote";
 import {NoteInfoList} from "../models/NoteInfoList";
 import {ICompositionState, makeICompositionState} from "../models/ICompositionState";
+import * as path from "path";
+import {rootPath} from "./Server";
 
 export class SQLiteDataLayer implements IDataLayer {
     private static instancePromise: Promise<SQLiteDataLayer> = null;
@@ -13,7 +15,8 @@ export class SQLiteDataLayer implements IDataLayer {
 
     private constructor() {
         sqlite3.verbose();
-        this.db = new sqlite3.Database(":memory:");
+        const dbPath = path.join(rootPath, "data", "db", "prod_db")
+        this.db = new sqlite3.Database(dbPath);
     }
 
     execRunWithPromise(query: string, params: any[] = []): Promise<RunResult> {
@@ -42,7 +45,7 @@ export class SQLiteDataLayer implements IDataLayer {
 
     createTables(): Promise<void> {
         return this.execRunWithPromise(
-            "CREATE TABLE compositions " +
+            "CREATE TABLE IF NOT EXISTS compositions " +
             "(edit_token VARCHAR(100), " +
             "view_token VARCHAR(100), " +
             "name VARCHAR(100), " +
@@ -55,7 +58,7 @@ export class SQLiteDataLayer implements IDataLayer {
             "UNIQUE (view_token)) ")
             .then(() => {
                 return this.execRunWithPromise(
-                    "CREATE TABLE compositions_notes_map " +
+                    "CREATE TABLE IF NOT EXISTS compositions_notes_map " +
                     "(composition_edit_token INT, " +
                     "note_id INT, " +
                     "start INT, " +

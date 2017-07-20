@@ -4,3 +4,4 @@ dist
 *.log
 css
 .DS_Store
+data
