@@ -17,8 +17,8 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
             <div style={[
                 GlobalFont,
                 RecorderNote.styles.base,
-                RecorderNote.styles.downState(this.props.isDown),
                 RecorderNote.styles.flatState(this.props.note.isFlat),
+                RecorderNote.styles.downState(this.props.isDown),
             ]}>
                 {this.props.note.keyboardCharacter}
             </div>
@@ -37,7 +37,8 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
             alignItems: "center",
             justifyContent: "center",
             fontSize: "2em",
-            borderRadius: "5px"
+            borderRadius: "10px",
+            border: "1px solid black"
         },
         downState: (isDown: boolean) => {
             if (isDown) {
@@ -55,7 +56,7 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
                     backgroundColor: "black",
                 }
             }
-            
+
             return {};
         }
     };
