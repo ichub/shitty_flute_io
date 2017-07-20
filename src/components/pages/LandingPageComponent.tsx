@@ -15,7 +15,7 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                     LandingPageComponent.styles.title,
                     LandingPageComponent.styles.easeIn(0),
                 ]}>
-                    shitty recorder
+                    welcome to floot
                 </div>
                 <div style={[
                     LandingPageComponent.styles.videoContainer,
