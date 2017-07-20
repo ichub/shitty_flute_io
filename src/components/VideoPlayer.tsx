@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Radium from "radium";
-import {GlobalFont} from "../styles/GlobalStyles";
+import {GlobalFont, TitleFont} from "../styles/GlobalStyles";
 
 const axios = require("axios");
 const ReactYoutube = require("react-youtube").default as any;
@@ -35,8 +35,11 @@ export class VideoPlayer extends React.Component<IVideoPlayerProps, IVideoPlayer
                     />
                     {
                         !this.props.canInteract ?
-                            <div style={[VideoPlayer.styles.overlay]}>
-
+                            <div style={[
+                                TitleFont,
+                                VideoPlayer.styles.overlay
+                            ]}>
+                                can't touch this until recording is finished!
                             </div> :
                             null
                     }
@@ -69,6 +72,11 @@ export class VideoPlayer extends React.Component<IVideoPlayerProps, IVideoPlayer
             position: "absolute",
             top: 0,
             left: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "black",
+            backgroundColor: "rgba(255, 255, 255, 0.8)"
         },
         videoTitle: {
             fontSize: "0.9em",
