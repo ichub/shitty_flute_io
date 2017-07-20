@@ -18,7 +18,8 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
                 ShareComponent.styles.base
             ]}>
                 share your creation:
-                <span style={[ShareComponent.styles.url]}>{`http://flute.io/view/${this.props.viewToken}`}</span>
+                <span
+                    style={[ShareComponent.styles.url]}>{`http://flute.io/recorder/view/${this.props.viewToken}`}</span>
             </div>
         );
     }
