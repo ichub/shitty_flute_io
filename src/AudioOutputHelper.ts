@@ -97,7 +97,9 @@ export class AudioOutputHelper {
         if (!loop) {
             if (duration < 1000 && Math.random() < shittiness) {
                 source.playbackRate.value = PD.rnorm(1, 1, 0.07)[0];
-                delay = Math.abs(PD.rnorm(1, 0, 0.25)[0]);
+            }
+            if (Math.random() < shittiness) {
+                delay = Math.abs(PD.rnorm(1, 0, 0.15)[0]);
                 delayNode.delayTime.value = delay;
             }
 
