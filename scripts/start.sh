@@ -2,4 +2,4 @@
 
 gulp build
 
-NODE_ENV=production forever ../dist/server/Server.js
+NODE_ENV=production forever start ../dist/server/Server.js
