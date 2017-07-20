@@ -25,7 +25,7 @@ export class FluteButton extends React.Component<IFluteButtonProps, IFluteButton
                 <span style={[
                     FluteButton.styles.noteText,
                 ]}>
-                    {this.props.buttonInfo.name}
+                    {this.props.buttonInfo.label}
 
                     <audio ref="audio" loop={true}>
                           <source src={this.props.buttonInfo.shittySoundFileUrl}/>

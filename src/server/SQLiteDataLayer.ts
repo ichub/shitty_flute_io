@@ -101,12 +101,12 @@ export class SQLiteDataLayer implements IDataLayer {
             });
     }
 
-    getCompositionEdit(editToken: string): Promise<ICompositionState> {
-        console.log("attempting to getCompositionEdit");
+    createCompositionIfNoneExists(editToken: string): Promise<void> {
+        console.log("will attempt to insert new composition in DB if none exists");
         let viewTokenIfNoneExists = generateToken();
         console.log("view token set (if none already exists) as: " + viewTokenIfNoneExists);
         return this.execRunWithPromise(
-            // command in SQL is INSERT IGNORE
+            // command in mySQL is INSERT IGNORE
             // in SQLite it is INSERT OR IGNORE
             "INSERT OR IGNORE INTO compositions " +
             "(edit_token, " +
@@ -119,16 +119,22 @@ export class SQLiteDataLayer implements IDataLayer {
             "has_recorded) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             [editToken, viewTokenIfNoneExists, "", "", -1, -1, -1, 0])
-            .then(() => {
-                return this.execGetWithPromise(
-                    "SELECT * from compositions WHERE edit_token=?",
-                    [editToken]);
-            })
+            .then(result => {})
+            .catch(err => {
+                console.log("An error occurred while trying to insert new row.");
+                console.log(err);
+            });
+    }
+
+    getCompositionEdit(editToken: string): Promise<ICompositionState> {
+        console.log("attempting to getCompositionEdit");
+        return this.execGetWithPromise(
+            "SELECT * from compositions WHERE edit_token=?",
+            [editToken])
             .then(row => {
                 return this.getCompositionFromRow(row);
             })
             .then((composition: IComposition) => {
-                console.log(composition.state);
                 return composition.state;
             });
     }
@@ -168,7 +174,7 @@ export class SQLiteDataLayer implements IDataLayer {
             "SELECT view_token from compositions WHERE edit_token=?",
             [editToken])
             .then(row => {
-                return Promise.resolve(JSON.parse((row as any).view_token) as string);
+                return Promise.resolve((row as any).view_token as string);
             })
             .catch(err => {
                 console.log(err);

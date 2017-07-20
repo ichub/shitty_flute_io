@@ -16,7 +16,7 @@ export class NoteButtonComponent extends React.Component<INoteButtonComponentPro
             <button style={[
                 NoteButtonComponent.styles.base,
             ]}>
-                {this.props.button.name}
+                {this.props.button.label}
             </button>
         );
     }

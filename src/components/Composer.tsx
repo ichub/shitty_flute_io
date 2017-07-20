@@ -86,8 +86,8 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         document.addEventListener("keydown", (e: KeyboardEvent) => {
             for (let i = 0; i < this.props.notes.length; i++) {
                 if (this.isKeyboardEventForNote(this.props.notes[i], e)) {
-                    if (!this.soundCancellationMap[this.props.notes[i].name]) {
-                        this.soundCancellationMap[this.props.notes[i].name] = this.helper.then(helper => Promise.resolve(helper.playNote(this.props.notes[i], true, -1)));
+                    if (!this.soundCancellationMap[this.props.notes[i].label]) {
+                        this.soundCancellationMap[this.props.notes[i].label] = this.helper.then(helper => Promise.resolve(helper.playNote(this.props.notes[i], true, -1)));
                     }
 
                     if (this.state.stateName == ComposerStateName.Recording) {
@@ -100,9 +100,9 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         document.addEventListener("keyup", (e: KeyboardEvent) => {
             for (let i = 0; i < this.props.notes.length; i++) {
                 if (this.isKeyboardEventForNote(this.props.notes[i], e)) {
-                    this.soundCancellationMap[this.props.notes[i].name].then((c) => {
+                    this.soundCancellationMap[this.props.notes[i].label].then((c) => {
                         c.stop();
-                        this.soundCancellationMap[this.props.notes[i].name] = null;
+                        this.soundCancellationMap[this.props.notes[i].label] = null;
                     });
 
                     if (this.state.stateName == ComposerStateName.Recording) {
@@ -119,7 +119,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
     isNoteDown(note: INoteInfo): boolean {
         for (let i = 0; i < this.state.downNotes.length; i++) {
-            if (this.state.downNotes[i].noteInfo.name == note.name) {
+            if (this.state.downNotes[i].noteInfo.label == note.label) {
                 return true;
             }
         }
@@ -155,10 +155,10 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
 
     handleNoteUp(note: INoteInfo) {
         if (this.isNoteDown(note)) {
-            const released = this.state.downNotes.filter(item => item.noteInfo.name === note.name)[0];
+            const released = this.state.downNotes.filter(item => item.noteInfo.label === note.label)[0];
             released.length = new Date().getTime() - released.start;
 
-            this.state.downNotes = this.state.downNotes.filter(item => item.noteInfo.name != released.noteInfo.name);
+            this.state.downNotes = this.state.downNotes.filter(item => item.noteInfo.label != released.noteInfo.label);
 
             released.length = new Date().getTime() - released.start - this.state.recordStartingTime;
             this.state.compositionState.notes.push(released);
@@ -278,7 +278,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
         const scale = 4;
 
         return {
-            nameString: note.noteInfo.name,
+            nameString: note.noteInfo.label,
             width: this.convertMillisecondsToPercentage(note.length) + "%",
             offset: this.convertMillisecondsToPercentage(note.start) + "%",
         };
@@ -334,7 +334,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                                         Composer.styles.note,
                                         downStyle,
                                     ]}>
-                                        {note.name}
+                                        {note.label}
                                     </div>
                                 );
                             })
@@ -343,7 +343,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                     <div style={[Composer.styles.timeSeries]}>
                         {
                             this.props.notes.map((note, i) => {
-                                const matching = this.state.compositionState.notes.filter(compNote => compNote.noteInfo.name == note.name);
+                                const matching = this.state.compositionState.notes.filter(compNote => compNote.noteInfo.label == note.label);
                                 return (
                                     <div key={i} style={[Composer.styles.noteRow]}>
                                         {

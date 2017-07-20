@@ -10,6 +10,7 @@ import {SQLiteDataLayer} from "./SQLiteDataLayer";
 import {YoutubeApi} from "./YoutubeApi";
 import {ICompositionState} from "../models/ICompositionState";
 import {InMemoryDataLayer} from "./InMemoryDataLayer";
+import {IDataLayer} from "./IDataLayer";
 
 export const ApiController = express.Router();
 export const rootPath = path.join(__dirname, "../../");
@@ -38,12 +39,24 @@ ApiController.get("/recorder", (req: express.Request, res: express.Response) => 
 ApiController.get("/recorder/:editToken", (req: express.Request, res: express.Response) => {
     const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
 
-    const initializedState = {
-        pageName: "recorder",
-        editToken: req.params.editToken
-    };
+    SQLiteDataLayer
+        .getInstance()
+        .then((dataLayer: IDataLayer) => {
+            dataLayer.createCompositionIfNoneExists(req.params.editToken);
+            return Promise.resolve(dataLayer);
+        })
+        .then((dataLayer: IDataLayer) => {
+            return dataLayer.getViewToken(req.params.editToken);
+        })
+        .then(viewToken => {
+            const initializedState = {
+                pageName: "recorder",
+                editToken: req.params.editToken,
+                viewToken: viewToken
+            };
 
-    res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
+            res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
+        });
 });
 
 ApiController.get("/recorder/view/:viewToken", (req: express.Request, res: express.Response) => {
