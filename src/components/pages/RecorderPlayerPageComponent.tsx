@@ -228,7 +228,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             <span>YouTube id:</span>
                             <input style={[RecorderPlayerPageComponent.styles.youtubeIdInput]}
                                    ref="youtubeInput"
-                                   type="text"/>
+                                   type="text"
+                                   placeholder={this.state.youtubeVideoId}/>
                             <input type="button"
                                    value="change video id"
                                    disabled={this.state.stateName !== RecorderStateName.FreePlay}
@@ -357,7 +358,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 console.log(compositionState);
                 this.setState({
                     stateName: RecorderStateName.FreePlay,
-                    youtubeVideoId: compositionState.youtubeVideoId,
+                    youtubeVideoId: compositionState.youtubeVideoId || "HQnC1UHBvWA",
                     noteState: makeNewITotalNoteState(),
                     recordingYoutubeStartTime: compositionState.recordingYoutubeStartTime,
                     recordingYoutubeEndTime: compositionState.recordingYoutubeEndTime,
