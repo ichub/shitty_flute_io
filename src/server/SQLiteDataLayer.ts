@@ -15,7 +15,7 @@ export class SQLiteDataLayer implements IDataLayer {
 
     private constructor() {
         sqlite3.verbose();
-        const dbPath = path.join(rootPath, "data", "db", "prod_db")
+        const dbPath = path.join("data", "db", "prod_db")
         this.db = new sqlite3.Database(dbPath);
     }
 
