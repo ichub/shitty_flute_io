@@ -223,7 +223,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         RecorderPlayerPageComponent.styles.flex
                     ]}>
                         <label>
-                            <span>current youtube id: {this.state.youtubeVideoId}</span>
+                            <span>YouTube id:</span>
                             <input style={[RecorderPlayerPageComponent.styles.youtubeIdInput]}
                                    ref="youtubeInput"
                                    type="text"/>
