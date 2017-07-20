@@ -19,7 +19,7 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
                 RecorderNote.styles.base,
                 RecorderNote.styles.downState(this.props.isDown),
             ]}>
-                {this.props.note.name}
+                {this.props.note.keyboardCharacter}
             </div>
         );
     }
