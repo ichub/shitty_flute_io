@@ -197,7 +197,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     </div>
 
                     <br/>
-                    <div style={[
+                        <div style={[
                         RecorderPlayerPageComponent.styles.flex,
                         RecorderPlayerPageComponent.styles.noteContainer
                     ]}>
