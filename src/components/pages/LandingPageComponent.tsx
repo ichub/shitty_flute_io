@@ -44,7 +44,17 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                         value="COMPOSE"
                         onClick={this.onComposeClick.bind(this)}/>
                 </div>
-
+                {/*<div*/}
+                    {/*style={[*/}
+                        {/*LandingPageComponent.styles.easeIn(0.75),*/}
+                        {/*LandingPageComponent.styles.instaContainer,*/}
+                    {/*]}>*/}
+                    {/*<a key="insta"*/}
+                       {/*style={[LandingPageComponent.styles.insta]}*/}
+                       {/*href="https://www.instagram.com/ivanchubster/">*/}
+                        {/*@ivanchubster*/}
+                    {/*</a>*/}
+                {/*</div>*/}
             </div>
         );
     }
@@ -58,10 +68,10 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
 
     private static readonly pulseKeyframes = Radium.keyframes({
         "0%": {
-            transform: "scale(1.5)",
+            transform: "scale(0.5)",
         },
         "100%": {
-            transform: "scale(2)",
+            transform: "scale(1)",
         },
     }, "pulse");
 
@@ -95,6 +105,7 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
             border: "none",
             cursor: "pointer",
             transition: "200ms",
+            fontSize: "1.5em",
             ":hover": {
                 textDecoration: "underline",
             },
@@ -122,6 +133,18 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                 animationName: LandingPageComponent.fadeInKeyframes,
             };
         },
+        insta: {
+            color: "rgba(0, 0, 0, 0.1)",
+            textDecoration: "none",
+
+            ":hover": {
+                color: "rgba(0, 0, 0, 0.5)",
+
+            }
+        },
+        instaContainer: {
+            "marginTop": "50px"
+        }
     };
 }
 
