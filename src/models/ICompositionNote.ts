@@ -7,13 +7,13 @@ import {INoteInfo} from "./INoteInfo";
 export interface ICompositionNote {
     noteInfo: INoteInfo
     start: number
-    length: number
+    end: number
 }
 
-export function makeICompositionNote(note: INoteInfo, start: number, length: number): ICompositionNote {
+export function makeICompositionNote(note: INoteInfo, start: number, end: number): ICompositionNote {
     return {
         noteInfo: note,
         start: start,
-        length: length
+        end: end
     };
 }

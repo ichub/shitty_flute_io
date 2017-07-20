@@ -5,9 +5,12 @@ import {IYoutubeVideoPlayer, VideoPlayer} from "../VideoPlayer";
 import {AudioOutputHelper} from "../../AudioOutputHelper";
 import {NoteInfoList} from "../../models/NoteInfoList";
 import {SingleNotePlayer} from "../../SingleNotePlayer";
-import {ICompletedNote, ITotalNoteState, NoteKeyboardManager} from "../../NoteKeyboardManager";
+import {ITotalNoteState, makeNewITotalNoteState, NoteKeyboardManager} from "../../NoteKeyboardManager";
 import {INoteInfo} from "../../models/INoteInfo";
 import {ChangeEvent} from "react";
+import {ICompositionNote} from "../../models/ICompositionNote";
+import {ICompositionState} from "../../models/ICompositionState";
+import {IComposition} from "../../models/IComposition";
 
 const axios = require("axios");
 
@@ -37,11 +40,11 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             },
             youtubeVideoId: "",
             stateName: RecorderStateName.Loading,
-            recordingYoutubeStartTime: 0,
-            recordingYoutubeEndTime: 0,
+            recordingYoutubeStartTime: -1,
+            recordingYoutubeEndTime: -1,
             hasRecorded: false,
             recording: [],
-            startRecordingDateTime: 0,
+            startRecordingDateTime: -1,
             err: null
         };
 
@@ -70,6 +73,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         });
 
         setTimeout(() => {
+            console.log("attempting to load data");
             this.loadData();
         }, 0);
     }
@@ -87,6 +91,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     }
 
     render() {
+        console.log("rendering...");
+        console.log(this.state);
         return (
             <div style={[
                 RecorderPlayerPageComponent.styles.base,
@@ -252,7 +258,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 .catch((err) => {
                     console.log(err);
                     this.setState({
-                        error: err as any
+                        err: err as any
                     })
                 });
         }
@@ -261,24 +267,41 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     private loadData() {
         axios.get(`/recorder/${this.props.editToken}/data`)
             .then((result) => {
+                let compositionState = (result.data as IComposition).state;
                 console.log("load complete");
                 console.log(result);
-                console.log(result.data);
+                console.log(compositionState);
                 this.setState({
-                    stateName: RecorderStateName.FreePlay
+                    stateName: RecorderStateName.FreePlay,
+                    youtubeVideoId: compositionState.youtubeVideoId,
+                    noteState: makeNewITotalNoteState(),
+                    recordingYoutubeStartTime: compositionState.recordingYoutubeStartTime,
+                    recordingYoutubeEndTime: compositionState.recordingYoutubeEndTime,
+                    startRecordingDateTime: compositionState.startRecordingDateTime,
+                    hasRecorded: compositionState.hasRecorded,
+                    recording: compositionState.notes,
+                    err: null
                 });
-                this.setState(result.data || {err: null});
             })
             .catch((err) => {
                 console.log(err);
                 this.setState({
-                    error: err as any
+                    err: err as any
                 })
             });
     }
 
-    private getUploadableComposition() {
-        return this.state;
+    private getUploadableComposition(): ICompositionState {
+        let compositionState = {
+            compName: "",
+            youtubeVideoId: this.state.youtubeVideoId,
+            recordingYoutubeStartTime: this.state.recordingYoutubeStartTime,
+            recordingYoutubeEndTime: this.state.recordingYoutubeEndTime,
+            startRecordingDateTime: this.state.startRecordingDateTime,
+            hasRecorded: this.state.hasRecorded,
+            notes: this.state.recording
+        };
+        return compositionState as ICompositionState;
     }
 
     private stopPlayback() {
@@ -315,7 +338,7 @@ export interface IRecorderPlayerPageComponentState {
     recordingYoutubeEndTime: number;
     startRecordingDateTime: number;
     hasRecorded: boolean;
-    recording: ICompletedNote[];
+    recording: ICompositionNote[];
     err: Error;
 }
 
@@ -325,12 +348,4 @@ export enum RecorderStateName {
     Playing = "playing",
     Saving = "saving",
     Loading = "loading",
-}
-
-export interface IRecorderComposition {
-    recording: ICompletedNote[];
-    recordingYoutubeStartTime: number;
-    recordingYoutubeEndTime: number;
-    startRecordingDateTime: number;
-    youtubeVideoId: string;
 }

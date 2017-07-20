@@ -9,7 +9,11 @@ import {ICompositionNote} from "./ICompositionNote";
 
 export interface ICompositionState {
     compName: string
-    youtubeId: string
+    youtubeVideoId: string
+    recordingYoutubeStartTime: number
+    recordingYoutubeEndTime: number
+    startRecordingDateTime: number
+    hasRecorded: boolean
     notes: ICompositionNote[]
 }
 
@@ -17,14 +21,25 @@ export interface ICompositionState {
 // responding to /view or something like that - send state
 
 export function makeNewICompositionState(): ICompositionState {
-    let notes: ICompositionNote[] = []
-    return makeICompositionState("", "", notes);
+    let notes: ICompositionNote[] = [];
+    return makeICompositionState("", "", -1, -1, -1, false, notes);
 }
 
-export function makeICompositionState(name: string, youtubeId: string, notes: ICompositionNote[]): ICompositionState {
+export function makeICompositionState(
+    name: string,
+    youtubeId: string,
+    recordingYoutubeStartTime: number,
+    recordingYoutubeEndTime: number,
+    startRecordingDateTime: number,
+    hasRecorded: boolean,
+    notes: ICompositionNote[]): ICompositionState {
     return {
         compName: name,
-        youtubeId: youtubeId,
+        youtubeVideoId: youtubeId,
+        recordingYoutubeStartTime: recordingYoutubeStartTime,
+        recordingYoutubeEndTime: recordingYoutubeEndTime,
+        startRecordingDateTime: startRecordingDateTime,
+        hasRecorded: hasRecorded,
         notes: notes
     };
 }

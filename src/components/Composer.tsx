@@ -64,7 +64,7 @@ export class Composer extends React.Component<IComposerProps, IComposerState> {
                 this.setState({
                     compositionState: response.data.state,
                 }, () => {
-                    axios.get(`/video-title/${this.state.compositionState.youtubeId}`)
+                    axios.get(`/video-title/${this.state.compositionState.youtubeVideoId}`)
                         .then((response) => {
                             this.setState({
                                 videoTitle: response.data.title,

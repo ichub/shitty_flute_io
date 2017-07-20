@@ -1,5 +1,6 @@
 import {INoteInfo} from "./models/INoteInfo";
 import {EventEmitter} from "events";
+import {ICompositionNote} from "./models/ICompositionNote";
 
 export class NoteKeyboardManager extends EventEmitter {
     public static readonly NOTE_START = "note_start";
@@ -8,7 +9,7 @@ export class NoteKeyboardManager extends EventEmitter {
 
     notes: INoteInfo[];
     down: IDownNote[];
-    played: IDownNote[];
+    played: ICompositionNote[];
 
     constructor(notes: INoteInfo[]) {
         super();
@@ -35,10 +36,14 @@ export class NoteKeyboardManager extends EventEmitter {
     }
 
     private removeDownNote(note: INoteInfo) {
-        const toRemove = this.down.filter(down => note.name === down.note.name)[0] as ICompletedNote;
+        const toRemove = this.down.filter(down => note.name === down.note.name)[0] as IDownNote;
         this.down = this.down.filter(down => note.name !== down.note.name);
-        toRemove.end = new Date().getTime();
-        this.played.push(toRemove);
+        const toPush: ICompositionNote = {
+            noteInfo: toRemove.note,
+            start: toRemove.start,
+            end: new Date().getTime()
+        };
+        this.played.push(toPush);
     }
 
     private emitStateChanged() {
@@ -82,13 +87,16 @@ export interface IDownNote {
     start: number;
 }
 
-export interface ICompletedNote {
-    note: INoteInfo;
-    start: number;
-    end: number;
-}
-
 export interface ITotalNoteState {
     down: IDownNote[];
-    played: ICompletedNote[];
+    played: ICompositionNote[];
+}
+
+export function makeNewITotalNoteState() {
+    let down: IDownNote[] = [];
+    let played: ICompositionNote[] = [];
+    return {
+        down: down,
+        played: played
+    };
 }
