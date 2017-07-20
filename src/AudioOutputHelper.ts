@@ -107,7 +107,7 @@ export class AudioOutputHelper {
                 () => {
                     gainNode.gain.exponentialRampToValueAtTime(
                         0.00001,
-                        this.audio.currentTime + 0.04,
+                        this.audio.currentTime + 0.04 + delay,
                     );
                 },
                 duration + 1000 * delay); // TODO: if you want to change duration of note this is where you would do that

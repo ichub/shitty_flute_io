@@ -8,6 +8,8 @@ export enum NoteType {
 
 export class NoteInfoList {
     static readonly notes: INoteInfo[] = [
+        // extra notes are in here for client-side rendering purposes
+        // this is super shitty FIX IT FIX IT FIX IT
         makeINoteInfo(0, "C4", "C", NoteType.Regular, "/res/notes/one-lined/C-Normal.mp3", "/res/notes/one-lined/C-Shitty.mp3", "A"),
         makeINoteInfo(1, "Cs4", "Cs", NoteType.Flat, "/res/notes/one-lined/Cs-Normal.mp3", "/res/notes/one-lined/Cs-Shitty.mp3", "W"),
         makeINoteInfo(2, "D4", "D", NoteType.Regular, "/res/notes/one-lined/D-Normal.mp3", "/res/notes/one-lined/D-Shitty.mp3", "S"),
