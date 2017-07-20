@@ -26,15 +26,16 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
 
     private static styles = {
         base: {
-            width: "50px",
-            height: "50px",
+            width: "75px",
+            height: "75px",
             fontWeight: "bold",
             backgroundColor: "black",
             color: "white",
             margin: "50px",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
+            fontSize: "3em"
         },
         downState: (isDown: boolean) => {
             if (isDown) {

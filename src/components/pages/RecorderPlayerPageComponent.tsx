@@ -11,6 +11,7 @@ import {ChangeEvent} from "react";
 import {ICompositionNote} from "../../models/ICompositionNote";
 import {ICompositionState} from "../../models/ICompositionState";
 import {IComposition} from "../../models/IComposition";
+import {GlobalFont} from "../../styles/GlobalStyles";
 
 const axios = require("axios");
 
@@ -106,45 +107,69 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             <div style={[
                 RecorderPlayerPageComponent.styles.base
             ]}>
-                <div>
-                    <div>
-                        youtubeVideoId: {this.state.youtubeVideoId} <br/>
-                        state: {this.state.stateName} <br/>
-                        record start: {this.state.recordingYoutubeStartTime} <br/>
-                        record end: {this.state.recordingYoutubeEndTime} <br/>
-                        has recorded: {this.state.hasRecorded.toString()} <br/>
-                        notes recorded: {this.state.recording.length} <br/>
-                        start offset: {this.state.startRecordingDateTime} <br/>
-                    </div>
+                <div style={[RecorderPlayerPageComponent.styles.buttonContainer]}>
+                    {/*<div>*/}
+                    {/*youtubeVideoId: {this.state.youtubeVideoId} <br/>*/}
+                    {/*state: {this.state.stateName} <br/>*/}
+                    {/*record start: {this.state.recordingYoutubeStartTime} <br/>*/}
+                    {/*record end: {this.state.recordingYoutubeEndTime} <br/>*/}
+                    {/*has recorded: {this.state.hasRecorded.toString()} <br/>*/}
+                    {/*notes recorded: {this.state.recording.length} <br/>*/}
+                    {/*start offset: {this.state.startRecordingDateTime} <br/>*/}
+                    {/*</div>*/}
 
                     <br/>
 
                     <input
+                        style={[
+                            GlobalFont,
+                            RecorderPlayerPageComponent.styles.button
+                        ]}
                         type="button"
                         value="record"
                         onClick={this.record.bind(this)}
                         disabled={this.state.stateName !== RecorderStateName.FreePlay}/>
                     <input
+                        style={[
+                            GlobalFont,
+                            RecorderPlayerPageComponent.styles.button
+                        ]}
                         type="button"
                         value="stop recording"
                         onClick={this.stopRecording.bind(this)}
                         disabled={this.state.stateName !== RecorderStateName.Recording}/>
                     <input
+                        style={[
+                            GlobalFont,
+                            RecorderPlayerPageComponent.styles.button
+                        ]}
                         type="button"
                         value="play back"
                         onClick={this.play.bind(this)}
                         disabled={this.state.stateName !== RecorderStateName.FreePlay || !this.state.hasRecorded}/>
                     <input
+                        style={[
+                            GlobalFont,
+                            RecorderPlayerPageComponent.styles.button
+                        ]}
                         type="button"
                         value="stop play back"
                         onClick={this.stopPlayback.bind(this)}
                         disabled={this.state.stateName !== RecorderStateName.Playing}/>
                     <input
+                        style={[
+                            GlobalFont,
+                            RecorderPlayerPageComponent.styles.button
+                        ]}
                         type="button"
                         value="reset"
                         onClick={this.reset.bind(this)}
                         disabled={this.state.stateName !== RecorderStateName.FreePlay}/>
                     <input
+                        style={[
+                            GlobalFont,
+                            RecorderPlayerPageComponent.styles.button
+                        ]}
                         type="button"
                         value="save"
                         onClick={this.save.bind(this)}
@@ -340,6 +365,18 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             justifyContent: "center",
             alignItems: "center"
         },
+        buttonContainer: {
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+        },
+        button: {
+            border: "none",
+            padding: "20px",
+            margin: "20px",
+            fontSize: "1.5em",
+        }
     };
 }
 
