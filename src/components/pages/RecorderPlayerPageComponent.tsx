@@ -219,6 +219,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     </div>
                     <br/>
                     <div style={[
+                        GlobalFont,
                         RecorderPlayerPageComponent.styles.flex
                     ]}>
                         <label>
@@ -434,7 +435,17 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 cursor: "initial",
             }
         },
-        youtubeIdInput: {}
+        youtubeIdInput: {
+            padding: "10px 10px 10px 10px",
+            borderRadius: "4px",
+            transition: "200ms",
+            border: "1px solid rgb(200, 200, 200)",
+            outline: "none",
+            margin: "20px",
+            ":focus": {
+                boxShadow: "inset 0px 0px 4px rgba(0,0,0,0.5)"
+            }
+        }
     };
 }
 
