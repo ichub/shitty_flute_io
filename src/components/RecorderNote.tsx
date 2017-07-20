@@ -44,7 +44,7 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
         downState: (isDown: boolean, type: NoteType) => {
             if (type == NoteType.Dummy) {
                 return {
-                    backgroundColor: "grey",
+                    backgroundColor: "rgb(225, 225, 225)",
                 };
             }
             if (isDown) {
