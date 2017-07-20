@@ -62,17 +62,13 @@ export class AudioOutputHelper {
         return Promise.all(
             [
                 this.getBufferForFile(note.soundFileUrl),
-                this.getBufferForFile(note.shittySoundFileUrl)
-            ]
+                this.getBufferForFile(note.shittySoundFileUrl),
+            ],
         ).then(audioBuffers => {
-            console.log("got buffers for note " + note.name);
-            let initializedSound: IInitializedSound = {
+            return Promise.resolve({
                 audioBuffers: audioBuffers,
-                note: note
-            };
-            return initializedSound;
-        }).catch(err => {
-            console.log(err);
+                note: note,
+            });
         });
     }
 
