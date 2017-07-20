@@ -2,6 +2,7 @@ import * as React from "react";
 import * as Radium from "radium";
 import {INoteInfo} from "../models/INoteInfo";
 import {GlobalFont} from "../styles/GlobalStyles";
+import {NoteType} from "../models/NoteInfoList";
 
 @Radium
 export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderNoteState> {
@@ -17,8 +18,8 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
             <div style={[
                 GlobalFont,
                 RecorderNote.styles.base,
-                RecorderNote.styles.flatState(this.props.note.isFlat),
-                RecorderNote.styles.downState(this.props.isDown),
+                RecorderNote.styles.downState(this.props.isDown, this.props.note.type),
+                RecorderNote.styles.flatState(this.props.note.type),
             ]}>
                 {this.props.note.keyboardCharacter}
             </div>
@@ -40,7 +41,12 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
             borderRadius: "10px",
             border: "1px solid black"
         },
-        downState: (isDown: boolean) => {
+        downState: (isDown: boolean, type: NoteType) => {
+            if (type == NoteType.Dummy) {
+                return {
+                    backgroundColor: "grey",
+                };
+            }
             if (isDown) {
                 return {
                     backgroundColor: "red",
@@ -49,12 +55,18 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
 
             return {};
         },
-        flatState: (isFlat: boolean) => {
-            if (isFlat) {
+        flatState: (type: NoteType) => {
+            if (type == NoteType.Flat) {
                 return {
                     color: "white",
                     backgroundColor: "black",
-                }
+                };
+            }
+            if (type == NoteType.Dummy) {
+                return {
+                    color: "grey",
+                    backgroundColor: "grey"
+                };
             }
 
             return {};

@@ -3,7 +3,7 @@ import * as Radium from "radium";
 import {RecorderNote} from "../RecorderNote";
 import {IYoutubeVideoPlayer, VideoPlayer} from "../VideoPlayer";
 import {AudioOutputHelper} from "../../AudioOutputHelper";
-import {NoteInfoList} from "../../models/NoteInfoList";
+import {NoteInfoList, NoteType} from "../../models/NoteInfoList";
 import {SingleNotePlayer} from "../../SingleNotePlayer";
 import {ITotalNoteState, makeNewITotalNoteState, NoteKeyboardManager} from "../../NoteKeyboardManager";
 import {INoteInfo} from "../../models/INoteInfo";
@@ -210,7 +210,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         RecorderPlayerPageComponent.styles.noteContainer
                     ]}>
                         {
-                            NoteInfoList.notes.filter(note => note.isFlat).map((note, i) => {
+                            NoteInfoList.notes.filter(note => note.type == NoteType.Flat || note.type == NoteType.Dummy).map((note, i) => {
                                 return <RecorderNote key={i} note={note} isDown={this.isNoteDown(note)}/>;
                             })
                         }
@@ -220,7 +220,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         RecorderPlayerPageComponent.styles.noteContainer
                     ]}>
                         {
-                            NoteInfoList.notes.filter(note => !note.isFlat).map((note, i) => {
+                            NoteInfoList.notes.filter(note => (note.type == NoteType.Regular)).map((note, i) => {
                                 return <RecorderNote key={i} note={note} isDown={this.isNoteDown(note)}/>;
                             })
                         }
