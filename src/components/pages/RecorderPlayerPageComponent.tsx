@@ -12,6 +12,7 @@ import {ICompositionNote} from "../../models/ICompositionNote";
 import {ICompositionState} from "../../models/ICompositionState";
 import {IComposition} from "../../models/IComposition";
 import {ButtonFont, GlobalFont} from "../../styles/GlobalStyles";
+import * as color from "color";
 
 const axios = require("axios");
 
@@ -131,6 +132,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                                 RecorderPlayerPageComponent.styles.flex,
                                 RecorderPlayerPageComponent.styles.button
                             ]}
+                            key="0"
                             type="button"
                             value="record"
                             onClick={this.record.bind(this)}
@@ -141,6 +143,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                                 RecorderPlayerPageComponent.styles.flex,
                                 RecorderPlayerPageComponent.styles.button
                             ]}
+                            key="1"
                             type="button"
                             value="stop recording"
                             onClick={this.stopRecording.bind(this)}
@@ -151,6 +154,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                                 RecorderPlayerPageComponent.styles.flex,
                                 RecorderPlayerPageComponent.styles.button
                             ]}
+                            key="2"
+
                             type="button"
                             value="play back"
                             onClick={this.play.bind(this)}
@@ -161,6 +166,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                                 RecorderPlayerPageComponent.styles.flex,
                                 RecorderPlayerPageComponent.styles.button
                             ]}
+                            key="3"
                             type="button"
                             value="stop play back"
                             onClick={this.stopPlayback.bind(this)}
@@ -171,6 +177,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                                 RecorderPlayerPageComponent.styles.flex,
                                 RecorderPlayerPageComponent.styles.button
                             ]}
+                            key="4"
                             type="button"
                             value="reset"
                             onClick={this.reset.bind(this)}
@@ -181,6 +188,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                                 RecorderPlayerPageComponent.styles.flex,
                                 RecorderPlayerPageComponent.styles.button
                             ]}
+                            key="5"
                             type="button"
                             value="save"
                             onClick={this.save.bind(this)}
@@ -382,6 +390,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         }
     }
 
+    private static readonly buttonColor = "rgb(192, 192, 192)";
     private static styles = {
         base: {
             width: "100vw",
@@ -406,6 +415,14 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             margin: "20px",
             fontSize: "1.5em",
             cursor: "pointer",
+            backgroundColor: color(RecorderPlayerPageComponent.buttonColor).hex(),
+            ":hover": {
+                backgroundColor: color(RecorderPlayerPageComponent.buttonColor).darken(0.5).hex()
+            },
+            ":disabled": {
+                backgroundColor: color(RecorderPlayerPageComponent.buttonColor).lighten(0.2).hex(),
+                cursor: "initial",
+            }
         },
         youtubeIdInput: {}
     };
