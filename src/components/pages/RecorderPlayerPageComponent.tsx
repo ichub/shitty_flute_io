@@ -404,7 +404,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             border: "none",
             padding: "20px",
             margin: "20px",
-            fontSize: "1.5em"
+            fontSize: "1.5em",
+            cursor: "pointer",
         },
         youtubeIdInput: {}
     };
