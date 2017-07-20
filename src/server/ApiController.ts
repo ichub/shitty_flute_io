@@ -13,10 +13,9 @@ import {InMemoryDataLayer} from "./InMemoryDataLayer";
 import {IDataLayer} from "./IDataLayer";
 
 export const ApiController = express.Router();
-export const rootPath = path.join(__dirname, "../../");
 const fs = require("fs");
 
-const dataStore = new InMemoryDataLayer();
+// const dataStore = new InMemoryDataLayer();
 
 function returnJson(res: express.Response, promise: Promise<any>): void {
     promise.then(data => res.json(data)).catch(err => {
@@ -27,9 +26,18 @@ function returnJson(res: express.Response, promise: Promise<any>): void {
     });
 }
 
-ApiController.get("/all-recordings", (req: express.Request, res: express.Response) => {
-    res.json(dataStore);
+ApiController.get("/", (req: express.Request, res: express.Response) => {
+    const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
+    const initializedState = {
+        pageName: "landing",
+        viewOnly: true
+    };
+    res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
 });
+
+// ApiController.get("/all-recordings", (req: express.Request, res: express.Response) => {
+//     res.json(dataStore);
+// });
 
 ApiController.get("/recorder", (req: express.Request, res: express.Response) => {
     let token = generateToken();
