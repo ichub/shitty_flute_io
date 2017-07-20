@@ -127,24 +127,28 @@ export class AudioOutputHelper {
         };
     }
 
-    public playComposition(compositionState: ICompositionState) {
-        for (let note of compositionState.notes) {
-            setTimeout(
-                () => {
-                    this.playNote(note.noteInfo, false, note.end - note.start);
-                },
-                note.start);
-        }
-    }
-
     public playListOfNotes(offset: number, notes: ICompositionNote[]) {
+        let stopped = false;
+        const stopping = [];
+
         for (let completedNote of notes) {
             setTimeout(
                 () => {
-                    this.playNote(completedNote.noteInfo, false, completedNote.end - completedNote.start);
+                    if (!stopped) {
+                        stopping.push(this.playNote(completedNote.noteInfo, false, completedNote.end - completedNote.start));
+                    }
                 },
                 completedNote.start - offset);
         }
+
+        return {
+            stop: () => {
+                stopped = true;
+                for (let stopper of stopping) {
+                    stopper.stop();
+                }
+            }
+        };
     }
 }
 

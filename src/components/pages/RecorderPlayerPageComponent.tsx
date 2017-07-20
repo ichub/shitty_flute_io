@@ -28,6 +28,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     stopPlayingTimeout: NodeJS.Timer;
 
+    audioOutputStopper: { stop: () => void };
+
     refs: {
         youtubeInput: HTMLInputElement
     };
@@ -311,7 +313,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             this.video.playVideo();
 
             this.audioOutputHelper.then(helper => {
-                helper.playListOfNotes(this.state.startRecordingDateTime, this.state.recording);
+                this.audioOutputStopper = helper.playListOfNotes(this.state.startRecordingDateTime, this.state.recording);
             });
         }
     }
@@ -397,6 +399,11 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
             if (this.stopPlayingTimeout) {
                 clearTimeout(this.stopPlayingTimeout);
+            }
+
+            if (this.audioOutputStopper) {
+                this.audioOutputStopper.stop();
+                this.audioOutputStopper = null;
             }
         }
     }
