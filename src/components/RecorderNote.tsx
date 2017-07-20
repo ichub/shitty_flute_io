@@ -37,7 +37,7 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: "2em",
+            fontSize: "1em",
             borderRadius: "10px",
             border: "1px solid black"
         },
@@ -64,8 +64,8 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
             }
             if (type == NoteType.Dummy) {
                 return {
-                    color: "grey",
-                    backgroundColor: "grey"
+                    color: "rgb(225, 225, 225)",
+                    backgroundColor: "rgb(225, 225, 225)"
                 };
             }
 
