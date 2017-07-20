@@ -18,8 +18,8 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
             <div style={[
                 GlobalFont,
                 RecorderNote.styles.base,
-                RecorderNote.styles.downState(this.props.isDown, this.props.note.type),
                 RecorderNote.styles.flatState(this.props.note.type),
+                RecorderNote.styles.downState(this.props.isDown, this.props.note.type),
             ]}>
                 {this.props.note.keyboardCharacter}
             </div>
@@ -64,6 +64,7 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
             }
             if (type == NoteType.Dummy) {
                 return {
+                    border: "none",
                     color: "rgb(225, 225, 225)",
                     backgroundColor: "rgb(225, 225, 225)"
                 };
