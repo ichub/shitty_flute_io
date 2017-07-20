@@ -19,7 +19,7 @@ const app = express();
 export var sqlite3 = require("sqlite3").verbose();
 export var db = new sqlite3.Database(":memory:");
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
 app.use(morgan("dev" as any));
 
 app.use(ApiController);
