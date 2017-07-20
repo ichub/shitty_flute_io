@@ -105,105 +105,121 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         console.log(this.state);
         return (
             <div style={[
-                RecorderPlayerPageComponent.styles.base
+                RecorderPlayerPageComponent.styles.base,
+                RecorderPlayerPageComponent.styles.flex
             ]}>
-                <div style={[RecorderPlayerPageComponent.styles.buttonContainer]}>
-                    {/*<div>*/}
-                    {/*youtubeVideoId: {this.state.youtubeVideoId} <br/>*/}
-                    {/*state: {this.state.stateName} <br/>*/}
-                    {/*record start: {this.state.recordingYoutubeStartTime} <br/>*/}
-                    {/*record end: {this.state.recordingYoutubeEndTime} <br/>*/}
-                    {/*has recorded: {this.state.hasRecorded.toString()} <br/>*/}
-                    {/*notes recorded: {this.state.recording.length} <br/>*/}
-                    {/*start offset: {this.state.startRecordingDateTime} <br/>*/}
-                    {/*</div>*/}
+                <div>
+                    <div style={[
+                        RecorderPlayerPageComponent.styles.flex,
+                        RecorderPlayerPageComponent.styles.buttonContainer
+                    ]}>
+                        {/*<div>*/}
+                        {/*youtubeVideoId: {this.state.youtubeVideoId} <br/>*/}
+                        {/*state: {this.state.stateName} <br/>*/}
+                        {/*record start: {this.state.recordingYoutubeStartTime} <br/>*/}
+                        {/*record end: {this.state.recordingYoutubeEndTime} <br/>*/}
+                        {/*has recorded: {this.state.hasRecorded.toString()} <br/>*/}
+                        {/*notes recorded: {this.state.recording.length} <br/>*/}
+                        {/*start offset: {this.state.startRecordingDateTime} <br/>*/}
+                        {/*</div>*/}
+
+                        <br/>
+
+                        <input
+                            style={[
+                                GlobalFont,
+                                RecorderPlayerPageComponent.styles.flex,
+                                RecorderPlayerPageComponent.styles.button
+                            ]}
+                            type="button"
+                            value="record"
+                            onClick={this.record.bind(this)}
+                            disabled={this.state.stateName !== RecorderStateName.FreePlay}/>
+                        <input
+                            style={[
+                                GlobalFont,
+                                RecorderPlayerPageComponent.styles.flex,
+                                RecorderPlayerPageComponent.styles.button
+                            ]}
+                            type="button"
+                            value="stop recording"
+                            onClick={this.stopRecording.bind(this)}
+                            disabled={this.state.stateName !== RecorderStateName.Recording}/>
+                        <input
+                            style={[
+                                GlobalFont,
+                                RecorderPlayerPageComponent.styles.flex,
+                                RecorderPlayerPageComponent.styles.button
+                            ]}
+                            type="button"
+                            value="play back"
+                            onClick={this.play.bind(this)}
+                            disabled={this.state.stateName !== RecorderStateName.FreePlay || !this.state.hasRecorded}/>
+                        <input
+                            style={[
+                                GlobalFont,
+                                RecorderPlayerPageComponent.styles.flex,
+                                RecorderPlayerPageComponent.styles.button
+                            ]}
+                            type="button"
+                            value="stop play back"
+                            onClick={this.stopPlayback.bind(this)}
+                            disabled={this.state.stateName !== RecorderStateName.Playing}/>
+                        <input
+                            style={[
+                                GlobalFont,
+                                RecorderPlayerPageComponent.styles.flex,
+                                RecorderPlayerPageComponent.styles.button
+                            ]}
+                            type="button"
+                            value="reset"
+                            onClick={this.reset.bind(this)}
+                            disabled={this.state.stateName !== RecorderStateName.FreePlay}/>
+                        <input
+                            style={[
+                                GlobalFont,
+                                RecorderPlayerPageComponent.styles.flex,
+                                RecorderPlayerPageComponent.styles.button
+                            ]}
+                            type="button"
+                            value="save"
+                            onClick={this.save.bind(this)}
+                            disabled={this.state.stateName !== RecorderStateName.FreePlay}/>
+
+                    </div>
 
                     <br/>
-
-                    <input
-                        style={[
-                            GlobalFont,
-                            RecorderPlayerPageComponent.styles.button
-                        ]}
-                        type="button"
-                        value="record"
-                        onClick={this.record.bind(this)}
-                        disabled={this.state.stateName !== RecorderStateName.FreePlay}/>
-                    <input
-                        style={[
-                            GlobalFont,
-                            RecorderPlayerPageComponent.styles.button
-                        ]}
-                        type="button"
-                        value="stop recording"
-                        onClick={this.stopRecording.bind(this)}
-                        disabled={this.state.stateName !== RecorderStateName.Recording}/>
-                    <input
-                        style={[
-                            GlobalFont,
-                            RecorderPlayerPageComponent.styles.button
-                        ]}
-                        type="button"
-                        value="play back"
-                        onClick={this.play.bind(this)}
-                        disabled={this.state.stateName !== RecorderStateName.FreePlay || !this.state.hasRecorded}/>
-                    <input
-                        style={[
-                            GlobalFont,
-                            RecorderPlayerPageComponent.styles.button
-                        ]}
-                        type="button"
-                        value="stop play back"
-                        onClick={this.stopPlayback.bind(this)}
-                        disabled={this.state.stateName !== RecorderStateName.Playing}/>
-                    <input
-                        style={[
-                            GlobalFont,
-                            RecorderPlayerPageComponent.styles.button
-                        ]}
-                        type="button"
-                        value="reset"
-                        onClick={this.reset.bind(this)}
-                        disabled={this.state.stateName !== RecorderStateName.FreePlay}/>
-                    <input
-                        style={[
-                            GlobalFont,
-                            RecorderPlayerPageComponent.styles.button
-                        ]}
-                        type="button"
-                        value="save"
-                        onClick={this.save.bind(this)}
-                        disabled={this.state.stateName !== RecorderStateName.FreePlay}/>
-
-                </div>
-
-                <br/>
-                <div style={[RecorderPlayerPageComponent.styles.noteContainer]}>
-                    {
-                        NoteInfoList.notes.map((note, i) => {
-                            return <RecorderNote key={i} note={note} isDown={this.isNoteDown(note)}/>;
-                        })
-                    }
-                </div>
-                <br/>
-                <div>
-                    <label>
-                        <span>current youtube id: {this.state.youtubeVideoId}</span>
-                        <input ref="youtubeInput"
-                               type="text"/>
-                        <input type="button"
-                               value="change video id"
-                               disabled={this.state.stateName !== RecorderStateName.FreePlay}
-                               onClick={this.handleVideoIdChange.bind(this)}/>
-                    </label>
-                </div>
-                <div>
-                    <VideoPlayer
-                        videoId={this.state.youtubeVideoId}
-                        onVideoReady={this.onVideoReady.bind(this)}
-                        onStateChange={this.onStateChange.bind(this)}
-                        canInteract={this.state.stateName == RecorderStateName.FreePlay}
-                    />
+                    <div style={[
+                        RecorderPlayerPageComponent.styles.flex,
+                        RecorderPlayerPageComponent.styles.noteContainer,
+                    ]}>
+                        {
+                            NoteInfoList.notes.map((note, i) => {
+                                return <RecorderNote key={i} note={note} isDown={this.isNoteDown(note)}/>;
+                            })
+                        }
+                    </div>
+                    <br/>
+                    <div>
+                        <label>
+                            <span>current youtube id: {this.state.youtubeVideoId}</span>
+                            <input style={[RecorderPlayerPageComponent.styles.youtubeIdInput]}
+                                   ref="youtubeInput"
+                                   type="text"/>
+                            <input type="button"
+                                   value="change video id"
+                                   disabled={this.state.stateName !== RecorderStateName.FreePlay}
+                                   onClick={this.handleVideoIdChange.bind(this)}/>
+                        </label>
+                    </div>
+                    <div>
+                        <VideoPlayer
+                            videoId={this.state.youtubeVideoId}
+                            onVideoReady={this.onVideoReady.bind(this)}
+                            onStateChange={this.onStateChange.bind(this)}
+                            canInteract={this.state.stateName == RecorderStateName.FreePlay}
+                        />
+                    </div>
                 </div>
             </div>
         );
@@ -356,27 +372,29 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     private static styles = {
         base: {
-            width: "100%",
+            width: "100vw",
+            height: "100vh",
+        },
+        flex: {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "row",
         },
         noteContainer: {
             width: "100%",
             height: "100px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
         },
         buttonContainer: {
             width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
         },
         button: {
             border: "none",
             padding: "20px",
             margin: "20px",
             fontSize: "1.5em",
-        }
+        },
+        youtubeIdInput: {}
     };
 }
 

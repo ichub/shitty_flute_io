@@ -31,7 +31,7 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
             fontWeight: "bold",
             backgroundColor: "black",
             color: "white",
-            margin: "50px",
+            margin: "10px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
