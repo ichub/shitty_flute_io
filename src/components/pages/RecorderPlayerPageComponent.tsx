@@ -95,17 +95,19 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         this.video.playVideo();
         setTimeout(() => {
             this.video.pauseVideo();
-        }, 10)
+            console.log("I should play and pause");
+        }, 5);
     }
 
     private onStateChange(event) {
+        console.log("state changing");
         console.log(event);
-        if (event.data == -1) {
+        if (event.data == 5) { // we want to play/pause when video cued
             this.video.playVideo();
             setTimeout(() => {
                 this.video.pauseVideo();
                 console.log("I should play and pause");
-            }, 1);
+            }, 5);
         }
     }
 
@@ -264,8 +266,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         if (this.state.stateName === RecorderStateName.FreePlay) {
             console.log("changing state");
             this.setState({
-                youtubeVideoId: this.refs.youtubeInput.value
-            });
+                    youtubeVideoId: this.refs.youtubeInput.value
+                });
         }
     }
 
@@ -449,7 +451,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             },
             ":disabled": {
                 backgroundColor: color(RecorderPlayerPageComponent.buttonColor).lighten(0.2).hex(),
-                cursor: "initial",
+                cursor: "initial"
             }
         },
         youtubeIdInput: {
