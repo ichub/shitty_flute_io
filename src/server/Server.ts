@@ -37,8 +37,11 @@ app.use("/js", express.static(jsDir));
 app.use("/res", express.static(resDir));
 app.use("/css", express.static(cssDir));
 
-const port = 4000;
+const DEBUG_PORT = 4000;
+const PROD_PORT = 80;
+const IS_PROD = process.env.NODE_ENV === "production";
+const port = IS_PROD ? PROD_PORT : DEBUG_PORT;
 
 app.listen(port, () => {
-    console.log(`listening on port ${port}`);
+    console.log(`listening on port ${DEBUG_PORT}`);
 });
