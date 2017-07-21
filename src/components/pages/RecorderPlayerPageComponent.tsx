@@ -192,7 +192,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             type="button"
                             value="reset"
                             onClick={this.reset.bind(this)}
-                            disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}/>
+                            disabled={!this.state.hasRecorded || this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}/>
                         <input
                             style={[
                                 ButtonFont,
@@ -203,7 +203,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             type="button"
                             value="save"
                             onClick={this.save.bind(this)}
-                            disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}/>
+                            disabled={!this.state.hasRecorded || this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}/>
 
                     </div>
 
@@ -309,7 +309,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 recordingYoutubeEndTime: this.video.getCurrentTime(),
                 hasRecorded: true,
                 recording: this.state.noteState.played.slice()
-            });
+            }, () => this.save());
             this.video.pauseVideo();
             this.video.seekTo(this.state.recordingYoutubeStartTime);
         }
