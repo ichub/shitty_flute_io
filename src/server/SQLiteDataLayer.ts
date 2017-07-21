@@ -259,6 +259,15 @@ export class SQLiteDataLayer implements IDataLayer {
             });
     }
 
+    cleanUnrecordedCompositions(): Promise<void> {
+        return this.execRunWithPromise("DELETE FROM compositions WHERE has_recorded=?", [0])
+            .then(() => {console.log("Cleaned successfully")})
+            .catch(err => {
+                console.log("Failed to delete rows.")
+                Promise.reject(err);
+            });
+    }
+
     static getInstance(): Promise<SQLiteDataLayer> {
         if (SQLiteDataLayer.instancePromise !== null) {
             return SQLiteDataLayer.instancePromise;

@@ -128,3 +128,14 @@ ApiController.get("/video-title/:youtubeVideoURL", (req: express.Request, res: e
             })
     );
 });
+
+export function cleanDB(): Promise<void> {
+    return SQLiteDataLayer
+        .getInstance()
+        .then((dataLayer) => {
+            return dataLayer.cleanUnrecordedCompositions();
+        })
+        .catch(err => {
+            return Promise.reject(err);
+        });
+}

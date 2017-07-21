@@ -2,7 +2,7 @@ import * as express from "express";
 import * as path from "path";
 import * as morgan from "morgan";
 import * as bodyParser from "body-parser";
-import {ApiController} from "./ApiController";
+import {ApiController, cleanDB} from "./ApiController";
 import * as fs from "fs";
 import {InitializationState} from "../models/IInitializationState";
 
@@ -15,6 +15,7 @@ export const resDir = path.join(rootPath, "res");
 export const cssDir = path.join(rootPath, "css");
 
 const app = express();
+const schedule = require('node-schedule');
 
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(morgan("dev" as any));
@@ -32,4 +33,15 @@ const port = IS_PROD ? PROD_PORT : DEBUG_PORT;
 
 app.listen(port, () => {
     console.log(`listening on port ${DEBUG_PORT}`);
+});
+
+// schedule jobs
+schedule.scheduleJob('* 0 * * *', () => {
+    console.log("Attempting to clean DB.");
+    cleanDB()
+        .then(() => console.log("Finished executing clean job."))
+        .catch(err => {
+            console.log("Could not execute clean job for reason: ");
+            console.log(err);
+        });
 });

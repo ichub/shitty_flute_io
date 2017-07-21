@@ -11,4 +11,5 @@ export interface IDataLayer {
     getCompositionView(viewToken: string): Promise<ICompositionState>;
     getViewToken(editToken: string): Promise<string>;
     saveComposition(editToken: string, compositionState: ICompositionState): Promise<void>;
+    cleanUnrecordedCompositions(): Promise<void>
 }
