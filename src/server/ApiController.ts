@@ -40,19 +40,21 @@ ApiController.get("/", (req: express.Request, res: express.Response) => {
 // });
 
 ApiController.get("/recorder", (req: express.Request, res: express.Response) => {
-    let token = generateToken();
-    res.redirect(302, "/recorder/" + token);
+    let editToken = generateToken();
+    SQLiteDataLayer
+        .getInstance()
+        .then((dataLayer: IDataLayer) => {
+            return dataLayer.createCompositionIfNoneExists(editToken);
+        })
+        .then(() => res.redirect(302, "/recorder/" + editToken));
 });
 
 ApiController.get("/recorder/:editToken", (req: express.Request, res: express.Response) => {
+    console.log("retrieving composition with edit token: " + req.params.editToken);
     const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
 
     SQLiteDataLayer
         .getInstance()
-        .then((dataLayer: IDataLayer) => {
-            dataLayer.createCompositionIfNoneExists(req.params.editToken);
-            return Promise.resolve(dataLayer);
-        })
         .then((dataLayer: IDataLayer) => {
             return dataLayer.getViewToken(req.params.editToken);
         })
