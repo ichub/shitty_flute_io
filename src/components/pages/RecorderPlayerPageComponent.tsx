@@ -374,7 +374,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 console.log(compositionState);
                 this.setState({
                     stateName: RecorderStateName.FreePlay,
-                    youtubeVideoId: compositionState.youtubeVideoId || "HQnC1UHBvWA",
+                    youtubeVideoId: compositionState.youtubeVideoId,
                     noteState: makeNewITotalNoteState(),
                     recordingYoutubeStartTime: compositionState.recordingYoutubeStartTime,
                     recordingYoutubeEndTime: compositionState.recordingYoutubeEndTime,

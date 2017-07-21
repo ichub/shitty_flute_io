@@ -140,7 +140,7 @@ export class SQLiteDataLayer implements IDataLayer {
             "start_recording_time, " +
             "has_recorded) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            [editToken, viewTokenIfNoneExists, "", "", -1, -1, -1, 0])
+            [editToken, viewTokenIfNoneExists, "", "HQnC1UHBvWA", -1, -1, -1, 0]) // default song is shelter
             .then(result => {})
             .catch(err => {
                 console.log("An error occurred while trying to insert new row.");
