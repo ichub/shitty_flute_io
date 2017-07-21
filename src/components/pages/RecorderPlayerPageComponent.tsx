@@ -51,6 +51,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             hasRecorded: false,
             recording: [],
             startRecordingDateTime: -1,
+            lastEdited: -1,
             err: null
         };
 
@@ -308,7 +309,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 stateName: RecorderStateName.FreePlay,
                 recordingYoutubeEndTime: this.video.getCurrentTime(),
                 hasRecorded: true,
-                recording: this.state.noteState.played.slice()
+                recording: this.state.noteState.played.slice(),
+                lastEdited: Date.now()
             }, () => this.save());
             this.video.pauseVideo();
             this.video.seekTo(this.state.recordingYoutubeStartTime);
@@ -338,7 +340,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     private save() {
         if (this.state.stateName == RecorderStateName.FreePlay) {
             this.setState({
-                stateName: RecorderStateName.Saving
+                stateName: RecorderStateName.Saving,
+                lastEdited: Date.now()
             });
 
             axios.post(`/recorder/${this.props.editToken}/save`, this.getUploadableComposition())
@@ -380,6 +383,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     recordingYoutubeEndTime: compositionState.recordingYoutubeEndTime,
                     startRecordingDateTime: compositionState.startRecordingDateTime,
                     hasRecorded: compositionState.hasRecorded,
+                    lastEdited: compositionState.lastEdited,
                     recording: compositionState.notes,
                     err: null
                 });
@@ -400,6 +404,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             recordingYoutubeEndTime: this.state.recordingYoutubeEndTime,
             startRecordingDateTime: this.state.startRecordingDateTime,
             hasRecorded: this.state.hasRecorded,
+            lastEdited: this.state.lastEdited,
             notes: this.state.recording
         };
         return compositionState as ICompositionState;
@@ -489,6 +494,7 @@ export interface IRecorderPlayerPageComponentState {
     startRecordingDateTime: number;
     hasRecorded: boolean;
     recording: ICompositionNote[];
+    lastEdited: number;
     err: Error;
 }
 

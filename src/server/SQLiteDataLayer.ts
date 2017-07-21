@@ -65,6 +65,7 @@ export class SQLiteDataLayer implements IDataLayer {
             "recording_youtube_end BIGINT, " +
             "start_recording_time BIGINT, " +
             "has_recorded BIT, " +
+            "last_edited BIGINT, " +
             "PRIMARY KEY (edit_token), " +
             "UNIQUE (view_token)) ")
             .then(() => {
@@ -88,6 +89,7 @@ export class SQLiteDataLayer implements IDataLayer {
         let recordingYoutubeEnd = (row as any).recording_youtube_end;
         let startRecordingTime = (row as any).start_recording_time;
         let hasRecorded = (row as any).has_recorded == 1;
+        let lastEdited = (row as any).last_edited;
 
         return this.execAllWithPromise(
             "SELECT * from compositions_notes_map WHERE composition_edit_token=?",
@@ -109,6 +111,7 @@ export class SQLiteDataLayer implements IDataLayer {
                     recordingYoutubeEnd,
                     startRecordingTime,
                     hasRecorded,
+                    lastEdited,
                     notes);
                 let composition = makeIComposition(editToken, viewToken, compositionState);
                 return composition;
@@ -138,9 +141,10 @@ export class SQLiteDataLayer implements IDataLayer {
             "recording_youtube_start, " +
             "recording_youtube_end, " +
             "start_recording_time, " +
-            "has_recorded) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            [editToken, viewTokenIfNoneExists, "", "HQnC1UHBvWA", -1, -1, -1, 0]) // default song is shelter
+            "has_recorded," +
+            "last_edited) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [editToken, viewTokenIfNoneExists, "", "HQnC1UHBvWA", -1, -1, -1, 0, -1]) // default song is shelter
             .then(result => {console.log("inserted the new row")})
             .catch(err => {
                 console.log("An error occurred while trying to insert new row.");
@@ -239,7 +243,8 @@ export class SQLiteDataLayer implements IDataLayer {
                     "recording_youtube_start=?, " +
                     "recording_youtube_end=?, " +
                     "start_recording_time=?, " +
-                    "has_recorded=? " +
+                    "has_recorded=?, " +
+                    "last_edited=?" +
                     "WHERE edit_token=? ",
                     [compositionState.compName,
                         compositionState.youtubeVideoId,
@@ -247,6 +252,7 @@ export class SQLiteDataLayer implements IDataLayer {
                         compositionState.recordingYoutubeEndTime,
                         compositionState.startRecordingDateTime,
                         compositionState.hasRecorded,
+                        compositionState.lastEdited,
                         editToken]
                 );
             })

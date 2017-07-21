@@ -14,6 +14,7 @@ export interface ICompositionState {
     recordingYoutubeEndTime: number
     startRecordingDateTime: number
     hasRecorded: boolean
+    lastEdited: number
     notes: ICompositionNote[]
 }
 
@@ -22,7 +23,7 @@ export interface ICompositionState {
 
 export function makeNewICompositionState(): ICompositionState {
     let notes: ICompositionNote[] = [];
-    return makeICompositionState("", "", -1, -1, -1, false, notes);
+    return makeICompositionState("", "", -1, -1, -1, false, -1, notes);
 }
 
 export function makeICompositionState(
@@ -32,6 +33,7 @@ export function makeICompositionState(
     recordingYoutubeEndTime: number,
     startRecordingDateTime: number,
     hasRecorded: boolean,
+    lastEdited: number,
     notes: ICompositionNote[]): ICompositionState {
     return {
         compName: name,
@@ -40,6 +42,7 @@ export function makeICompositionState(
         recordingYoutubeEndTime: recordingYoutubeEndTime,
         startRecordingDateTime: startRecordingDateTime,
         hasRecorded: hasRecorded,
+        lastEdited: lastEdited,
         notes: notes
     };
 }
