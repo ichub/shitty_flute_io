@@ -16,6 +16,7 @@ import * as color from "color";
 import {ShareComponent} from "../ShareComponent";
 
 const axios = require("axios");
+const getYoutubeId = require("get-youtube-id");
 
 @Radium
 export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayerPageComponentProps, IRecorderPlayerPageComponentState> {
@@ -233,13 +234,13 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         RecorderPlayerPageComponent.styles.flex
                     ]}>
                         <label>
-                            <span>YouTube id:</span>
+                            <span>YouTube URL:</span>
                             <input style={[RecorderPlayerPageComponent.styles.youtubeIdInput]}
                                    ref="youtubeInput"
                                    type="text"
-                                   placeholder={this.state.youtubeVideoId}/>
+                                   placeholder={"https://www.youtube.com/watch?v=" + this.state.youtubeVideoId}/>
                             <input type="button"
-                                   value="change video id"
+                                   value="Change Video"
                                    disabled={this.state.stateName !== RecorderStateName.FreePlay}
                                    onClick={this.handleVideoIdChange.bind(this)}/>
                         </label>
@@ -265,8 +266,12 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     private handleVideoIdChange() {
         if (this.state.stateName === RecorderStateName.FreePlay) {
             console.log("changing state");
+            let videoId = getYoutubeId(this.refs.youtubeInput.value);
+            if (videoId == null) {
+                videoId = "";
+            }
             this.setState({
-                    youtubeVideoId: this.refs.youtubeInput.value
+                    youtubeVideoId: videoId
                 });
         }
     }
@@ -455,6 +460,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             }
         },
         youtubeIdInput: {
+            width: "300px",
             padding: "10px 10px 10px 10px",
             borderRadius: "4px",
             transition: "200ms",
