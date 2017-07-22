@@ -36,13 +36,13 @@ app.listen(port, () => {
 });
 
 // schedule jobs
-// actually this is probably unnecessary
-// schedule.scheduleJob('* 0 * * *', () => {
-//     console.log("Attempting to clean DB.");
-//     cleanDB()
-//         .then(() => console.log("Finished executing clean job."))
-//         .catch(err => {
-//             console.log("Could not execute clean job for reason: ");
-//             console.log(err);
-//         });
-// });
+// clean every day at midnight
+schedule.scheduleJob('* 0 * * *', () => {
+    console.log("Attempting to clean DB.");
+    cleanDB()
+        .then(() => console.log("Finished executing clean job."))
+        .catch(err => {
+            console.log("Could not execute clean job for reason: ");
+            console.log(err);
+        });
+});
