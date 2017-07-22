@@ -10,7 +10,7 @@ import * as path from "path";
 import {rootPath} from "./Server";
 import {INoteInfo} from "../models/INoteInfo";
 
-var fs = require('fs');
+var fs = require("fs");
 
 export class SQLiteDataLayer implements IDataLayer {
     private static instancePromise: Promise<SQLiteDataLayer> = null;
@@ -20,7 +20,7 @@ export class SQLiteDataLayer implements IDataLayer {
         this.makeDirIfNotExists(path.join(rootPath, "data"));
         this.makeDirIfNotExists(path.join(rootPath, "data", "db"));
         sqlite3.verbose();
-        const dbPath = path.join(rootPath, "data", "db", "prod_db")
+        const dbPath = path.join(rootPath, "data", "db", "prod_db");
         this.db = new sqlite3.Database(dbPath);
     }
 
@@ -64,8 +64,9 @@ export class SQLiteDataLayer implements IDataLayer {
             "recording_youtube_start BIGINT, " +
             "recording_youtube_end BIGINT, " +
             "start_recording_time BIGINT, " +
-            "has_recorded BIT, " +
             "last_edited BIGINT, " +
+            "view_count INT, " +
+            "has_recorded BIT, " +
             "PRIMARY KEY (edit_token), " +
             "UNIQUE (view_token)) ")
             .then(() => {
@@ -88,8 +89,9 @@ export class SQLiteDataLayer implements IDataLayer {
         let recordingYoutubeStart = (row as any).recording_youtube_start;
         let recordingYoutubeEnd = (row as any).recording_youtube_end;
         let startRecordingTime = (row as any).start_recording_time;
-        let hasRecorded = (row as any).has_recorded == 1;
         let lastEdited = (row as any).last_edited;
+        let viewCount = (row as any).view_count;
+        let hasRecorded = (row as any).has_recorded == 1;
 
         return this.execAllWithPromise(
             "SELECT * from compositions_notes_map WHERE composition_edit_token=?",
@@ -110,8 +112,9 @@ export class SQLiteDataLayer implements IDataLayer {
                     recordingYoutubeStart,
                     recordingYoutubeEnd,
                     startRecordingTime,
-                    hasRecorded,
                     lastEdited,
+                    viewCount,
+                    hasRecorded,
                     notes);
                 let composition = makeIComposition(editToken, viewToken, compositionState);
                 return composition;
@@ -141,11 +144,14 @@ export class SQLiteDataLayer implements IDataLayer {
             "recording_youtube_start, " +
             "recording_youtube_end, " +
             "start_recording_time, " +
-            "has_recorded," +
-            "last_edited) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            [editToken, viewTokenIfNoneExists, "", "HQnC1UHBvWA", -1, -1, -1, 0, -1]) // default song is shelter
-            .then(result => {console.log("inserted the new row")})
+            "last_edited," +
+            "view_count," +
+            "has_recorded) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [editToken, viewTokenIfNoneExists, "", "HQnC1UHBvWA", -1, -1, -1, -1, 0, 0]) // default song is shelter
+            .then(result => {
+                console.log("inserted the new row");
+            })
             .catch(err => {
                 console.log("An error occurred while trying to insert new row.");
                 console.log(err);
@@ -154,9 +160,15 @@ export class SQLiteDataLayer implements IDataLayer {
 
     getCompositionEdit(editToken: string): Promise<ICompositionState> {
         console.log("attempting to getCompositionEdit");
-        return this.execGetWithPromise(
-            "SELECT * from compositions WHERE edit_token=?",
+        return this.execRunWithPromise("UPDATE compositions " +
+            "SET view_count=view_count+1 " +
+            "WHERE edit_token=?",
             [editToken])
+            .then(result => {
+                return this.execGetWithPromise(
+                    "SELECT * from compositions WHERE edit_token=?",
+                    [editToken]);
+            })
             .then(row => {
                 return this.getCompositionFromRow(row);
             })
@@ -165,27 +177,16 @@ export class SQLiteDataLayer implements IDataLayer {
             });
     }
 
-    // getCompositionEdit(editToken: string): Promise<IComposition> {
-    //     return this.execRunWithPromise(
-    //         // command in SQL is INSERT IGNORE
-    //         // in SQLite it is INSERT OR IGNORE
-    //         "INSERT OR IGNORE INTO composition_json_table (id, view_token, data) VALUES (?, ?, ?)",
-    //         [compositionId, viewTokenIfNoneExists, JSON.stringify(makeNewIComposition("", compositionId))])
-    //         .then(() => {
-    //             return this.execGetWithPromise(
-    //                 "SELECT data from composition_json_table WHERE id=?",
-    //                 [compositionId]);
-    //         })
-    //         .then(row => {
-    //             console.log(JSON.parse((row as any).data) as IComposition);
-    //             return Promise.resolve(JSON.parse((row as any).data) as IComposition);
-    //         });
-    // }
-
     getCompositionView(viewToken: string): Promise<ICompositionState> {
-        return this.execGetWithPromise(
-            "SELECT * from compositions WHERE view_token=?",
+        return this.execRunWithPromise("UPDATE compositions " +
+            "SET view_count=view_count+1 " +
+            "WHERE view_token=?",
             [viewToken])
+            .then(result => {
+                return this.execGetWithPromise(
+                    "SELECT * from compositions WHERE view_token=?",
+                    [viewToken]);
+            })
             .then(row => {
                 return this.getCompositionFromRow(row);
             })
@@ -243,16 +244,18 @@ export class SQLiteDataLayer implements IDataLayer {
                     "recording_youtube_start=?, " +
                     "recording_youtube_end=?, " +
                     "start_recording_time=?, " +
-                    "has_recorded=?, " +
-                    "last_edited=?" +
-                    "WHERE edit_token=? ",
+                    "last_edited=?, " +
+                    "view_count=?, " +
+                    "has_recorded=? " +
+                    "WHERE edit_token=?",
                     [compositionState.compName,
                         compositionState.youtubeVideoId,
                         compositionState.recordingYoutubeStartTime,
                         compositionState.recordingYoutubeEndTime,
                         compositionState.startRecordingDateTime,
-                        compositionState.hasRecorded,
                         compositionState.lastEdited,
+                        compositionState.viewCount,
+                        compositionState.hasRecorded,
                         editToken]
                 );
             })
@@ -267,9 +270,11 @@ export class SQLiteDataLayer implements IDataLayer {
 
     cleanUnrecordedCompositions(): Promise<void> {
         return this.execRunWithPromise("DELETE FROM compositions WHERE has_recorded=?", [0])
-            .then(() => {console.log("Cleaned successfully")})
+            .then(() => {
+                console.log("Cleaned successfully");
+            })
             .catch(err => {
-                console.log("Failed to delete rows.")
+                console.log("Failed to delete rows.");
                 Promise.reject(err);
             });
     }

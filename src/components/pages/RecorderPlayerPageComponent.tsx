@@ -52,6 +52,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             recording: [],
             startRecordingDateTime: -1,
             lastEdited: -1,
+            viewCount: 0,
             err: null
         };
 
@@ -384,6 +385,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     startRecordingDateTime: compositionState.startRecordingDateTime,
                     hasRecorded: compositionState.hasRecorded,
                     lastEdited: compositionState.lastEdited,
+                    viewCount: compositionState.viewCount,
                     recording: compositionState.notes,
                     err: null
                 });
@@ -405,6 +407,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             startRecordingDateTime: this.state.startRecordingDateTime,
             hasRecorded: this.state.hasRecorded,
             lastEdited: this.state.lastEdited,
+            viewCount: this.state.viewCount,
             notes: this.state.recording
         };
         return compositionState as ICompositionState;
@@ -493,8 +496,9 @@ export interface IRecorderPlayerPageComponentState {
     recordingYoutubeEndTime: number;
     startRecordingDateTime: number;
     hasRecorded: boolean;
-    recording: ICompositionNote[];
     lastEdited: number;
+    viewCount: number;
+    recording: ICompositionNote[];
     err: Error;
 }
 
