@@ -66,6 +66,7 @@ export class SQLiteDataLayer implements IDataLayer {
             "start_recording_time BIGINT, " +
             "last_edited BIGINT, " +
             "view_count INT, " +
+            "offset INT, " +
             "has_recorded BIT, " +
             "PRIMARY KEY (edit_token), " +
             "UNIQUE (view_token)) ")
@@ -91,6 +92,7 @@ export class SQLiteDataLayer implements IDataLayer {
         let startRecordingTime = (row as any).start_recording_time;
         let lastEdited = (row as any).last_edited;
         let viewCount = (row as any).view_count;
+        let offset = (row as any).offset;
         let hasRecorded = (row as any).has_recorded == 1;
 
         return this.execAllWithPromise(
@@ -114,6 +116,7 @@ export class SQLiteDataLayer implements IDataLayer {
                     startRecordingTime,
                     lastEdited,
                     viewCount,
+                    offset,
                     hasRecorded,
                     notes);
                 let composition = makeIComposition(editToken, viewToken, compositionState);
@@ -146,9 +149,10 @@ export class SQLiteDataLayer implements IDataLayer {
             "start_recording_time, " +
             "last_edited," +
             "view_count," +
+            "offset," +
             "has_recorded) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            [editToken, viewTokenIfNoneExists, "", "HQnC1UHBvWA", -1, -1, -1, -1, 0, 0]) // default song is shelter
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [editToken, viewTokenIfNoneExists, "", "HQnC1UHBvWA", -1, -1, -1, -1, 0, 0, 0]) // default song is shelter
             .then(result => {
                 console.log("inserted the new row");
             })
@@ -246,6 +250,7 @@ export class SQLiteDataLayer implements IDataLayer {
                     "start_recording_time=?, " +
                     "last_edited=?, " +
                     "view_count=?, " +
+                    "offset=?, " +
                     "has_recorded=? " +
                     "WHERE edit_token=?",
                     [compositionState.compName,
@@ -255,6 +260,7 @@ export class SQLiteDataLayer implements IDataLayer {
                         compositionState.startRecordingDateTime,
                         compositionState.lastEdited,
                         compositionState.viewCount,
+                        compositionState.offset,
                         compositionState.hasRecorded,
                         editToken]
                 );
