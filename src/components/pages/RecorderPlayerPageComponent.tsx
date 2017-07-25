@@ -14,6 +14,7 @@ import {IComposition} from "../../models/IComposition";
 import {ButtonFont, GlobalFont} from "../../styles/GlobalStyles";
 import * as color from "color";
 import {ShareComponent} from "../ShareComponent";
+import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
 
 const axios = require("axios");
 const getYoutubeId = require("get-youtube-id");
@@ -53,12 +54,13 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             startRecordingDateTime: -1,
             lastEdited: -1,
             viewCount: 0,
+            offset: 0,
             err: null
         };
 
         this.audioOutputHelper = AudioOutputHelper.getInstance(NoteInfoList.notes);
         this.singleNotePlayer = new SingleNotePlayer();
-        this.noteKeyboardManager = new NoteKeyboardManager(NoteInfoList.notes);
+        this.noteKeyboardManager = new NoteKeyboardManager(NoteInfoList.notes, this.state.offset);
 
         this.noteKeyboardManager.attachListeners();
 
@@ -87,6 +89,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     }
 
     private isNoteDown(note: INoteInfo): boolean {
+        if (!note) {
+            return false;
+        }
         return this.state.noteState.down.filter(down => down.note.name === note.name).length === 1;
     }
 
@@ -98,18 +103,14 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         this.video.playVideo();
         setTimeout(() => {
             this.video.pauseVideo();
-            console.log("I should play and pause");
         }, 5);
     }
 
     private onStateChange(event) {
-        console.log("state changing");
-        console.log(event);
         if (event.data == 5) { // we want to play/pause when video cued
             this.video.playVideo();
             setTimeout(() => {
                 this.video.pauseVideo();
-                console.log("I should play and pause");
             }, 5);
         }
     }
@@ -215,8 +216,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         RecorderPlayerPageComponent.styles.noteContainer
                     ]}>
                         {
-                            NoteInfoList.notes.filter(note => note.type == NoteType.Flat || note.type == NoteType.Dummy).map((note, i) => {
-                                return <RecorderNote key={i} note={note} isDown={this.isNoteDown(note)}/>;
+                            NoteUIPositionList.minorRow.notePositions.map((notePos, i) => {
+                                let note = getINoteInfoForPositionIndex(notePos.index, this.state.offset);
+                                return <RecorderNote key={i} notePosition={notePos} isDown={this.isNoteDown(note)}/>;
                             })
                         }
                     </div>
@@ -225,8 +227,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         RecorderPlayerPageComponent.styles.noteContainer
                     ]}>
                         {
-                            NoteInfoList.notes.filter(note => (note.type == NoteType.Regular)).map((note, i) => {
-                                return <RecorderNote key={i} note={note} isDown={this.isNoteDown(note)}/>;
+                            NoteUIPositionList.majorRow.notePositions.map((notePos, i) => {
+                                let note = getINoteInfoForPositionIndex(notePos.index, this.state.offset);
+                                return <RecorderNote key={i} notePosition={notePos} isDown={this.isNoteDown(note)}/>;
                             })
                         }
                     </div>
@@ -267,7 +270,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     private handleVideoIdChange() {
         if (this.state.stateName === RecorderStateName.FreePlay) {
-            console.log("changing state");
             let videoId = getYoutubeId(this.refs.youtubeInput.value);
             if (videoId == null) {
                 videoId = "";
@@ -374,7 +376,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 console.log(result);
                 let compositionState = result.data as ICompositionState;
                 console.log("load complete");
-                console.log(result);
                 console.log(compositionState);
                 this.setState({
                     stateName: RecorderStateName.FreePlay,
@@ -387,6 +388,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     lastEdited: compositionState.lastEdited,
                     viewCount: compositionState.viewCount,
                     recording: compositionState.notes,
+                    offset: compositionState.offset,
                     err: null
                 });
             })
@@ -408,6 +410,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             hasRecorded: this.state.hasRecorded,
             lastEdited: this.state.lastEdited,
             viewCount: this.state.viewCount,
+            offset: this.state.viewCount,
             notes: this.state.recording
         };
         return compositionState as ICompositionState;
@@ -499,6 +502,7 @@ export interface IRecorderPlayerPageComponentState {
     lastEdited: number;
     viewCount: number;
     recording: ICompositionNote[];
+    offset: number;
     err: Error;
 }
 

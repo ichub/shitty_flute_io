@@ -1,33 +1,40 @@
 import {INoteInfo} from "./models/INoteInfo";
 import {EventEmitter} from "events";
 import {ICompositionNote} from "./models/ICompositionNote";
+import {
+    getINoteInfoForPositionIndex, getUIPositionForNote, getUIPositionWithCharacter,
+    NoteUIPositionList
+} from "./models/NoteUIPositionList";
 
 export class NoteKeyboardManager extends EventEmitter {
     public static readonly NOTE_START = "note_start";
     public static readonly NOTE_END = "note_end";
     public static readonly STATE_CHANGED = "state_changed";
 
+    offset: number;
     notes: INoteInfo[];
     down: IDownNote[];
     played: ICompositionNote[];
 
-    constructor(notes: INoteInfo[]) {
+    constructor(notes: INoteInfo[], offset: number) {
         super();
 
         this.notes = notes;
         this.down = [];
         this.played = [];
+        this.offset = offset;
     }
 
-    private static isKeyboardEventForNote(note: INoteInfo, e: KeyboardEvent) {
-        return note.keyboardCharacter.toLowerCase() === e.key.toLowerCase();
+    private isKeyboardEventForNote(note: INoteInfo, e: KeyboardEvent) {
+        let position = getUIPositionForNote(note, this.offset);
+        return position.keyboardCharacter.toLowerCase() === e.key.toLowerCase();
     }
 
     private addDownNote(note: INoteInfo): boolean {
         if (!this.down.filter(down => note.name === down.note.name)[0]) {
             this.down.push({
                 note: note,
-                start: new Date().getTime(),
+                start: new Date().getTime()
             });
             return true;
         }
@@ -56,7 +63,7 @@ export class NoteKeyboardManager extends EventEmitter {
     public attachListeners() {
         document.addEventListener("keydown", (e: KeyboardEvent) => {
             for (let note of this.notes) {
-                if (NoteKeyboardManager.isKeyboardEventForNote(note, e)) {
+                if (this.isKeyboardEventForNote(note, e)) {
                     if (this.addDownNote(note)) {
                         this.emit(NoteKeyboardManager.NOTE_START, note);
                         this.emitStateChanged();
@@ -67,7 +74,7 @@ export class NoteKeyboardManager extends EventEmitter {
 
         document.addEventListener("keyup", (e: KeyboardEvent) => {
             for (let note of this.notes) {
-                if (NoteKeyboardManager.isKeyboardEventForNote(note, e)) {
+                if (this.isKeyboardEventForNote(note, e)) {
                     this.removeDownNote(note);
                     this.emit(NoteKeyboardManager.NOTE_END, note);
                     this.emitStateChanged();

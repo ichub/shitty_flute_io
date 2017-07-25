@@ -3,6 +3,7 @@ import * as Radium from "radium";
 import {INoteInfo} from "../models/INoteInfo";
 import {GlobalFont} from "../styles/GlobalStyles";
 import {NoteType} from "../models/NoteInfoList";
+import {INoteUIPosition} from "../models/INoteUIPosition";
 
 @Radium
 export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderNoteState> {
@@ -18,10 +19,11 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
             <div style={[
                 GlobalFont,
                 RecorderNote.styles.base,
-                RecorderNote.styles.flatState(this.props.note.type),
-                RecorderNote.styles.downState(this.props.isDown, this.props.note.type),
+                RecorderNote.styles.flatState(this.props.notePosition.isMinor),
+                RecorderNote.styles.downState(this.props.isDown),
+                RecorderNote.styles.dummyState(this.props.notePosition.isDummy),
             ]}>
-                {this.props.note.keyboardCharacter}
+                {this.props.notePosition.keyboardCharacter}
             </div>
         );
     }
@@ -41,12 +43,7 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
             borderRadius: "10px",
             border: "1px solid black"
         },
-        downState: (isDown: boolean, type: NoteType) => {
-            if (type == NoteType.Dummy) {
-                return {
-                    backgroundColor: "rgb(225, 225, 225)",
-                };
-            }
+        downState: (isDown: boolean) => {
             if (isDown) {
                 return {
                     backgroundColor: "red",
@@ -55,14 +52,18 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
 
             return {};
         },
-        flatState: (type: NoteType) => {
-            if (type == NoteType.Flat) {
+        flatState: (isMinor: boolean) => {
+            if (isMinor) {
                 return {
                     color: "white",
                     backgroundColor: "black",
                 };
             }
-            if (type == NoteType.Dummy) {
+
+            return {};
+        },
+        dummyState: (isDummy: boolean) => {
+            if (isDummy) {
                 return {
                     border: "none",
                     color: "rgb(225, 225, 225)",
@@ -76,7 +77,7 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
 }
 
 export interface IRecorderNoteProps {
-    note: INoteInfo;
+    notePosition: INoteUIPosition;
     isDown: boolean;
 }
 
