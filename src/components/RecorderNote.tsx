@@ -45,7 +45,6 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
         },
         downState: (isDown: boolean) => {
             if (isDown) {
-                console.log("holding down key");
                 return {
                     backgroundColor: "red",
                 };
@@ -69,7 +68,7 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
                     border: "none",
                     color: "rgb(225, 225, 225)",
                     backgroundColor: "rgb(225, 225, 225)"
-                }
+                };
             }
 
             return {};

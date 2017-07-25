@@ -77,10 +77,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         });
 
         this.noteKeyboardManager.on(NoteKeyboardManager.STATE_CHANGED, (state: ITotalNoteState) => {
-            console.log("about to set state after keyboardmanager state change");
             this.setState({
                 noteState: state
-            }, () => console.log("state changed"));
+            });
         });
 
         setTimeout(() => {
@@ -90,9 +89,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     }
 
     private isNoteDown(note: INoteInfo): boolean {
-        console.log(this.state.noteState.down);
-        if (note) {
-            console.log(note.name);
+        if (!note) {
+            return false;
         }
         return this.state.noteState.down.filter(down => down.note.name === note.name).length === 1;
     }
@@ -105,18 +103,14 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         this.video.playVideo();
         setTimeout(() => {
             this.video.pauseVideo();
-            console.log("I should play and pause");
         }, 5);
     }
 
     private onStateChange(event) {
-        console.log("state changing");
-        console.log(event);
         if (event.data == 5) { // we want to play/pause when video cued
             this.video.playVideo();
             setTimeout(() => {
                 this.video.pauseVideo();
-                console.log("I should play and pause");
             }, 5);
         }
     }
@@ -276,7 +270,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     private handleVideoIdChange() {
         if (this.state.stateName === RecorderStateName.FreePlay) {
-            console.log("changing state");
             let videoId = getYoutubeId(this.refs.youtubeInput.value);
             if (videoId == null) {
                 videoId = "";
@@ -383,7 +376,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 console.log(result);
                 let compositionState = result.data as ICompositionState;
                 console.log("load complete");
-                console.log(result);
                 console.log(compositionState);
                 this.setState({
                     stateName: RecorderStateName.FreePlay,

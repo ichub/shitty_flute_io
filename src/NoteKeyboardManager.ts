@@ -2,7 +2,7 @@ import {INoteInfo} from "./models/INoteInfo";
 import {EventEmitter} from "events";
 import {ICompositionNote} from "./models/ICompositionNote";
 import {
-    getINoteInfoForPositionIndex, getUIPositionWithCharacter,
+    getINoteInfoForPositionIndex, getUIPositionForNote, getUIPositionWithCharacter,
     NoteUIPositionList
 } from "./models/NoteUIPositionList";
 
@@ -25,12 +25,9 @@ export class NoteKeyboardManager extends EventEmitter {
         this.offset = offset;
     }
 
-    private getNoteForKeyboardEvent(e: KeyboardEvent): INoteInfo {
-        return getINoteInfoForPositionIndex(getUIPositionWithCharacter(e.key).index, this.offset);
-    }
-
-    private static isKeyboardEventForNote(note: INoteInfo, e: KeyboardEvent) {
-        return note.keyboardCharacter.toLowerCase() === e.key.toLowerCase();
+    private isKeyboardEventForNote(note: INoteInfo, e: KeyboardEvent) {
+        let position = getUIPositionForNote(note, this.offset);
+        return position.keyboardCharacter.toLowerCase() === e.key.toLowerCase();
     }
 
     private addDownNote(note: INoteInfo): boolean {
@@ -39,7 +36,6 @@ export class NoteKeyboardManager extends EventEmitter {
                 note: note,
                 start: new Date().getTime()
             });
-            console.log("pushed down " + note.label);
             return true;
         }
 
@@ -58,30 +54,32 @@ export class NoteKeyboardManager extends EventEmitter {
     }
 
     private emitStateChanged() {
-        console.log("emmitting state change");
         this.emit(NoteKeyboardManager.STATE_CHANGED, <ITotalNoteState> {
             down: this.down.slice(),
-            played: this.played.slice()
+            played: this.played.slice(),
         });
-        console.log("emmitted state change");
     }
 
     public attachListeners() {
         document.addEventListener("keydown", (e: KeyboardEvent) => {
-            let note = this.getNoteForKeyboardEvent(e);
-            if (this.addDownNote(note)) {
-                console.log("keydown, " + note.name);
-                this.emit(NoteKeyboardManager.NOTE_START, note);
-                console.log("emitted note start");
-                this.emitStateChanged();
+            for (let note of this.notes) {
+                if (this.isKeyboardEventForNote(note, e)) {
+                    if (this.addDownNote(note)) {
+                        this.emit(NoteKeyboardManager.NOTE_START, note);
+                        this.emitStateChanged();
+                    }
+                }
             }
         });
 
         document.addEventListener("keyup", (e: KeyboardEvent) => {
-            let note = this.getNoteForKeyboardEvent(e);
-            this.removeDownNote(note);
-            this.emit(NoteKeyboardManager.NOTE_END, note);
-            this.emitStateChanged();
+            for (let note of this.notes) {
+                if (this.isKeyboardEventForNote(note, e)) {
+                    this.removeDownNote(note);
+                    this.emit(NoteKeyboardManager.NOTE_END, note);
+                    this.emitStateChanged();
+                }
+            }
         });
     }
 
