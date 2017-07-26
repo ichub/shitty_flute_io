@@ -30,7 +30,7 @@ if (initializedState.pageName === "landing") {
 } else if (initializedState.pageName === "error") {
     ReactDom.render(
         <StyleRoot>
-            <ErrorPageComponent code={initializedState.error.code} message={initializedState.error.message}/>
+            <ErrorPageComponent error={initializedState.error} isProd={initializedState.isProd}/>
         </StyleRoot>,
         document.getElementById("app-container"));
 }

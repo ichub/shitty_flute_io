@@ -1,15 +1,8 @@
-/**
- * Created by bgu on 7/14/17.
- */
-
 import * as express from "express";
-import * as path from "path";
 import {generateToken} from "./ComposerTokenLoader";
-import {htmlDir} from "./Server";
 import {SQLiteDataLayer} from "./SQLiteDataLayer";
 import {YoutubeApi} from "./YoutubeApi";
 import {ICompositionState} from "../models/ICompositionState";
-import {InMemoryDataLayer} from "./InMemoryDataLayer";
 import {IDataLayer} from "./IDataLayer";
 import {ReactPage} from "./ReactPageRenderMiddleware";
 

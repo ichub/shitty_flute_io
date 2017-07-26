@@ -15,7 +15,14 @@ export class ErrorPageComponent extends React.Component<IErrorPageComponentProps
             <div style={[
                 ErrorPageComponent.styles.base
             ]}>
-                Looks like there was an error
+                code: {this.props.error.code}
+                <br/>
+                message: {this.props.error.message}
+                <br/>
+                {
+                    this.props.isProd ? "" : "debug mode"
+                }
+                <br/>
             </div>
         );
     }
@@ -28,7 +35,11 @@ export class ErrorPageComponent extends React.Component<IErrorPageComponentProps
 }
 
 export interface IErrorPageComponentProps {
-
+    error: {
+        message: string,
+        code: number
+    }
+    isProd: boolean
 }
 
 export interface IErrorPageComponentState {

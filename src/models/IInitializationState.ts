@@ -3,6 +3,7 @@ export interface InitializationState {
     editToken?: string
     viewToken?: string
     viewOnly?: boolean
+    isProd?: boolean
     error?: {
         code: number,
         message: string
