@@ -7,6 +7,7 @@ import * as fs from "fs";
 import {InitializationState} from "../models/IInitializationState";
 import {ErrorMiddleware} from "./ErrorMiddleware";
 import {DEBUG_PORT, PORT, rootPath} from "./Env";
+import * as exphbs from "express-handlebars";
 
 export declare var initializedState: InitializationState;
 
@@ -20,6 +21,17 @@ const schedule = require('node-schedule');
 
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(morgan("dev" as any));
+app.set('view engine', 'hbs');
+app.engine(".hbs", exphbs({
+    defaultLayout: "main",
+    extname: ".hbs",
+    layoutsDir: path.join(rootPath, "views", "layouts"),
+    helpers: {
+        str: (context) => {
+            return JSON.stringify(context);
+        }
+    }
+}));
 
 app.use(ApiController);
 
