@@ -5,10 +5,11 @@ import * as bodyParser from "body-parser";
 import {ApiController, cleanDB} from "./ApiController";
 import * as fs from "fs";
 import {InitializationState} from "../models/IInitializationState";
+import {ErrorMiddleware} from "./ErrorMiddleware";
+import {DEBUG_PORT, PORT, rootPath} from "./Env";
 
 export declare var initializedState: InitializationState;
 
-export const rootPath = path.join(__dirname, "../../");
 export const htmlDir = path.join(rootPath, "html");
 export const jsDir = path.join(rootPath, "dist", "bundle");
 export const resDir = path.join(rootPath, "res");
@@ -26,12 +27,9 @@ app.use("/js", express.static(jsDir));
 app.use("/res", express.static(resDir));
 app.use("/css", express.static(cssDir));
 
-const DEBUG_PORT = 4000;
-const PROD_PORT = 80;
-const IS_PROD = process.env.NODE_ENV === "production";
-const port = IS_PROD ? PROD_PORT : DEBUG_PORT;
+app.use(ErrorMiddleware);
 
-app.listen(port, () => {
+app.listen(PORT, () => {
     console.log(`listening on port ${DEBUG_PORT}`);
 });
 

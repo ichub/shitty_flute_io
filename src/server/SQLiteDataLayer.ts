@@ -7,10 +7,10 @@ import {ICompositionNote, makeICompositionNote} from "../models/ICompositionNote
 import {NoteInfoList} from "../models/NoteInfoList";
 import {ICompositionState, makeICompositionState} from "../models/ICompositionState";
 import * as path from "path";
-import {rootPath} from "./Server";
 import {INoteInfo} from "../models/INoteInfo";
+import {rootPath} from "./Env";
+import * as fs from "fs";
 
-var fs = require("fs");
 
 export class SQLiteDataLayer implements IDataLayer {
     private static instancePromise: Promise<SQLiteDataLayer> = null;

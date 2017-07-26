@@ -2,5 +2,9 @@ export interface InitializationState {
     pageName: string
     editToken?: string
     viewToken?: string
-    viewOnly: boolean
+    viewOnly?: boolean
+    error?: {
+        code: number,
+        message: string
+    }
 }

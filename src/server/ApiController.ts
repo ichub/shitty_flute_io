@@ -18,12 +18,14 @@ const fs = require("fs");
 // const dataStore = new InMemoryDataLayer();
 
 function returnJson(res: express.Response, promise: Promise<any>): void {
-    promise.then(data => res.json(data)).catch(err => {
-        res.status(500);
-        res.json(err);
+    promise
+        .then(data => res.json(data))
+        .catch(err => {
+            res.status(500);
+            res.json(err);
 
-        console.log(err);
-    });
+            console.log(err);
+        });
 }
 
 ApiController.get("/", (req: express.Request, res: express.Response) => {
@@ -39,17 +41,20 @@ ApiController.get("/", (req: express.Request, res: express.Response) => {
 //     res.json(dataStore);
 // });
 
-ApiController.get("/recorder", (req: express.Request, res: express.Response) => {
+ApiController.get("/recorder", (req: express.Request, res: express.Response, next: Function) => {
     let editToken = generateToken();
     SQLiteDataLayer
         .getInstance()
         .then((dataLayer: IDataLayer) => {
             return dataLayer.createCompositionIfNoneExists(editToken);
         })
-        .then(() => res.redirect(302, "/recorder/" + editToken));
+        .then(() => res.redirect(302, "/recorder/" + editToken))
+        .catch(err => {
+            next(err);
+        });
 });
 
-ApiController.get("/recorder/:editToken", (req: express.Request, res: express.Response) => {
+ApiController.get("/recorder/:editToken", (req: express.Request, res: express.Response, next: Function) => {
     console.log("retrieving composition with edit token: " + req.params.editToken);
     const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
 
@@ -66,10 +71,13 @@ ApiController.get("/recorder/:editToken", (req: express.Request, res: express.Re
             };
 
             res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
+        })
+        .catch(err => {
+            next(err);
         });
 });
 
-ApiController.get("/recorder/view/:viewToken", (req: express.Request, res: express.Response) => {
+ApiController.get("/recorder/view/:viewToken", (req: express.Request, res: express.Response, next: Function) => {
     const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
     const initializedState = {
         pageName: "recorder-view",
