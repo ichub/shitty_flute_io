@@ -11,6 +11,7 @@ import {YoutubeApi} from "./YoutubeApi";
 import {ICompositionState} from "../models/ICompositionState";
 import {InMemoryDataLayer} from "./InMemoryDataLayer";
 import {IDataLayer} from "./IDataLayer";
+import {ReactPage} from "./ReactPageRenderMiddleware";
 
 export const ApiController = express.Router();
 const fs = require("fs");
@@ -29,12 +30,9 @@ function returnJson(res: express.Response, promise: Promise<any>): void {
 }
 
 ApiController.get("/", (req: express.Request, res: express.Response) => {
-    const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
-    const initializedState = {
-        pageName: "landing",
-        viewOnly: true
-    };
-    res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
+    res.render("index", {
+        pageName: ReactPage.Landing
+    });
 });
 
 // ApiController.get("/all-recordings", (req: express.Request, res: express.Response) => {
@@ -56,7 +54,6 @@ ApiController.get("/recorder", (req: express.Request, res: express.Response, nex
 
 ApiController.get("/recorder/:editToken", (req: express.Request, res: express.Response, next: Function) => {
     console.log("retrieving composition with edit token: " + req.params.editToken);
-    const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
 
     SQLiteDataLayer
         .getInstance()
@@ -64,13 +61,11 @@ ApiController.get("/recorder/:editToken", (req: express.Request, res: express.Re
             return dataLayer.getViewToken(req.params.editToken);
         })
         .then(viewToken => {
-            const initializedState = {
-                pageName: "recorder",
+            res.render("index", {
+                pageName: ReactPage.Recorder,
                 editToken: req.params.editToken,
                 viewToken: viewToken
-            };
-
-            res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
+            });
         })
         .catch(err => {
             next(err);
@@ -78,13 +73,10 @@ ApiController.get("/recorder/:editToken", (req: express.Request, res: express.Re
 });
 
 ApiController.get("/recorder/view/:viewToken", (req: express.Request, res: express.Response, next: Function) => {
-    const fileContents = fs.readFileSync(path.join(htmlDir, "index.html")).toString();
-    const initializedState = {
-        pageName: "recorder-view",
+    res.render("index", {
+        pageName: ReactPage.RecorderView,
         viewToken: req.params.viewToken
-    };
-
-    res.send(fileContents.replace("\"%INITIALIZE_ME%\"", JSON.stringify(initializedState, null, 2)));
+    });
 });
 
 ApiController.post("/recorder/:editToken/save", (req: express.Request, res: express.Response) => {
