@@ -69,6 +69,7 @@
     "gulp-webpack": "^1.5.0",
     "moment": "^2.17.1",
     "morgan": "^1.8.2",
+    "node-schedule": "^1.2.3",
     "probability-distributions": "^0.9.1",
     "radium": "^0.19.1",
     "randomstring": "^1.1.5",
