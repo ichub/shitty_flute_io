@@ -17,6 +17,7 @@ export interface ICompositionState {
     viewCount: number
     offset: number
     hasRecorded: boolean
+    autoRecorded: boolean
     notes: ICompositionNote[]
 }
 
@@ -25,7 +26,7 @@ export interface ICompositionState {
 
 export function makeNewICompositionState(): ICompositionState {
     let notes: ICompositionNote[] = [];
-    return makeICompositionState("", "", -1, -1, -1, -1, 0, 0, false, notes);
+    return makeICompositionState("", "", -1, -1, -1, -1, 0, 0, false, false, notes);
 }
 
 export function makeICompositionState(
@@ -38,6 +39,7 @@ export function makeICompositionState(
     viewCount: number,
     offset: number,
     hasRecorded: boolean,
+    autoRecorded: boolean,
     notes: ICompositionNote[]): ICompositionState {
     return {
         compName: name,
@@ -49,6 +51,7 @@ export function makeICompositionState(
         viewCount: viewCount,
         offset: offset,
         hasRecorded: hasRecorded,
+        autoRecorded: autoRecorded,
         notes: notes
     };
 }

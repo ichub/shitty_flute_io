@@ -10,6 +10,7 @@ export interface IDataLayer {
     getCompositionEdit(editToken: string): Promise<ICompositionState>;
     getCompositionView(viewToken: string): Promise<ICompositionState>;
     getViewToken(editToken: string): Promise<string>;
+    flootify(youtubeId: string): Promise<ICompositionState>;
     saveComposition(editToken: string, compositionState: ICompositionState): Promise<void>;
     cleanUnrecordedCompositions(): Promise<void>
 }

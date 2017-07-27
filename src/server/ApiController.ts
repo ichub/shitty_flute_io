@@ -113,6 +113,17 @@ ApiController.get("/recorder/:editToken/viewToken", (req: express.Request, res: 
     );
 });
 
+ApiController.get("/flootify/:youtubeId", (req: express.Request, res: express.Response) => {
+    returnJson(
+        res,
+        SQLiteDataLayer
+            .getInstance()
+            .then((dataLayer) => {
+                return dataLayer.flootify(req.params.youtubeId);
+            })
+    )
+})
+
 ApiController.get("/video-title/:youtubeVideoURL", (req: express.Request, res: express.Response) => {
     returnJson(res,
         YoutubeApi.getInfoOnVideo(req.params.youtubeVideoURL)

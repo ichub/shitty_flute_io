@@ -105,6 +105,7 @@ def json_state_for_comp(comp_notes, video_id):
     ret += "\"viewCount\": 0,"
     ret += "\"offset\": 0,"
     ret += "\"hasRecorded\": true,"
+    ret += "\"autoRecorded\": true,"
     ret += "\"notes\": "
     ret += json_array_for_notes(comp_notes)
     ret += "}"

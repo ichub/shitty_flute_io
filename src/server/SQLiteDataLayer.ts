@@ -11,6 +11,8 @@ import {INoteInfo} from "../models/INoteInfo";
 import {rootPath} from "./Env";
 import * as fs from "fs";
 
+const util = require('util');
+const exec = require('child_process').exec;
 
 export class SQLiteDataLayer implements IDataLayer {
     private static instancePromise: Promise<SQLiteDataLayer> = null;
@@ -54,6 +56,21 @@ export class SQLiteDataLayer implements IDataLayer {
         });
     }
 
+    execCommandWithPromise(command: string): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            exec(command, (err, stdout, stderr) => {
+                if (err) {
+                    return reject(err);
+                }
+                if (stderr) {
+                    return reject(stderr);
+                } else {
+                    return resolve(stdout);
+                }
+            });
+        });
+    }
+
     createTables(): Promise<void> {
         return this.execRunWithPromise(
             "CREATE TABLE IF NOT EXISTS compositions " +
@@ -68,6 +85,7 @@ export class SQLiteDataLayer implements IDataLayer {
             "view_count INT, " +
             "offset INT, " +
             "has_recorded BIT, " +
+            "auto_recorded BIT, " +
             "PRIMARY KEY (edit_token), " +
             "UNIQUE (view_token)) ")
             .then(() => {
@@ -94,6 +112,7 @@ export class SQLiteDataLayer implements IDataLayer {
         let viewCount = (row as any).view_count;
         let offset = (row as any).offset;
         let hasRecorded = (row as any).has_recorded == 1;
+        let autoRecorded = (row as any).auto_recorded == 1;
 
         return this.execAllWithPromise(
             "SELECT * from compositions_notes_map WHERE composition_edit_token=?",
@@ -118,6 +137,7 @@ export class SQLiteDataLayer implements IDataLayer {
                     viewCount,
                     offset,
                     hasRecorded,
+                    autoRecorded,
                     notes);
                 let composition = makeIComposition(editToken, viewToken, compositionState);
                 return composition;
@@ -150,9 +170,10 @@ export class SQLiteDataLayer implements IDataLayer {
             "last_edited," +
             "view_count," +
             "offset," +
-            "has_recorded) " +
+            "has_recorded," +
+            "auto_recorded) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            [editToken, viewTokenIfNoneExists, "", "HQnC1UHBvWA", -1, -1, -1, -1, 0, 0, 0]) // default song is shelter
+            [editToken, viewTokenIfNoneExists, "", "HQnC1UHBvWA", -1, -1, -1, -1, 0, 0, 0, 0]) // default song is shelter
             .then(result => {
                 console.log("inserted the new row");
             })
@@ -214,6 +235,22 @@ export class SQLiteDataLayer implements IDataLayer {
             });
     }
 
+
+
+    flootify(youtubeId: string): Promise<ICompositionState> {
+        console.log("Attempting to flootify...");
+        let script_path = path.join(rootPath, "scripts", "flootify.py");
+        return this.execCommandWithPromise("python " + script_path + " " + youtubeId)
+            .then(result => {
+                console.log("flootified video with id " + youtubeId);
+                return Promise.resolve(JSON.parse(result) as ICompositionState);
+            })
+            .catch((err) => {
+                console.log("Could not flootify.");
+                Promise.reject(err);
+            });
+    }
+
     saveComposition(editToken: string, compositionState: ICompositionState): Promise<void> {
         console.log("trying to get row for save operation");
         return this.execGetWithPromise(
@@ -252,6 +289,7 @@ export class SQLiteDataLayer implements IDataLayer {
                     "view_count=?, " +
                     "offset=?, " +
                     "has_recorded=? " +
+                    "auto_recorded=? " +
                     "WHERE edit_token=?",
                     [compositionState.compName,
                         compositionState.youtubeVideoId,
@@ -262,6 +300,7 @@ export class SQLiteDataLayer implements IDataLayer {
                         compositionState.viewCount,
                         compositionState.offset,
                         compositionState.hasRecorded,
+                        compositionState.autoRecorded,
                         editToken]
                 );
             })
