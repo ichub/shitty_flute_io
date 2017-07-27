@@ -7,10 +7,9 @@ export interface INoteInfo {
     type: NoteType;
     soundFileUrl: string;
     shittySoundFileUrl: string;
-    keyboardCharacter: string;
 }
 
-export function makeINoteInfo(id: number, name: string, label: string, type: NoteType, soundFileUrl: string, shittySoundFileUrl: string, keyboardCharacter: string = "") {
+export function makeINoteInfo(id: number, name: string, label: string, type: NoteType, soundFileUrl: string, shittySoundFileUrl: string) {
     return {
         noteId: id,
         name: name,
@@ -18,6 +17,5 @@ export function makeINoteInfo(id: number, name: string, label: string, type: Not
         type: type,
         soundFileUrl: soundFileUrl,
         shittySoundFileUrl: shittySoundFileUrl,
-        keyboardCharacter: keyboardCharacter,
     };
 }

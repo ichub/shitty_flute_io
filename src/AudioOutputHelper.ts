@@ -77,6 +77,7 @@ export class AudioOutputHelper {
     }
 
     public playNote(note: INoteInfo, loop: boolean, duration: number) {
+        console.log("playing note: " + note.name + " with duration " + duration.toString());
         const audioBuffer = this.getRandomElement(this.noteToAudioBufferMap[note.name]); // TODO: pick random buffer from array of buffers
         const source = this.audio.createBufferSource();
         source.buffer = audioBuffer;
