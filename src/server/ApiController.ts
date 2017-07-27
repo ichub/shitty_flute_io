@@ -124,9 +124,9 @@ ApiController.get("/flootify/:youtubeId", (req: express.Request, res: express.Re
     )
 })
 
-ApiController.get("/video-title/:youtubeVideoURL", (req: express.Request, res: express.Response) => {
+ApiController.get("/video-title/:youtubeId", (req: express.Request, res: express.Response) => {
     returnJson(res,
-        YoutubeApi.getInfoOnVideo(req.params.youtubeVideoURL)
+        YoutubeApi.getInfoOnVideo(req.params.youtubeId)
             .then(info => {
                 return Promise.resolve({title: info.items[0].snippet.title});
             })
