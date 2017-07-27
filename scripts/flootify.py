@@ -3,13 +3,13 @@ USAGE: python flootify.py video_id
 prints icompositionstate json to standard output
 """
 
+from __future__ import print_function
 import vamp
 import librosa
 import numpy as np
 import math
 import sys
 import subprocess
-from __future__ import print_function
 
 # set globals
 n_notes = 24
@@ -71,12 +71,18 @@ class CompositionNote:
         return "{\n\tnote_id: " + str(self.note_id) + "\n\tstart: " + str(self.start) + "\n\tend: " + str(self.end) + "\n}\n"
 
     def json_for_comp_note(comp_note):
+	    if comp_note is None:
+	        return ""
+	    template = "{{\"noteInfo\": {0}, \"start\": {1}, \"end\": {2}}}"
+	    return template.format(json_for_id[comp_note.note_id], comp_note.start, comp_note.end)
+    
+# json serialization of notes compositions
+def json_for_comp_note(comp_note):
     if comp_note is None:
         return ""
     template = "{{\"noteInfo\": {0}, \"start\": {1}, \"end\": {2}}}"
     return template.format(json_for_id[comp_note.note_id], comp_note.start, comp_note.end)
-    
-# json serialization of notes compositions
+
 def json_array_for_notes(comp_notes):
     ret = "["
     
@@ -112,7 +118,7 @@ if __name__ == "__main__":
 	# download temp .wav audio file, read it into audio variable, delete temp .wav file
 	youtube_id = sys.argv[1]
 	youtube_url = url_from_id(youtube_id)
-	subprocess.run("youtube-dl -o " + youtube_id + ".wav -x --audio-format \"wav\" " + youtube_url, shell=True)
+	subprocess.run("youtube-dl -q -o " + youtube_id + ".wav -x --audio-format \"wav\" " + youtube_url, shell=True)
 
 	audio_file = "./" + youtube_id + ".wav"
 	audio, sr = librosa.load(audio_file, sr=44100, mono=True)
@@ -124,10 +130,9 @@ if __name__ == "__main__":
 	data = vamp.collect(audio, sr, "mtg-melodia:melodia")
 	hop, melody = data['vector']
 	timestamps = 8 * 128/44100.0 + np.arange(len(melody)) * (128/44100.0) # first timestamp is 8 * 128/44100 for whatever reason
-	melody_pos = melody[:]
-	melody_pos[melody<=0] = None
+	melody[melody <= 0] = 1
 	melody_cents_scaled = 12*np.log2(melody/130.813) # how many hundred cents above C3
-	melody_cents_scaled[melody<=0] = None
+	melody_cents_scaled[melody<=1] = None
 
 	# convert into array of notes
 	current_id = None
@@ -172,4 +177,4 @@ if __name__ == "__main__":
 	    note.start = note.start + np.random.normal(0, 0.02)
 
 	# print to standard output
-	print(json_state_for_comp(comp_notes), youtube_id)
+	print(json_state_for_comp(comp_notes, youtube_id))
