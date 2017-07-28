@@ -10,6 +10,9 @@ import numpy as np
 import math
 import sys
 import subprocess
+import time
+
+current_milli_time = lambda: int(round(time.time() * 1000))
 
 # set globals
 n_notes = 24
@@ -94,14 +97,14 @@ def json_array_for_notes(comp_notes):
     ret += "]"
     return ret
     
-def json_state_for_comp(comp_notes, video_id):
+def json_state_for_comp(comp_notes, video_id, duration):
     ret = "{"
     ret += "\"compName\": \"\","
     ret += "\"youtubeVideoId\": \"" + video_id + "\","
     ret += "\"recordingYoutubeStartTime\": 0,"
-    ret += "\"recordingYoutubeEndTime\": 200,"
+    ret += "\"recordingYoutubeEndTime\": " + str(duration) + ","
     ret += "\"startRecordingDateTime\": 0,"
-    ret += "\"lastEdited\": 0,"
+    ret += "\"lastEdited\": " + str(current_milli_time()) + ","
     ret += "\"viewCount\": 0,"
     ret += "\"offset\": 0,"
     ret += "\"hasRecorded\": true,"
@@ -131,6 +134,7 @@ if __name__ == "__main__":
 	data = vamp.collect(audio, sr, "mtg-melodia:melodia")
 	hop, melody = data['vector']
 	timestamps = 8 * 128/44100.0 + np.arange(len(melody)) * (128/44100.0) # first timestamp is 8 * 128/44100 for whatever reason
+	duration = timestamps[-1]
 	melody[melody <= 0] = 1
 	melody_cents_scaled = 12*np.log2(melody/130.813) # how many hundred cents above C3
 	melody_cents_scaled[melody<=1] = None
@@ -174,8 +178,8 @@ if __name__ == "__main__":
 	# make notes a little more natural/shitty?
 	for note in comp_notes:
 		# make notes about 0.1s + 10% longer, then add noise to both start and end times
-	    note.end = note.end + (note.end - note.start) * 0.1 + np.random.normal(0.05, 0.05) 
+	    note.end = note.end + (note.end - note.start) * 0.05 + np.random.normal(0.02, 0.02) 
 	    note.start = note.start + np.random.normal(0, 0.02)
 
 	# print to standard output
-	print(json_state_for_comp(comp_notes, youtube_id))
+	print(json_state_for_comp(comp_notes, youtube_id, duration))

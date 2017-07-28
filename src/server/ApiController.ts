@@ -121,8 +121,8 @@ ApiController.get("/flootify/:youtubeId", (req: express.Request, res: express.Re
             .then((dataLayer) => {
                 return dataLayer.flootify(req.params.youtubeId);
             })
-    )
-})
+    );
+});
 
 ApiController.get("/video-title/:youtubeId", (req: express.Request, res: express.Response) => {
     returnJson(res,

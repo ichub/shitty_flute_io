@@ -58,7 +58,7 @@ export class SQLiteDataLayer implements IDataLayer {
 
     execCommandWithPromise(command: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            exec(command, (err, stdout, stderr) => {
+            exec(command, {maxBuffer: 1024 * 1024}, (err, stdout, stderr) => {
                 if (err) {
                     return reject(err);
                 }
@@ -172,8 +172,8 @@ export class SQLiteDataLayer implements IDataLayer {
             "offset," +
             "has_recorded," +
             "auto_recorded) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            [editToken, viewTokenIfNoneExists, "", "HQnC1UHBvWA", -1, -1, -1, -1, 0, 0, 0, 0]) // default song is shelter
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [editToken, viewTokenIfNoneExists, "", "HQnC1UHBvWA", -1, -1, -1, (new Date()).getTime(), 0, 0, 0, 0]) // default song is shelter
             .then(result => {
                 console.log("inserted the new row");
             })
@@ -288,7 +288,7 @@ export class SQLiteDataLayer implements IDataLayer {
                     "last_edited=?, " +
                     "view_count=?, " +
                     "offset=?, " +
-                    "has_recorded=? " +
+                    "has_recorded=?, " +
                     "auto_recorded=? " +
                     "WHERE edit_token=?",
                     [compositionState.compName,
@@ -314,7 +314,11 @@ export class SQLiteDataLayer implements IDataLayer {
     }
 
     cleanUnrecordedCompositions(): Promise<void> {
-        return this.execRunWithPromise("DELETE FROM compositions WHERE has_recorded=?", [0])
+        let thresholdTime = (new Date()).getTime() - 1000 * 60 * 60 * 24;
+        return this.execRunWithPromise(
+            "DELETE FROM compositions " +
+            "WHERE has_recorded=? " +
+            "AND last_edited<?", [0, thresholdTime])
             .then(() => {
                 console.log("Cleaned successfully");
             })
