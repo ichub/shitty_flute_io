@@ -116,20 +116,32 @@ ApiController.get("/recorder/:editToken/viewToken", (req: express.Request, res: 
 ApiController.get("/flootify/:youtubeId", (req: express.Request, res: express.Response) => {
     returnJson(
         res,
-        SQLiteDataLayer
-            .getInstance()
-            .then((dataLayer) => {
+        YoutubeApi.getDurationOnVideo(req.params.youtubeId)
+            .then(duration => {
+                if (duration > 600) {
+                    console.log("Video duration must be under 10 minutes.")
+                    return Promise.reject("Video duration must be under 10 minutes.")
+                }
+                return SQLiteDataLayer.getInstance()
+            })
+            .then((dataLayer: IDataLayer) => {
                 return dataLayer.flootify(req.params.youtubeId);
+            })
+            .catch(err => {
+                return Promise.reject(err);
             })
     );
 });
 
 ApiController.get("/video-title/:youtubeId", (req: express.Request, res: express.Response) => {
     returnJson(res,
-        YoutubeApi.getInfoOnVideo(req.params.youtubeId)
-            .then(info => {
-                return Promise.resolve({title: info.items[0].snippet.title});
-            })
+        YoutubeApi.getTitleOnVideo(req.params.youtubeId)
+    );
+});
+
+ApiController.get("/video-duration/:youtubeId", (req: express.Request, res: express.Response) => {
+    returnJson(res,
+        YoutubeApi.getDurationOnVideo(req.params.youtubeId)
     );
 });
 

@@ -68,6 +68,7 @@
     "geolib": "^2.0.22",
     "get-youtube-id": "^1.0.0",
     "gulp-webpack": "^1.5.0",
+    "iso8601-duration": "^1.0.6",
     "moment": "^2.17.1",
     "morgan": "^1.8.2",
     "node-schedule": "^1.2.3",

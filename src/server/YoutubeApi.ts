@@ -1,3 +1,5 @@
+import {parse, toSeconds, pattern} from 'iso8601-duration';
+
 const axios = require("axios");
 
 export class YoutubeApi {
@@ -5,19 +7,70 @@ export class YoutubeApi {
 
     }
 
-    public static getInfoOnVideo(videoId: string): Promise<IYoutubeVideoInfo> {
+    public static getSnippetOnVideo(videoId: string): Promise<IYoutubeVideoSnippet> {
         return axios.get(
             `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet&key=AIzaSyDXOagMe4Ozv3D3iFbtGxSiO4J82IcGXJo`)
             .then((result) => {
+                if (result.data.items.length < 1) {
+                    return Promise.reject("No video found.");
+                }
                 return Promise.resolve(result.data);
+            })
+            .catch((err) => {
+                return Promise.reject(err);
             });
     }
+
+    public static getDetailOnVideo(videoId: string): Promise<IYoutubeVideoContentDetail> {
+        return axios.get(
+            `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=contentDetails&key=AIzaSyDXOagMe4Ozv3D3iFbtGxSiO4J82IcGXJo`)
+            .then((result) => {
+                if (result.data.items.length < 1) {
+                    return Promise.reject("No video found.");
+                }
+                return Promise.resolve(result.data);
+            })
+            .catch((err) => {
+                return Promise.reject(err);
+            });
+    }
+
+    public static getTitleOnVideo(videoId: string): Promise<string> {
+        return this.getSnippetOnVideo(videoId)
+            .then(info => {
+                let title = info.items[0].snippet.title;
+                return Promise.resolve(title);
+            })
+            .catch((err) => {
+                return Promise.reject(err);
+            });
+    }
+
+    public static getDurationOnVideo(videoId: string): Promise<number> {
+        return this.getDetailOnVideo(videoId)
+            .then(info => {
+                let duration = toSeconds(parse(info.items[0].contentDetails.duration));
+                return Promise.resolve(duration);
+            })
+            .catch((err) => {
+                return Promise.reject(err);
+            });
+    }
+
 }
 
-export interface IYoutubeVideoInfo {
+export interface IYoutubeVideoSnippet {
     items: [{
         snippet: {
             title: string
+        }
+    }]
+}
+
+export interface IYoutubeVideoContentDetail {
+    items: [{
+        contentDetails: {
+            duration: string
         }
     }]
 }
