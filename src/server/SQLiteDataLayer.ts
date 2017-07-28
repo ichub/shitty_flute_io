@@ -235,15 +235,23 @@ export class SQLiteDataLayer implements IDataLayer {
             });
     }
 
-
-
     flootify(youtubeId: string): Promise<ICompositionState> {
         console.log("Attempting to flootify...");
         let script_path = path.join(rootPath, "scripts", "flootify.py");
-        return this.execCommandWithPromise("python " + script_path + " " + youtubeId)
-            .then(result => {
-                console.log("flootified video with id " + youtubeId);
-                return Promise.resolve(JSON.parse(result) as ICompositionState);
+        return this.execGetWithPromise(
+            "SELECT * from compositions WHERE youtube_id=? AND auto_recorded=?",
+            [youtubeId, 1])
+            .then(row => {
+                if ("undefined" === typeof row) {
+                    return this.execCommandWithPromise("python " + script_path + " " + youtubeId)
+                        .then(result => {
+                            console.log("flootified video with id " + youtubeId);
+                            return Promise.resolve(JSON.parse(result) as ICompositionState);
+                        });
+                } else {
+                    console.log("Found flootified version in database");
+                    return this.getCompositionFromRow(row);
+                }
             })
             .catch((err) => {
                 console.log("Could not flootify.");
