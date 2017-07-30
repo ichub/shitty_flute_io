@@ -1,9 +1,5 @@
 # Floot
 
-you are about to experience
-
-a new musical paradigm
-
 welcome to floot
 
 http://floot.io 
