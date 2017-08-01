@@ -113,6 +113,17 @@ ApiController.get("/recorder/:editToken/viewToken", (req: express.Request, res: 
     );
 });
 
+ApiController.get("/topten/:timeLimit", (req: express.Request, res: express.Response) => {
+    returnJson(
+        res,
+        SQLiteDataLayer
+            .getInstance()
+            .then((dataLayer) => {
+                return dataLayer.getTopTen(req.params.timeLimit);
+            })
+    );
+});
+
 ApiController.get("/flootify/:youtubeId", (req: express.Request, res: express.Response) => {
     returnJson(
         res,

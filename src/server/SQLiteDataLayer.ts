@@ -235,6 +235,30 @@ export class SQLiteDataLayer implements IDataLayer {
             });
     }
 
+    // return view tokens of top 10 most viewed compositions in the last day
+    getTopTen(timeLimit: TimeInterval): Promise<string[]> {
+        let thresholdTime = (new Date()).getTime() - timeIntervalToMillis(timeLimit);
+        console.log("checking " + timeIntervalToMillis(timeLimit) + " millis in the past");
+        return this.execAllWithPromise(
+            "SELECT view_token FROM compositions " +
+            "WHERE has_recorded=? " +
+            "AND last_edited>? " +
+            "ORDER BY view_count DESC " +
+            "LIMIT 10",
+            [1, thresholdTime])
+            .then((rows) => {
+                let viewTokens: string[] = [];
+                for (let row of rows) {
+                    viewTokens.push((row as any).view_token);
+                }
+                return Promise.resolve(viewTokens);
+            })
+            .catch(err => {
+                console.log("Failed to retrieve top 10.");
+                Promise.reject(err);
+            });
+    }
+
     flootify(youtubeId: string): Promise<ICompositionState> {
         console.log("Attempting to flootify...");
         let script_path = path.join(rootPath, "scripts", "flootify.py");
@@ -250,7 +274,10 @@ export class SQLiteDataLayer implements IDataLayer {
                         });
                 } else {
                     console.log("Found flootified version in database");
-                    return this.getCompositionFromRow(row);
+                    return this.getCompositionFromRow(row)
+                        .then((comp: IComposition) => {
+                            return Promise.resolve(comp.state);
+                        });
                 }
             })
             .catch((err) => {
@@ -294,7 +321,7 @@ export class SQLiteDataLayer implements IDataLayer {
                     "recording_youtube_end=?, " +
                     "start_recording_time=?, " +
                     "last_edited=?, " +
-                    "view_count=?, " +
+                    "view_count=0, " +
                     "offset=?, " +
                     "has_recorded=?, " +
                     "auto_recorded=? " +
@@ -305,11 +332,10 @@ export class SQLiteDataLayer implements IDataLayer {
                         compositionState.recordingYoutubeEndTime,
                         compositionState.startRecordingDateTime,
                         compositionState.lastEdited,
-                        compositionState.viewCount,
                         compositionState.offset,
                         compositionState.hasRecorded,
                         compositionState.autoRecorded,
-                        editToken]
+                        editToken] // note that we reset the view_count when a composition is updated
                 );
             })
             .then(() => {
@@ -357,5 +383,32 @@ export class SQLiteDataLayer implements IDataLayer {
         });
 
         return SQLiteDataLayer.instancePromise;
+    }
+}
+
+export enum TimeInterval {
+    Day = "day",
+    Week = "week",
+    Month = "month",
+    AllTime = "all_time",
+}
+
+export function timeIntervalToMillis(timeInterval: TimeInterval): number {
+    switch (timeInterval) {
+        case "day": {
+            return 1000 * 60 * 60 * 24;
+        }
+        case "week": {
+            return 1000 * 60 * 60 * 24 * 7;
+        }
+        case "month": {
+            return 1000 * 60 * 60 * 24 * 31;
+        }
+        case "all_time": {
+            return 1000 * 60 * 60 * 24 * 365 * 30;
+        }
+        default: {
+            return 0;
+        }
     }
 }
