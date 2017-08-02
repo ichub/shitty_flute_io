@@ -57,12 +57,29 @@ export class YoutubeApi {
             });
     }
 
+    public static getThumbnailOnVideo(videoId: string): Promise<IYoutubeThumbnail> {
+        return this.getSnippetOnVideo(videoId)
+            .then(info => {
+                let thumbnailURL = info.items[0].snippet.thumbnails.default.url;
+                return Promise.resolve({ url: thumbnailURL });
+            })
+            .catch((err) => {
+                return Promise.reject(err);
+            })
+
+    }
+
 }
 
 export interface IYoutubeVideoSnippet {
     items: [{
         snippet: {
             title: string
+            thumbnails: {
+                default: {
+                    url: string
+                }
+            }
         }
     }]
 }
@@ -73,4 +90,8 @@ export interface IYoutubeVideoContentDetail {
             duration: string
         }
     }]
+}
+
+export interface IYoutubeThumbnail {
+    url: string
 }

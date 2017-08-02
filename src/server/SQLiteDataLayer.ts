@@ -10,6 +10,10 @@ import * as path from "path";
 import {INoteInfo} from "../models/INoteInfo";
 import {rootPath} from "./Env";
 import * as fs from "fs";
+import {
+    ICompositionPreview,
+    makeICompositionPreviewPromise
+} from "../models/ICompositionPreview";
 
 const util = require('util');
 const exec = require('child_process').exec;
@@ -236,22 +240,27 @@ export class SQLiteDataLayer implements IDataLayer {
     }
 
     // return view tokens of top 10 most viewed compositions in the last day
-    getTopTen(timeLimit: TimeInterval): Promise<string[]> {
+    getTop(numCompositions: number, timeLimit: TimeInterval): Promise<ICompositionPreview[]> {
         let thresholdTime = (new Date()).getTime() - timeIntervalToMillis(timeLimit);
         console.log("checking " + timeIntervalToMillis(timeLimit) + " millis in the past");
         return this.execAllWithPromise(
-            "SELECT view_token FROM compositions " +
+            "SELECT view_token, name, view_count, auto_recorded, youtube_id FROM compositions " +
             "WHERE has_recorded=? " +
             "AND last_edited>? " +
             "ORDER BY view_count DESC " +
-            "LIMIT 10",
-            [1, thresholdTime])
+            "LIMIT ?",
+            [1, thresholdTime, numCompositions])
             .then((rows) => {
-                let viewTokens: string[] = [];
+                let previews: Promise<ICompositionPreview>[] = [];
                 for (let row of rows) {
-                    viewTokens.push((row as any).view_token);
+                    let viewToken = (row as any).view_token;
+                    let name = (row as any).name;
+                    let viewCount = (row as any).view_count;
+                    let autoRecorded = (row as any).auto_recorded == 1;
+                    let youtubeId = (row as any).youtube_id;
+                    previews.push(makeICompositionPreviewPromise(viewToken, name, "", viewCount, autoRecorded, youtubeId));
                 }
-                return Promise.resolve(viewTokens);
+                return Promise.all(previews);
             })
             .catch(err => {
                 console.log("Failed to retrieve top 10.");

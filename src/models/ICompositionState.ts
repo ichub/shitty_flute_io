@@ -29,18 +29,17 @@ export function makeNewICompositionState(): ICompositionState {
     return makeICompositionState("", "", -1, -1, -1, -1, 0, 0, false, false, notes);
 }
 
-export function makeICompositionState(
-    name: string,
-    youtubeId: string,
-    recordingYoutubeStartTime: number,
-    recordingYoutubeEndTime: number,
-    startRecordingDateTime: number,
-    lastEdited: number,
-    viewCount: number,
-    offset: number,
-    hasRecorded: boolean,
-    autoRecorded: boolean,
-    notes: ICompositionNote[]): ICompositionState {
+export function makeICompositionState(name: string,
+                                      youtubeId: string,
+                                      recordingYoutubeStartTime: number,
+                                      recordingYoutubeEndTime: number,
+                                      startRecordingDateTime: number,
+                                      lastEdited: number,
+                                      viewCount: number,
+                                      offset: number,
+                                      hasRecorded: boolean,
+                                      autoRecorded: boolean,
+                                      notes: ICompositionNote[]): ICompositionState {
     return {
         compName: name,
         youtubeVideoId: youtubeId,

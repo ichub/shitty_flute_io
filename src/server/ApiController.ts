@@ -119,7 +119,7 @@ ApiController.get("/topten/:timeLimit", (req: express.Request, res: express.Resp
         SQLiteDataLayer
             .getInstance()
             .then((dataLayer) => {
-                return dataLayer.getTopTen(req.params.timeLimit);
+                return dataLayer.getTop(10, req.params.timeLimit);
             })
     );
 });
