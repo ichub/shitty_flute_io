@@ -11,26 +11,27 @@ export class NoteKeyboardManager extends EventEmitter {
     public static readonly NOTE_END = "note_end";
     public static readonly STATE_CHANGED = "state_changed";
 
-    offset: number;
+    pitchShift: number;
     notes: INoteInfo[];
     down: IDownNote[];
     played: ICompositionNote[];
 
-    constructor(notes: INoteInfo[], offset: number) {
+    constructor(notes: INoteInfo[], pitchShift: number) {
         super();
 
         this.notes = notes;
         this.down = [];
         this.played = [];
-        this.offset = offset;
+        this.pitchShift = pitchShift;
     }
 
     private isKeyboardEventForNote(note: INoteInfo, e: KeyboardEvent) {
-        let position = getUIPositionForNote(note, this.offset);
+        let position = getUIPositionForNote(note, this.pitchShift);
         return position.keyboardCharacter.toLowerCase() === e.key.toLowerCase();
     }
 
     private addDownNote(note: INoteInfo): boolean {
+        console.log("adding down note");
         if (!this.down.filter(down => note.name === down.note.name)[0]) {
             this.down.push({
                 note: note,
@@ -54,9 +55,10 @@ export class NoteKeyboardManager extends EventEmitter {
     }
 
     private emitStateChanged() {
+        console.log("aaaaa");
         this.emit(NoteKeyboardManager.STATE_CHANGED, <ITotalNoteState> {
             down: this.down.slice(),
-            played: this.played.slice(),
+            played: this.played.slice()
         });
     }
 
@@ -64,6 +66,7 @@ export class NoteKeyboardManager extends EventEmitter {
         document.addEventListener("keydown", (e: KeyboardEvent) => {
             for (let note of this.notes) {
                 if (this.isKeyboardEventForNote(note, e)) {
+                    console.log("note down");
                     if (this.addDownNote(note)) {
                         this.emit(NoteKeyboardManager.NOTE_START, note);
                         this.emitStateChanged();

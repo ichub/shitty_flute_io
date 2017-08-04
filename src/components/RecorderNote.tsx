@@ -15,15 +15,19 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
     }
 
     render() {
+        console.log(this.props);
         return (
             <div style={[
                 GlobalFont,
                 RecorderNote.styles.base,
                 RecorderNote.styles.flatState(this.props.notePosition.isMinor),
                 RecorderNote.styles.downState(this.props.isDown),
-                RecorderNote.styles.dummyState(this.props.notePosition.isDummy),
+                RecorderNote.styles.dummyState(this.props.isDummy)
             ]}>
                 {this.props.notePosition.keyboardCharacter}
+                <div style={{alignSelf: "flex-end"}}>
+                    {this.props.note.label}
+                </div>
             </div>
         );
     }
@@ -46,7 +50,7 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
         downState: (isDown: boolean) => {
             if (isDown) {
                 return {
-                    backgroundColor: "red",
+                    backgroundColor: "red"
                 };
             }
 
@@ -56,7 +60,7 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
             if (isMinor) {
                 return {
                     color: "white",
-                    backgroundColor: "black",
+                    backgroundColor: "black"
                 };
             }
 
@@ -65,7 +69,7 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
         dummyState: (isDummy: boolean) => {
             if (isDummy) {
                 return {
-                    border: "none",
+                    border: "1px solid rgb(225, 225, 225)",
                     color: "rgb(225, 225, 225)",
                     backgroundColor: "rgb(225, 225, 225)"
                 };
@@ -78,7 +82,9 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
 
 export interface IRecorderNoteProps {
     notePosition: INoteUIPosition;
+    note: INoteInfo;
     isDown: boolean;
+    isDummy: boolean;
 }
 
 export interface IRecorderNoteState {

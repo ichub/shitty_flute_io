@@ -55,33 +55,36 @@ function makeMajorRow(): INoteUIRow {
 export function getUIPositionWithCharacter(character: string): INoteUIPosition {
     for (let position of NoteUIPositionList.minorRow.notePositions) {
         if (position.keyboardCharacter.toLowerCase() == character.toLowerCase()) {
-            return position
+            return position;
         }
     }
 
     for (let position of NoteUIPositionList.majorRow.notePositions) {
         if (position.keyboardCharacter.toLowerCase() == character.toLowerCase()) {
-            return position
+            return position;
         }
     }
     return null;
 }
 
-export function getINoteInfoForPositionIndex(index: number, offset: number): INoteInfo {
-    return NoteInfoList.notes[index + offset];
+export function getINoteInfoForPositionIndex(index: number, pitchShift: number, isDummy: boolean = false): INoteInfo {
+    if (isDummy || index + pitchShift >= NoteInfoList.notes.length - 1) {
+        return NoteInfoList.notes[NoteInfoList.notes.length - 1];
+    }
+    return NoteInfoList.notes[index + pitchShift];
 }
 
-export function getUIPositionForNote(note: INoteInfo, offset: number): INoteUIPosition {
+export function getUIPositionForNote(note: INoteInfo, pitchShift: number): INoteUIPosition {
     let ret: INoteUIPosition = makeINoteUIPosition("", -1, false, true);
 
     for (let position of NoteUIPositionList.minorRow.notePositions) {
-        if (position.index == note.noteId + offset) {
+        if (position.index == note.noteId - pitchShift) {
             ret = position;
         }
     }
 
     for (let position of NoteUIPositionList.majorRow.notePositions) {
-        if (position.index == note.noteId + offset) {
+        if (position.index == note.noteId - pitchShift) {
             ret = position;
         }
     }

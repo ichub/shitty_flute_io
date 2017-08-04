@@ -55,13 +55,12 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             startRecordingDateTime: -1,
             lastEdited: -1,
             viewCount: 0,
-            offset: 0,
             err: null
         };
 
         this.audioOutputHelper = AudioOutputHelper.getInstance(NoteInfoList.notes);
         this.singleNotePlayer = new SingleNotePlayer();
-        this.noteKeyboardManager = new NoteKeyboardManager(NoteInfoList.notes, this.state.offset);
+        this.noteKeyboardManager = new NoteKeyboardManager(NoteInfoList.notes, 0);
 
         this.noteKeyboardManager.attachListeners();
 
@@ -212,28 +211,69 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     </div>
 
                     <br/>
+
                     <div style={[
                         RecorderPlayerPageComponent.styles.flex,
-                        RecorderPlayerPageComponent.styles.noteContainer
+                        RecorderPlayerPageComponent.styles.keyboardContainer
                     ]}>
-                        {
-                            NoteUIPositionList.minorRow.notePositions.map((notePos, i) => {
-                                let note = getINoteInfoForPositionIndex(notePos.index, this.state.offset);
-                                return <RecorderNote key={i} notePosition={notePos} isDown={this.isNoteDown(note)}/>;
-                            })
-                        }
+                        <div style={[
+                            RecorderPlayerPageComponent.styles.flexCol,
+                            RecorderPlayerPageComponent.styles.pitchButtonsContainer
+                        ]}>
+                            <input
+                                style={[
+                                    ButtonFont,
+                                    RecorderPlayerPageComponent.styles.flex,
+                                    RecorderPlayerPageComponent.styles.button
+                                ]}
+                                key="6"
+                                type="button"
+                                value="^"
+                                onClick={this.pitchUp.bind(this)}
+                                disabled={this.noteKeyboardManager.pitchShift >= 11}/>
+                            <input
+                                style={[
+                                    ButtonFont,
+                                    RecorderPlayerPageComponent.styles.flex,
+                                    RecorderPlayerPageComponent.styles.button
+                                ]}
+                                key="7"
+                                type="button"
+                                value="v"
+                                onClick={this.pitchDown.bind(this)}
+                                disabled={this.noteKeyboardManager.pitchShift <= 0}/>
+                        </div>
+                        <div>
+                            <div style={[
+                                RecorderPlayerPageComponent.styles.flex,
+                                RecorderPlayerPageComponent.styles.noteContainer
+                            ]}>
+                                {
+                                    NoteUIPositionList.minorRow.notePositions.map((notePos, i) => {
+                                        let note = getINoteInfoForPositionIndex(notePos.index, this.noteKeyboardManager.pitchShift, notePos.isDummy);
+                                        return <RecorderNote key={i} note={note} notePosition={notePos}
+                                                             isDown={this.isNoteDown(note)}
+                                                             isDummy={notePos.isDummy || note.noteId == -1}/>;
+                                    })
+                                }
+                            </div>
+                            <div style={[
+                                RecorderPlayerPageComponent.styles.flex,
+                                RecorderPlayerPageComponent.styles.noteContainer
+                            ]}>
+                                {
+                                    NoteUIPositionList.majorRow.notePositions.map((notePos, i) => {
+                                        let note = getINoteInfoForPositionIndex(notePos.index, this.noteKeyboardManager.pitchShift, notePos.isDummy);
+                                        return <RecorderNote key={i} note={note} notePosition={notePos}
+                                                             isDown={this.isNoteDown(note)}
+                                                             isDummy={notePos.isDummy || note.noteId == -1}/>;
+                                    })
+                                }
+                            </div>
+                        </div>
                     </div>
-                    <div style={[
-                        RecorderPlayerPageComponent.styles.flex,
-                        RecorderPlayerPageComponent.styles.noteContainer
-                    ]}>
-                        {
-                            NoteUIPositionList.majorRow.notePositions.map((notePos, i) => {
-                                let note = getINoteInfoForPositionIndex(notePos.index, this.state.offset);
-                                return <RecorderNote key={i} notePosition={notePos} isDown={this.isNoteDown(note)}/>;
-                            })
-                        }
-                    </div>
+
+
                     <br/>
                     <div style={[
                         GlobalFont,
@@ -276,8 +316,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 videoId = "";
             }
             this.setState({
-                    youtubeVideoId: videoId
-                });
+                youtubeVideoId: videoId
+            });
         }
     }
 
@@ -364,6 +404,20 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         }
     }
 
+    private pitchUp() {
+        if (this.state.stateName === RecorderStateName.FreePlay) {
+            this.noteKeyboardManager.pitchShift += 1;
+        }
+        this.setState(this.state); // force re-render
+    }
+
+    private pitchDown() {
+        if (this.state.stateName === RecorderStateName.FreePlay) {
+            this.noteKeyboardManager.pitchShift -= 1;
+        }
+        this.setState(this.state); // force re-render
+    }
+
     private loadData() {
         let query: string = "";
         if (this.props.viewOnly) {
@@ -390,9 +444,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     lastEdited: compositionState.lastEdited,
                     viewCount: compositionState.viewCount,
                     recording: compositionState.notes,
-                    offset: compositionState.offset,
                     err: null
                 });
+                this.noteKeyboardManager.pitchShift = compositionState.pitchShift;
             })
             .catch((err) => {
                 console.log(err);
@@ -413,7 +467,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             autoRecorded: this.state.autoRecorded,
             lastEdited: this.state.lastEdited,
             viewCount: this.state.viewCount,
-            offset: this.state.viewCount,
+            pitchShift: this.noteKeyboardManager.pitchShift,
             notes: this.state.recording
         };
         return compositionState as ICompositionState;
@@ -451,9 +505,23 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             justifyContent: "center",
             flexDirection: "row"
         },
+        flexCol: {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column"
+        },
+        pitchButtonsContainer: {
+            width: "15%",
+            height: "200px"
+        },
         noteContainer: {
             width: "100%",
             height: "100px"
+        },
+        keyboardContainer: {
+            width: "100%",
+            height: "200px"
         },
         buttonContainer: {
             width: "100%"
@@ -506,7 +574,6 @@ export interface IRecorderPlayerPageComponentState {
     lastEdited: number;
     viewCount: number;
     recording: ICompositionNote[];
-    offset: number;
     err: Error;
 }
 

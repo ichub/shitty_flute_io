@@ -87,7 +87,7 @@ export class SQLiteDataLayer implements IDataLayer {
             "start_recording_time BIGINT, " +
             "last_edited BIGINT, " +
             "view_count INT, " +
-            "offset INT, " +
+            "pitch_shift INT, " +
             "has_recorded BIT, " +
             "auto_recorded BIT, " +
             "PRIMARY KEY (edit_token), " +
@@ -114,7 +114,7 @@ export class SQLiteDataLayer implements IDataLayer {
         let startRecordingTime = (row as any).start_recording_time;
         let lastEdited = (row as any).last_edited;
         let viewCount = (row as any).view_count;
-        let offset = (row as any).offset;
+        let pitchShift = (row as any).pitch_shift;
         let hasRecorded = (row as any).has_recorded == 1;
         let autoRecorded = (row as any).auto_recorded == 1;
 
@@ -139,7 +139,7 @@ export class SQLiteDataLayer implements IDataLayer {
                     startRecordingTime,
                     lastEdited,
                     viewCount,
-                    offset,
+                    pitchShift,
                     hasRecorded,
                     autoRecorded,
                     notes);
@@ -173,7 +173,7 @@ export class SQLiteDataLayer implements IDataLayer {
             "start_recording_time, " +
             "last_edited," +
             "view_count," +
-            "offset," +
+            "pitch_shift," +
             "has_recorded," +
             "auto_recorded) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -331,7 +331,7 @@ export class SQLiteDataLayer implements IDataLayer {
                     "start_recording_time=?, " +
                     "last_edited=?, " +
                     "view_count=0, " +
-                    "offset=?, " +
+                    "pitch_shift=?, " +
                     "has_recorded=?, " +
                     "auto_recorded=? " +
                     "WHERE edit_token=?",
@@ -341,7 +341,7 @@ export class SQLiteDataLayer implements IDataLayer {
                         compositionState.recordingYoutubeEndTime,
                         compositionState.startRecordingDateTime,
                         compositionState.lastEdited,
-                        compositionState.offset,
+                        compositionState.pitchShift,
                         compositionState.hasRecorded,
                         compositionState.autoRecorded,
                         editToken] // note that we reset the view_count when a composition is updated

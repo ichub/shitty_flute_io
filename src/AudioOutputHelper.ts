@@ -87,10 +87,6 @@ export class AudioOutputHelper {
 
         let shittiness = 0.0;
 
-        // TODO: insert a node that does pitch shifting, look up
-        // web sound api to figure out how to do this, also figure out
-        // what other nodes
-
         source.connect(gainNode);
         gainNode.connect(delayNode);
         delayNode.connect(this.audio.destination);

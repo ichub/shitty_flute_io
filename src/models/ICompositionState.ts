@@ -15,7 +15,7 @@ export interface ICompositionState {
     startRecordingDateTime: number
     lastEdited: number
     viewCount: number
-    offset: number
+    pitchShift: number
     hasRecorded: boolean
     autoRecorded: boolean
     notes: ICompositionNote[]
@@ -36,7 +36,7 @@ export function makeICompositionState(name: string,
                                       startRecordingDateTime: number,
                                       lastEdited: number,
                                       viewCount: number,
-                                      offset: number,
+                                      pitchShift: number,
                                       hasRecorded: boolean,
                                       autoRecorded: boolean,
                                       notes: ICompositionNote[]): ICompositionState {
@@ -48,7 +48,7 @@ export function makeICompositionState(name: string,
         startRecordingDateTime: startRecordingDateTime,
         lastEdited: lastEdited,
         viewCount: viewCount,
-        offset: offset,
+        pitchShift: pitchShift,
         hasRecorded: hasRecorded,
         autoRecorded: autoRecorded,
         notes: notes

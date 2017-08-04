@@ -46,10 +46,10 @@ export class FluteButton extends React.Component<IFluteButtonProps, IFluteButton
     private static buttonColor = "red";
     private static styles = {
         base: {
-            width: "100px",
-            height: "100px",
+            width: "50px",
+            height: "50px",
             backgroundColor: FluteButton.buttonColor,
-            margin: "20px",
+            margin: "10px",
             display: "inline-flex",
             justifyContent: "center",
             alignItems: "center",
