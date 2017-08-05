@@ -11,7 +11,7 @@ import {ChangeEvent} from "react";
 import {ICompositionNote} from "../../models/ICompositionNote";
 import {ICompositionState} from "../../models/ICompositionState";
 import {IComposition} from "../../models/IComposition";
-import {ButtonFont, GlobalFont} from "../../styles/GlobalStyles";
+import {ButtonFont, GlobalFont, TitleFont} from "../../styles/GlobalStyles";
 import * as color from "color";
 import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
@@ -55,7 +55,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             startRecordingDateTime: -1,
             lastEdited: -1,
             viewCount: 0,
-            err: null
+            err: null,
+            canInteract: true
         };
 
         this.audioOutputHelper = AudioOutputHelper.getInstance(NoteInfoList.notes);
@@ -123,6 +124,16 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 RecorderPlayerPageComponent.styles.base,
                 RecorderPlayerPageComponent.styles.flex
             ]}>
+                {
+                    !this.state.canInteract ?
+                        <div style={[
+                            TitleFont,
+                            RecorderPlayerPageComponent.styles.overlay
+                        ]}>
+                            flootifying for you...
+                        </div> :
+                        null
+                }
                 <div>
                     <div style={[
                         RecorderPlayerPageComponent.styles.flex,
@@ -207,6 +218,17 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             value="save"
                             onClick={this.save.bind(this)}
                             disabled={!this.state.hasRecorded || this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}/>
+                        <input
+                            style={[
+                                ButtonFont,
+                                RecorderPlayerPageComponent.styles.flex,
+                                RecorderPlayerPageComponent.styles.button
+                            ]}
+                            key="6"
+                            type="button"
+                            value="flootify"
+                            onClick={this.flootify.bind(this)}
+                            disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}/>
 
                     </div>
 
@@ -226,22 +248,22 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                                     RecorderPlayerPageComponent.styles.flex,
                                     RecorderPlayerPageComponent.styles.button
                                 ]}
-                                key="6"
+                                key="7"
                                 type="button"
                                 value="^"
                                 onClick={this.pitchUp.bind(this)}
-                                disabled={this.noteKeyboardManager.pitchShift >= 11}/>
+                                disabled={this.noteKeyboardManager.pitchShift >= 11 || this.state.stateName !== RecorderStateName.FreePlay}/>
                             <input
                                 style={[
                                     ButtonFont,
                                     RecorderPlayerPageComponent.styles.flex,
                                     RecorderPlayerPageComponent.styles.button
                                 ]}
-                                key="7"
+                                key="8"
                                 type="button"
                                 value="v"
                                 onClick={this.pitchDown.bind(this)}
-                                disabled={this.noteKeyboardManager.pitchShift <= 0}/>
+                                disabled={this.noteKeyboardManager.pitchShift <= 0 || this.state.stateName !== RecorderStateName.FreePlay}/>
                         </div>
                         <div>
                             <div style={[
@@ -381,7 +403,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         }
     }
 
-    private save() {
+    private save(): Promise<void> {
         if (this.state.stateName == RecorderStateName.FreePlay) {
             this.setState({
                 stateName: RecorderStateName.Saving,
@@ -394,6 +416,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     this.setState({
                         stateName: RecorderStateName.FreePlay
                     });
+                    return Promise.resolve();
                 })
                 .catch((err) => {
                     console.log(err);
@@ -402,6 +425,33 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     });
                 });
         }
+        return Promise.resolve();
+    }
+
+    private flootify() {
+        this.setState({
+            canInteract: false
+        });
+        let query = `/flootify/${this.state.youtubeVideoId}`;
+        console.log("sending flootify query...");
+        axios.get(query)
+            .then((result) => {
+                console.log("here's the result i got back:");
+                console.log(result);
+                let compositionState = result.data as ICompositionState;
+                console.log("load complete");
+                this.updateWithCompositionState(compositionState);
+            })
+            .then(() => {
+                return this.save();
+            })
+            .then(() => {
+                window.location.href = "/recorder/view/" + this.props.viewToken;
+            })
+            .catch(err => {
+                console.log(err);
+                Promise.reject(err);
+            });
     }
 
     private pitchUp() {
@@ -431,22 +481,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 console.log(result);
                 let compositionState = result.data as ICompositionState;
                 console.log("load complete");
-                console.log(compositionState);
-                this.setState({
-                    stateName: RecorderStateName.FreePlay,
-                    youtubeVideoId: compositionState.youtubeVideoId,
-                    noteState: makeNewITotalNoteState(),
-                    recordingYoutubeStartTime: compositionState.recordingYoutubeStartTime,
-                    recordingYoutubeEndTime: compositionState.recordingYoutubeEndTime,
-                    startRecordingDateTime: compositionState.startRecordingDateTime,
-                    hasRecorded: compositionState.hasRecorded,
-                    autoRecorded: compositionState.autoRecorded,
-                    lastEdited: compositionState.lastEdited,
-                    viewCount: compositionState.viewCount,
-                    recording: compositionState.notes,
-                    err: null
-                });
-                this.noteKeyboardManager.pitchShift = compositionState.pitchShift;
+                this.updateWithCompositionState(compositionState);
             })
             .catch((err) => {
                 console.log(err);
@@ -454,6 +489,24 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     err: err as any
                 });
             });
+    }
+
+    private updateWithCompositionState(compositionState: ICompositionState) {
+        this.setState({
+            stateName: RecorderStateName.FreePlay,
+            youtubeVideoId: compositionState.youtubeVideoId,
+            noteState: makeNewITotalNoteState(),
+            recordingYoutubeStartTime: compositionState.recordingYoutubeStartTime,
+            recordingYoutubeEndTime: compositionState.recordingYoutubeEndTime,
+            startRecordingDateTime: compositionState.startRecordingDateTime,
+            hasRecorded: compositionState.hasRecorded,
+            autoRecorded: compositionState.autoRecorded,
+            lastEdited: compositionState.lastEdited,
+            viewCount: compositionState.viewCount,
+            recording: compositionState.notes,
+            err: null
+        });
+        this.noteKeyboardManager.pitchShift = compositionState.pitchShift;
     }
 
     private getUploadableComposition(): ICompositionState {
@@ -552,6 +605,18 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             ":focus": {
                 boxShadow: "inset 0px 0px 4px rgba(0,0,0,0.5)"
             }
+        },
+        overlay: {
+            width: "100%",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "black",
+            backgroundColor: "rgba(255, 255, 255, 0.8)"
         }
     };
 }
@@ -575,6 +640,7 @@ export interface IRecorderPlayerPageComponentState {
     viewCount: number;
     recording: ICompositionNote[];
     err: Error;
+    canInteract: boolean;
 }
 
 export enum RecorderStateName {

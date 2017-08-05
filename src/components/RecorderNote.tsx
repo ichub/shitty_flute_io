@@ -15,7 +15,6 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
     }
 
     render() {
-        console.log(this.props);
         return (
             <div style={[
                 GlobalFont,

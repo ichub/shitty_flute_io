@@ -106,7 +106,7 @@ def json_state_for_comp(comp_notes, video_id, duration):
     ret += "\"startRecordingDateTime\": 0,"
     ret += "\"lastEdited\": " + str(current_milli_time()) + ","
     ret += "\"viewCount\": 0,"
-    ret += "\"offset\": 0,"
+    ret += "\"pitchShift\": 0,"
     ret += "\"hasRecorded\": true,"
     ret += "\"autoRecorded\": true,"
     ret += "\"notes\": "

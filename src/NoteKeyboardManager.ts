@@ -66,7 +66,6 @@ export class NoteKeyboardManager extends EventEmitter {
         document.addEventListener("keydown", (e: KeyboardEvent) => {
             for (let note of this.notes) {
                 if (this.isKeyboardEventForNote(note, e)) {
-                    console.log("note down");
                     if (this.addDownNote(note)) {
                         this.emit(NoteKeyboardManager.NOTE_START, note);
                         this.emitStateChanged();
