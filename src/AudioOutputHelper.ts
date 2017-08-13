@@ -10,11 +10,13 @@ export class AudioOutputHelper {
     private notes: INoteInfo[];
     private audio: AudioContext;
     private noteToAudioBufferMap: { [name: string]: AudioBuffer[] };
+    shittiness: number;
 
     private constructor(notes: INoteInfo[]) {
         this.notes = notes;
         this.audio = new AudioContext();
         this.noteToAudioBufferMap = {};
+        this.shittiness = 0.0;
     }
 
     public static getInstance(notes: INoteInfo[]): Promise<AudioOutputHelper> {
@@ -85,8 +87,6 @@ export class AudioOutputHelper {
         const gainNode = this.audio.createGain();
         const delayNode = this.audio.createDelay(1.);
 
-        let shittiness = 0.0;
-
         source.connect(gainNode);
         gainNode.connect(delayNode);
         delayNode.connect(this.audio.destination);
@@ -94,10 +94,10 @@ export class AudioOutputHelper {
         let delay = 0.;
 
         if (!loop) {
-            if (duration < 1000 && Math.random() < shittiness) {
+            if (duration < 1000 && Math.random() < this.shittiness) {
                 source.playbackRate.value = PD.rnorm(1, 1, 0.07)[0];
             }
-            if (Math.random() < shittiness) {
+            if (Math.random() < this.shittiness) {
                 delay = Math.abs(PD.rnorm(1, 0, 0.15)[0]);
                 delayNode.delayTime.value = delay;
             }
