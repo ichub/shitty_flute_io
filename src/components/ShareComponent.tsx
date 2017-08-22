@@ -20,6 +20,7 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
                 share your creation:
                 <span
                     style={[ShareComponent.styles.url]}>{`http://floot.io/recorder/view/${this.props.viewToken}`}</span>
+                <i className="fa fa-bath" aria-hidden="true"></i>
             </div>
         );
     }
