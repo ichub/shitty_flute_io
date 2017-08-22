@@ -7,6 +7,10 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
     props: IShareComponentProps;
     state: IShareComponentState;
 
+    refs: {
+        urlText: HTMLElement
+    };
+
     constructor(props: IShareComponentProps) {
         super();
     }
@@ -18,11 +22,26 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
                 ShareComponent.styles.base
             ]}>
                 <span
+                    onClick={this.selectText.bind(this)}
+                    ref="urlText"
                     style={[ShareComponent.styles.url]}>{`http://floot.io/recorder/view/${this.props.viewToken}`}</span>
                 <i style={[ShareComponent.styles.share]}
                    className="fa fa-files-o" aria-hidden="true"></i>
             </div>
         );
+    }
+
+    selectText() {
+        if (document["selection"]) {
+            const range = document.body["createTextRange"]();
+            range.moveToElementText(this.refs.urlText);
+            range.select();
+        } else if (window.getSelection()) {
+            const range = document.createRange();
+            range.selectNode(this.refs.urlText);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+        }
     }
 
     private static styles = {
@@ -37,6 +56,7 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
             fontWeight: "bold",
             marginTop: "20px",
             marginBottom: "15px",
+            cursor: "pointer",
         },
         share: {
             margin: "10px",
