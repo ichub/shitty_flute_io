@@ -25,8 +25,6 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
                     onClick={this.selectText.bind(this)}
                     ref="urlText"
                     style={[ShareComponent.styles.url]}>{`http://floot.io/recorder/view/${this.props.viewToken}`}</span>
-                <i style={[ShareComponent.styles.share]}
-                   className="fa fa-files-o" aria-hidden="true"></i>
             </div>
         );
     }
