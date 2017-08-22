@@ -264,7 +264,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             RecorderPlayerPageComponent.styles.flexCol,
                             RecorderPlayerPageComponent.styles.pitchButtonsContainer
                         ]}>
-                            <input
+                            <button
                                 style={[
                                     ButtonFont,
                                     RecorderPlayerPageComponent.styles.flex,
@@ -274,8 +274,10 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                                 type="button"
                                 value="^"
                                 onClick={this.pitchUp.bind(this)}
-                                disabled={this.noteKeyboardManager.pitchShift >= 11 || this.state.stateName !== RecorderStateName.FreePlay}/>
-                            <input
+                                disabled={this.noteKeyboardManager.pitchShift >= 11 || this.state.stateName !== RecorderStateName.FreePlay}>
+                                <i className="fa fa-long-arrow-up" aria-hidden="true"></i>
+                            </button>
+                            <button
                                 style={[
                                     ButtonFont,
                                     RecorderPlayerPageComponent.styles.flex,
@@ -285,7 +287,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                                 type="button"
                                 value="v"
                                 onClick={this.pitchDown.bind(this)}
-                                disabled={this.noteKeyboardManager.pitchShift <= 0 || this.state.stateName !== RecorderStateName.FreePlay}/>
+                                disabled={this.noteKeyboardManager.pitchShift <= 0 || this.state.stateName !== RecorderStateName.FreePlay}>
+                                <i className="fa fa-long-arrow-down" aria-hidden="true"></i>
+                            </button>
                         </div>
                         <div>
                             <div style={[
