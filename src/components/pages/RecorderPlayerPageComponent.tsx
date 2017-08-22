@@ -3,14 +3,12 @@ import * as Radium from "radium";
 import {RecorderNote} from "../RecorderNote";
 import {IYoutubeVideoPlayer, VideoPlayer} from "../VideoPlayer";
 import {AudioOutputHelper} from "../../AudioOutputHelper";
-import {NoteInfoList, NoteType} from "../../models/NoteInfoList";
+import {NoteInfoList} from "../../models/NoteInfoList";
 import {SingleNotePlayer} from "../../SingleNotePlayer";
 import {ITotalNoteState, makeNewITotalNoteState, NoteKeyboardManager} from "../../NoteKeyboardManager";
 import {INoteInfo} from "../../models/INoteInfo";
-import {ChangeEvent} from "react";
 import {ICompositionNote} from "../../models/ICompositionNote";
 import {ICompositionState} from "../../models/ICompositionState";
-import {IComposition} from "../../models/IComposition";
 import {ButtonFont, GlobalFont, TitleFont} from "../../styles/GlobalStyles";
 import * as color from "color";
 import {ShareComponent} from "../ShareComponent";
@@ -119,6 +117,68 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     render() {
         console.log("rendering...");
         console.log(this.state);
+
+        const stopOrPlayButton = this.state.stateName === RecorderStateName.Playing ? (
+            <button
+                style={[
+                    ButtonFont,
+                    RecorderPlayerPageComponent.styles.flex,
+                    RecorderPlayerPageComponent.styles.button
+                ]}
+                key="3"
+                type="button"
+                value="stop play back"
+                onClick={this.stopPlayback.bind(this)}
+                disabled={this.state.stateName !== RecorderStateName.Playing}>
+                <i className="fa fa-stop" aria-hidden="true"></i>
+            </button>
+        ) : (
+            <button
+                style={[
+                    ButtonFont,
+                    RecorderPlayerPageComponent.styles.flex,
+                    RecorderPlayerPageComponent.styles.button
+                ]}
+                key="2"
+                type="button"
+                value="play back"
+                onClick={this.play.bind(this)}
+                disabled={this.state.stateName !== RecorderStateName.FreePlay || !this.state.hasRecorded}>
+                <i className="fa fa-play" aria-hidden="true"></i>
+            </button>
+        );
+
+        const recordOrStopRecordingButton = this.state.stateName === RecorderStateName.Recording ? (
+            <button
+                style={[
+                    ButtonFont,
+                    RecorderPlayerPageComponent.styles.flex,
+                    RecorderPlayerPageComponent.styles.button
+                ]}
+                key="1"
+                type="button"
+                value="stop recording"
+                onClick={this.stopRecording.bind(this)}
+                disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.Recording}>
+                <i className="fa fa-stop" aria-hidden="true"></i>
+            </button>
+        ) : (
+            <button
+                style={[
+                    ButtonFont,
+                    RecorderPlayerPageComponent.styles.flex,
+                    RecorderPlayerPageComponent.styles.button
+                ]}
+                key="0"
+                type="button"
+                value="record"
+                onClick={this.record.bind(this)}
+                disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}>
+                <i className="fa fa-circle" aria-hidden="true"></i>
+            </button>
+        );
+
+
         return (
             <div style={[
                 RecorderPlayerPageComponent.styles.base,
@@ -150,53 +210,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         {/*</div>*/}
 
                         <br/>
-
-                        <input
-                            style={[
-                                ButtonFont,
-                                RecorderPlayerPageComponent.styles.flex,
-                                RecorderPlayerPageComponent.styles.button
-                            ]}
-                            key="0"
-                            type="button"
-                            value="record"
-                            onClick={this.record.bind(this)}
-                            disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}/>
-                        <input
-                            style={[
-                                ButtonFont,
-                                RecorderPlayerPageComponent.styles.flex,
-                                RecorderPlayerPageComponent.styles.button
-                            ]}
-                            key="1"
-                            type="button"
-                            value="stop recording"
-                            onClick={this.stopRecording.bind(this)}
-                            disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.Recording}/>
-                        <input
-                            style={[
-                                ButtonFont,
-                                RecorderPlayerPageComponent.styles.flex,
-                                RecorderPlayerPageComponent.styles.button
-                            ]}
-                            key="2"
-
-                            type="button"
-                            value="play back"
-                            onClick={this.play.bind(this)}
-                            disabled={this.state.stateName !== RecorderStateName.FreePlay || !this.state.hasRecorded}/>
-                        <input
-                            style={[
-                                ButtonFont,
-                                RecorderPlayerPageComponent.styles.flex,
-                                RecorderPlayerPageComponent.styles.button
-                            ]}
-                            key="3"
-                            type="button"
-                            value="stop play back"
-                            onClick={this.stopPlayback.bind(this)}
-                            disabled={this.state.stateName !== RecorderStateName.Playing}/>
-                        <input
+                        {recordOrStopRecordingButton}
+                        {stopOrPlayButton}
+                        <button
                             style={[
                                 ButtonFont,
                                 RecorderPlayerPageComponent.styles.flex,
@@ -206,8 +222,10 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             type="button"
                             value="reset"
                             onClick={this.reset.bind(this)}
-                            disabled={!this.state.hasRecorded || this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}/>
-                        <input
+                            disabled={!this.state.hasRecorded || this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}>
+                            <i className="fa fa-eraser" aria-hidden="true"></i>
+                        </button>
+                        <button
                             style={[
                                 ButtonFont,
                                 RecorderPlayerPageComponent.styles.flex,
@@ -217,18 +235,22 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             type="button"
                             value="save"
                             onClick={this.save.bind(this)}
-                            disabled={!this.state.hasRecorded || this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}/>
-                        <input
-                            style={[
-                                ButtonFont,
-                                RecorderPlayerPageComponent.styles.flex,
-                                RecorderPlayerPageComponent.styles.button
-                            ]}
-                            key="6"
-                            type="button"
-                            value="flootify"
-                            onClick={this.flootify.bind(this)}
-                            disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}/>
+                            disabled={!this.state.hasRecorded || this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}>
+                            <i className="fa fa-floppy-o" aria-hidden="true"></i>
+                        </button>
+                        {/*<button*/}
+                        {/*style={[*/}
+                        {/*ButtonFont,*/}
+                        {/*RecorderPlayerPageComponent.styles.flex,*/}
+                        {/*RecorderPlayerPageComponent.styles.button*/}
+                        {/*]}*/}
+                        {/*key="6"*/}
+                        {/*type="button"*/}
+                        {/*value="flootify"*/}
+                        {/*onClick={this.flootify.bind(this)}*/}
+                        {/*disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}>*/}
+                        {/*<i className="fa fa-floppy-o" aria-hidden="true"></i>*/}
+                        {/*</button>*/}
 
                     </div>
 

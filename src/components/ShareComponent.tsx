@@ -17,10 +17,10 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
                 GlobalFont,
                 ShareComponent.styles.base
             ]}>
-                share your creation:
                 <span
                     style={[ShareComponent.styles.url]}>{`http://floot.io/recorder/view/${this.props.viewToken}`}</span>
-                <i className="fa fa-bath" aria-hidden="true"></i>
+                <i style={[ShareComponent.styles.share]}
+                   className="fa fa-files-o" aria-hidden="true"></i>
             </div>
         );
     }
@@ -32,10 +32,18 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
         },
         url: {
             padding: "5px 10px 5px 10px",
-            borderRadius: "5px",
+            borderRadius: "2px",
             backgroundColor: "rgb(220, 220, 220)",
             fontWeight: "bold",
-            margin: "20px",
+            marginTop: "20px",
+            marginBottom: "15px",
+        },
+        share: {
+            margin: "10px",
+            cursor: "pointer",
+            ":hover": {
+                color: "black"
+            }
         }
     }
 }
