@@ -605,7 +605,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             border: "none",
             padding: "20px",
             margin: "20px",
-            fontSize: "1.5em",
+            fontSize: "0.8em",
             cursor: "pointer",
             backgroundColor: color(RecorderPlayerPageComponent.buttonColor).hex(),
             ":hover": {
