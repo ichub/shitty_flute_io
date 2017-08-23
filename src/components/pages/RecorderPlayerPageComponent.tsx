@@ -37,7 +37,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     refs: {
         youtubeInput: HTMLInputElement
-        youtubeVolume: HTMLInputElement
     };
 
     constructor(props: IRecorderPlayerPageComponentProps) {
@@ -182,10 +181,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     <i className="fa fa-circle" aria-hidden="true"></i>
                 </button>
             );
-
-        const createSliderWithTooltip = Slider.createSliderWithTooltip;
-        const Range = createSliderWithTooltip(Slider.Range);
-        const Handle = Slider.Handle;
 
 
         return (
@@ -356,27 +351,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                                    disabled={this.state.stateName !== RecorderStateName.FreePlay}
                                    onClick={this.handleVideoIdChange.bind(this)}/>
                         </label>
-                    </div>
-
-                    <div style={[
-                        GlobalFont,
-                        RecorderPlayerPageComponent.styles.flex
-                    ]}>
-                        <input style={[RecorderPlayerPageComponent.styles.youtubeIdInput]}
-                               ref="youtubeVolume"
-                               type="text"
-                               placeholder="100"
-                               onChange={ this.handleYoutubeVolumeChange.bind(this) }/>
-                    </div>
-
-                    <div style={[
-                        GlobalFont,
-                        RecorderPlayerPageComponent.styles.flex
-                    ]}>
-                        <div style={wrapperStyle}>
-                            <p>Slider with custom handle</p>
-                            <Slider min={0} max={20} defaultValue={3} handle={handle} />
-                        </div>
                     </div>
 
                     <div style={[
