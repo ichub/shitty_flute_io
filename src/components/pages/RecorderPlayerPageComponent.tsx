@@ -611,8 +611,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         },
         button: {
             border: "none",
-            padding: "20px",
-            margin: "20px",
+            padding: "15px",
+            margin: "15px",
             fontSize: "0.8em",
             cursor: "pointer",
             backgroundColor: color(RecorderPlayerPageComponent.buttonColor).hex(),
