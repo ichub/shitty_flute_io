@@ -29,7 +29,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     stopPlayingTimeout: NodeJS.Timer;
 
-    audioOutputStopper: { stop: () => void };
+    audioOutputStopper: {stop: () => void};
 
     refs: {
         youtubeInput: HTMLInputElement
@@ -119,64 +119,64 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         console.log(this.state);
 
         const stopOrPlayButton = this.state.stateName === RecorderStateName.Playing ? (
-            <button
-                style={[
+                <button
+                    style={[
                     ButtonFont,
                     RecorderPlayerPageComponent.styles.flex,
                     RecorderPlayerPageComponent.styles.button
                 ]}
-                key="3"
-                type="button"
-                value="stop play back"
-                onClick={this.stopPlayback.bind(this)}
-                disabled={this.state.stateName !== RecorderStateName.Playing}>
-                <i className="fa fa-stop" aria-hidden="true"></i>
-            </button>
-        ) : (
-            <button
-                style={[
+                    key="3"
+                    type="button"
+                    value="stop play back"
+                    onClick={this.stopPlayback.bind(this)}
+                    disabled={this.state.stateName !== RecorderStateName.Playing}>
+                    <i className="fa fa-stop" aria-hidden="true"></i>
+                </button>
+            ) : (
+                <button
+                    style={[
                     ButtonFont,
                     RecorderPlayerPageComponent.styles.flex,
                     RecorderPlayerPageComponent.styles.button
                 ]}
-                key="2"
-                type="button"
-                value="play back"
-                onClick={this.play.bind(this)}
-                disabled={this.state.stateName !== RecorderStateName.FreePlay || !this.state.hasRecorded}>
-                <i className="fa fa-play" aria-hidden="true"></i>
-            </button>
-        );
+                    key="2"
+                    type="button"
+                    value="play back"
+                    onClick={this.play.bind(this)}
+                    disabled={this.state.stateName !== RecorderStateName.FreePlay || !this.state.hasRecorded}>
+                    <i className="fa fa-play" aria-hidden="true"></i>
+                </button>
+            );
 
         const recordOrStopRecordingButton = this.state.stateName === RecorderStateName.Recording ? (
-            <button
-                style={[
+                <button
+                    style={[
                     ButtonFont,
                     RecorderPlayerPageComponent.styles.flex,
                     RecorderPlayerPageComponent.styles.button
                 ]}
-                key="1"
-                type="button"
-                value="stop recording"
-                onClick={this.stopRecording.bind(this)}
-                disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.Recording}>
-                <i className="fa fa-stop" aria-hidden="true"></i>
-            </button>
-        ) : (
-            <button
-                style={[
+                    key="1"
+                    type="button"
+                    value="stop recording"
+                    onClick={this.stopRecording.bind(this)}
+                    disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.Recording}>
+                    <i className="fa fa-stop" aria-hidden="true"></i>
+                </button>
+            ) : (
+                <button
+                    style={[
                     ButtonFont,
                     RecorderPlayerPageComponent.styles.flex,
                     RecorderPlayerPageComponent.styles.button
                 ]}
-                key="0"
-                type="button"
-                value="record"
-                onClick={this.record.bind(this)}
-                disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}>
-                <i className="fa fa-circle" aria-hidden="true"></i>
-            </button>
-        );
+                    key="0"
+                    type="button"
+                    value="record"
+                    onClick={this.record.bind(this)}
+                    disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}>
+                    <i className="fa fa-circle" aria-hidden="true"></i>
+                </button>
+            );
 
 
         return (
@@ -346,7 +346,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             videoId={this.state.youtubeVideoId}
                             onVideoReady={this.onVideoReady.bind(this)}
                             onStateChange={this.onStateChange.bind(this)}
-                            canInteract={this.state.stateName == RecorderStateName.FreePlay}
+                            canInteract={this.canVideoPlayerInteract()}
                         />
                     </div>
                     <div style={[RecorderPlayerPageComponent.styles.flex]}>
@@ -355,6 +355,10 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 </div>
             </div>
         );
+    }
+
+    private canVideoPlayerInteract(): boolean {
+        return (this.state.stateName == RecorderStateName.FreePlay) && !this.props.viewOnly;
     }
 
     private handleVideoIdChange() {
@@ -418,7 +422,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             this.stopPlayingTimeout = setTimeout(() => {
                 this.stopPlayingTimeout = null;
                 this.stopPlayback();
-            }, (this.state.recordingYoutubeEndTime - this.state.recordingYoutubeStartTime) * 1000);
+            }, (this.state.recordingYoutubeEndTime - this.state.recordingYoutubeStartTime) * 1000) as any;
 
             this.video.seekTo(this.state.recordingYoutubeStartTime);
             this.video.playVideo();

@@ -39,7 +39,6 @@ export class VideoPlayer extends React.Component<IVideoPlayerProps, IVideoPlayer
                                 TitleFont,
                                 VideoPlayer.styles.overlay
                             ]}>
-                                can't touch this until recording is finished!
                             </div> :
                             null
                     }
@@ -76,7 +75,7 @@ export class VideoPlayer extends React.Component<IVideoPlayerProps, IVideoPlayer
             justifyContent: "center",
             alignItems: "center",
             color: "black",
-            backgroundColor: "rgba(255, 255, 255, 0.8)"
+            backgroundColor: "rgba(255, 255, 255, 0.3)"
         },
         videoTitle: {
             fontSize: "0.9em",
