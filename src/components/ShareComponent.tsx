@@ -21,6 +21,9 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
                 GlobalFont,
                 ShareComponent.styles.base
             ]}>
+                <span style={[ShareComponent.styles.sharePreamble]}>
+                    share your creation:
+                </span>
                 <span
                     onClick={this.selectText.bind(this)}
                     ref="urlText"
@@ -45,7 +48,8 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
     private static styles = {
         base: {
             display: "inline-block",
-            opacity: 0.5
+            opacity: 0.5,
+            margin: "20px"
         },
         url: {
             padding: "5px 10px 5px 10px",
@@ -62,6 +66,14 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
             ":hover": {
                 color: "black"
             }
+        },
+        sharePreamble: {
+            opacity: 0.9,
+            fontSize: "0.9em",
+            height: "100%",
+            lineHeight: "100%",
+            textAlign: "center",
+            marginRight: "10px",
         }
     }
 }

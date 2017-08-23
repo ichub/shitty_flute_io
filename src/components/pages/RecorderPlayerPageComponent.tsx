@@ -195,6 +195,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         null
                 }
                 <div>
+                    <div style={[RecorderPlayerPageComponent.styles.flex]}>
+                        <ShareComponent viewToken={this.props.viewToken}/>
+                    </div>
                     <div style={[
                         RecorderPlayerPageComponent.styles.flex,
                         RecorderPlayerPageComponent.styles.buttonContainer
@@ -348,9 +351,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             onStateChange={this.onStateChange.bind(this)}
                             canInteract={this.canVideoPlayerInteract()}
                         />
-                    </div>
-                    <div style={[RecorderPlayerPageComponent.styles.flex]}>
-                        <ShareComponent viewToken={this.props.viewToken}/>
                     </div>
                 </div>
             </div>
