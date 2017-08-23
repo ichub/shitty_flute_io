@@ -61,11 +61,9 @@ export class AudioOutputHelper {
     }
 
     private initializeSingleNote(note: INoteInfo): Promise<IInitializedSound> {
-        return Promise.all(
-            [
-                this.getBufferForFile(note.soundFileUrl),
-                this.getBufferForFile(note.shittySoundFileUrl),
-            ],
+        return Promise.all(note.soundFileUrls.map((url) => {
+                return this.getBufferForFile(url);
+            })
         ).then(audioBuffers => {
             return Promise.resolve({
                 audioBuffers: audioBuffers,
