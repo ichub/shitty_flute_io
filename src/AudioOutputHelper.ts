@@ -76,9 +76,28 @@ export class AudioOutputHelper {
         return arr[Math.floor(Math.random() * arr.length)];
     }
 
+    private getRandomElementForShittiness(arr: any[], shittiness: number) {
+        let denom = 0;
+        let thresholds = [];
+        for (let i = 0; i < arr.length; i++) {
+            denom += (1 - shittiness) * (arr.length - 1 - i) + 0.5;
+            thresholds.push(denom);
+        }
+        for (let i = 0; i < thresholds.length; i++) {
+            thresholds[i] /= denom;
+        }
+        let r = Math.random();
+        for (let i = 0; i < thresholds.length; i++) {
+            if (r <= thresholds[i]) {
+                console.log(i);
+                return arr[i];
+            }
+        }
+    }
+
     public playNote(note: INoteInfo, loop: boolean, duration: number) {
         console.log("playing note: " + note.name + " with duration " + duration.toString());
-        const audioBuffer = this.getRandomElement(this.noteToAudioBufferMap[note.name]); // TODO: pick random buffer from array of buffers
+        const audioBuffer = this.getRandomElementForShittiness(this.noteToAudioBufferMap[note.name], this.shittiness);
         const source = this.audio.createBufferSource();
         source.buffer = audioBuffer;
 

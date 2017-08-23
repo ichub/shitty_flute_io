@@ -105,4 +105,8 @@ export interface IYoutubeVideoPlayer {
     getCurrentTime(): number;
 
     seekTo(time: number);
+
+    setVolume(volume: number): void;
+
+    getVolume(): number;
 }

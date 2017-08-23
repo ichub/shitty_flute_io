@@ -45,5 +45,5 @@ export class NoteInfoList {
 }
 
 function makeSoundFileList(noteName: string): string[] {
-    return ["1", "2", "3"].map(s => "../res/notes/" + noteName + "-" + s + ".mp3");
+    return ["1", "2", "3", "4", "5", "6"].map(s => "../res/notes/" + noteName + "-" + s + ".mp3");
 }
