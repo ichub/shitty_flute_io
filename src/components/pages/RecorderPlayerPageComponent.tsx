@@ -13,10 +13,6 @@ import {ButtonFont, GlobalFont, TitleFont} from "../../styles/GlobalStyles";
 import * as color from "color";
 import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
-import Slider from 'rc-slider';
-import Tooltip from 'rc-tooltip';
-import 'rc-slider/assets/index.css';
-import 'rc-tooltip/assets/bootstrap.css';
 
 const axios = require("axios");
 const getYoutubeId = require("get-youtube-id");
@@ -370,10 +366,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     private canVideoPlayerInteract(): boolean {
         return (this.state.stateName == RecorderStateName.FreePlay) && !this.props.viewOnly;
-    }
-
-    private handleYoutubeVolumeChange() {
-        this.video.setVolume(parseInt(this.refs.youtubeVolume.value));
     }
 
     private handleVideoIdChange() {
