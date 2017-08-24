@@ -13,9 +13,12 @@ import {ButtonFont, GlobalFont, TitleFont} from "../../styles/GlobalStyles";
 import * as color from "color";
 import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
+import * as Tooltip from 'rc-tooltip';
+import * as ReactTooltip from 'react-tooltip'
 
 const axios = require("axios");
 const getYoutubeId = require("get-youtube-id");
+
 
 @Radium
 export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayerPageComponentProps, IRecorderPlayerPageComponentState> {
@@ -118,6 +121,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         console.log("rendering...");
         console.log(this.state);
 
+        let playDisabled: boolean = this.state.stateName !== RecorderStateName.Playing;
+        let stopPlayDisabled: boolean = this.state.stateName !== RecorderStateName.FreePlay || !this.state.hasRecorded;
+
         const stopOrPlayButton = this.state.stateName === RecorderStateName.Playing ? (
                 <button
                     style={[
@@ -129,7 +135,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     type="button"
                     value="stop play back"
                     onClick={this.stopPlayback.bind(this)}
-                    disabled={this.state.stateName !== RecorderStateName.Playing}>
+                    disabled={playDisabled}
+                    data-tip="stop playback">
                     <i className="fa fa-stop" aria-hidden="true"></i>
                 </button>
             ) : (
@@ -143,10 +150,14 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     type="button"
                     value="play back"
                     onClick={this.play.bind(this)}
-                    disabled={this.state.stateName !== RecorderStateName.FreePlay || !this.state.hasRecorded}>
+                    disabled={stopPlayDisabled}
+                    data-tip="play back">
                     <i className="fa fa-play" aria-hidden="true"></i>
                 </button>
             );
+
+        let recordDisabled: boolean = this.props.viewOnly || this.state.stateName !== RecorderStateName.Recording;
+        let stopRecordDisabled: boolean = this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay;
 
         const recordOrStopRecordingButton = this.state.stateName === RecorderStateName.Recording ? (
                 <button
@@ -159,7 +170,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     type="button"
                     value="stop recording"
                     onClick={this.stopRecording.bind(this)}
-                    disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.Recording}>
+                    disabled={recordDisabled}
+                    data-tip="stop recording">
                     <i className="fa fa-stop" aria-hidden="true"></i>
                 </button>
             ) : (
@@ -173,7 +185,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     type="button"
                     value="record"
                     onClick={this.record.bind(this)}
-                    disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}>
+                    disabled={stopRecordDisabled}
+                    data-tip="record">
                     <i className="fa fa-circle" aria-hidden="true"></i>
                 </button>
             );
@@ -219,8 +232,13 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         {/*</div>*/}
 
                         <br/>
-                        {recordOrStopRecordingButton}
-                        {stopOrPlayButton}
+
+                            <ReactTooltip place="top" type="dark" effect="solid" delayHide={1}/>
+                            {recordOrStopRecordingButton}
+                            <ReactTooltip place="top" type="dark" effect="solid" delayHide={1}/>
+                            {stopOrPlayButton}
+                            <ReactTooltip place="top" type="dark" effect="solid" delayHide={1}/>
+
                         <button
                             style={[
                                 ButtonFont,
@@ -231,9 +249,11 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             type="button"
                             value="reset"
                             onClick={this.reset.bind(this)}
-                            disabled={!this.state.hasRecorded || this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}>
+                            disabled={!this.state.hasRecorded || this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}
+                            data-tip="reset">
                             <i className="fa fa-eraser" aria-hidden="true"></i>
                         </button>
+                        <ReactTooltip place="top" type="dark" effect="solid" delayHide={1}/>
                         <button
                             style={[
                                 ButtonFont,
@@ -244,9 +264,11 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             type="button"
                             value="save"
                             onClick={this.save.bind(this)}
-                            disabled={!this.state.hasRecorded || this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}>
+                            disabled={!this.state.hasRecorded || this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}
+                            data-tip="save">
                             <i className="fa fa-floppy-o" aria-hidden="true"></i>
                         </button>
+                        <ReactTooltip place="top" type="dark" effect="solid" delayHide={1}/>
                         {/*<button*/}
                         {/*style={[*/}
                         {/*ButtonFont,*/}
