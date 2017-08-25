@@ -15,6 +15,7 @@ import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
 import * as ReactTooltip from "react-tooltip";
 import * as ReactModal from "react-modal";
+import Slider from "rc-slider";
 
 const axios = require("axios");
 const getYoutubeId = require("get-youtube-id");
@@ -189,6 +190,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             </button>
         );
 
+        const wrapperStyle = { width: 400, margin: 50 };
 
         return (
             <div style={[
@@ -382,6 +384,15 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                                    disabled={this.state.stateName !== RecorderStateName.FreePlay}
                                    onClick={this.handleVideoIdChange.bind(this)}/>
                         </label>
+                    </div>
+
+                    <div style={[
+                        RecorderPlayerPageComponent.styles.flex,
+                        RecorderPlayerPageComponent.styles.youtubeVolumeWrapper
+                    ]}>
+                        <Slider min={0} max={20} defaultValue={3} style={[
+                            RecorderPlayerPageComponent.styles.flex
+                        ]}/>
                     </div>
 
                     <div style={[
@@ -704,6 +715,10 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 backgroundColor: color(RecorderPlayerPageComponent.buttonColor).lighten(0.2).hex(),
                 cursor: "initial"
             }
+        },
+        youtubeVolumeWrapper: {
+            width: "200px",
+            margin: "50px",
         },
         youtubeIdInput: {
             width: "300px",
