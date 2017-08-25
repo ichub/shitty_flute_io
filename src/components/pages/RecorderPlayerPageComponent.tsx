@@ -13,8 +13,8 @@ import {ButtonFont, GlobalFont, TitleFont} from "../../styles/GlobalStyles";
 import * as color from "color";
 import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
-import * as Tooltip from 'rc-tooltip';
-import * as ReactTooltip from 'react-tooltip'
+import * as ReactTooltip from "react-tooltip";
+import * as ReactModal from "react-modal";
 
 const axios = require("axios");
 const getYoutubeId = require("get-youtube-id");
@@ -32,7 +32,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     stopPlayingTimeout: NodeJS.Timer;
 
-    audioOutputStopper: {stop: () => void};
+    audioOutputStopper: { stop: () => void };
 
     refs: {
         youtubeInput: HTMLInputElement
@@ -57,12 +57,14 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             lastEdited: -1,
             viewCount: 0,
             err: null,
-            canInteract: true
+            canInteract: true,
+            showSilverModal: false,
+            hasShownSilverModal: false
         };
 
         this.audioOutputHelper = AudioOutputHelper.getInstance(NoteInfoList.notes);
         this.singleNotePlayer = new SingleNotePlayer();
-        this.noteKeyboardManager = new NoteKeyboardManager(NoteInfoList.notes, 0);
+        this.noteKeyboardManager = new NoteKeyboardManager(NoteInfoList.notes, 0, this);
 
         this.noteKeyboardManager.attachListeners();
 
@@ -125,67 +127,67 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         let stopPlayDisabled: boolean = this.state.stateName !== RecorderStateName.FreePlay || !this.state.hasRecorded;
 
         const stopOrPlayButton = this.state.stateName === RecorderStateName.Playing ? (
-                <button
-                    style={[
+            <button
+                style={[
                     ButtonFont,
                     RecorderPlayerPageComponent.styles.flex,
                     RecorderPlayerPageComponent.styles.button
                 ]}
-                    key="3"
-                    type="button"
-                    value="stop play back"
-                    onClick={this.stopPlayback.bind(this)}
-                    disabled={playDisabled}>
-                    <i className="fa fa-stop" aria-hidden="true"></i>
-                </button>
-            ) : (
-                <button
-                    style={[
+                key="3"
+                type="button"
+                value="stop play back"
+                onClick={this.stopPlayback.bind(this)}
+                disabled={playDisabled}>
+                <i className="fa fa-stop" aria-hidden="true"></i>
+            </button>
+        ) : (
+            <button
+                style={[
                     ButtonFont,
                     RecorderPlayerPageComponent.styles.flex,
                     RecorderPlayerPageComponent.styles.button
                 ]}
-                    key="2"
-                    type="button"
-                    value="play back"
-                    onClick={this.play.bind(this)}
-                    disabled={stopPlayDisabled}>
-                    <i className="fa fa-play" aria-hidden="true"></i>
-                </button>
-            );
+                key="2"
+                type="button"
+                value="play back"
+                onClick={this.play.bind(this)}
+                disabled={stopPlayDisabled}>
+                <i className="fa fa-play" aria-hidden="true"></i>
+            </button>
+        );
 
         let recordDisabled: boolean = this.props.viewOnly || this.state.stateName !== RecorderStateName.Recording;
         let stopRecordDisabled: boolean = this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay;
 
         const recordOrStopRecordingButton = this.state.stateName === RecorderStateName.Recording ? (
-                <button
-                    style={[
+            <button
+                style={[
                     ButtonFont,
                     RecorderPlayerPageComponent.styles.flex,
                     RecorderPlayerPageComponent.styles.button
                 ]}
-                    key="1"
-                    type="button"
-                    value="stop recording"
-                    onClick={this.stopRecording.bind(this)}
-                    disabled={recordDisabled}>
-                    <i className="fa fa-stop" aria-hidden="true"></i>
-                </button>
-            ) : (
-                <button
-                    style={[
+                key="1"
+                type="button"
+                value="stop recording"
+                onClick={this.stopRecording.bind(this)}
+                disabled={recordDisabled}>
+                <i className="fa fa-stop" aria-hidden="true"></i>
+            </button>
+        ) : (
+            <button
+                style={[
                     ButtonFont,
                     RecorderPlayerPageComponent.styles.flex,
                     RecorderPlayerPageComponent.styles.button
                 ]}
-                    key="0"
-                    type="button"
-                    value="record"
-                    onClick={this.record.bind(this)}
-                    disabled={stopRecordDisabled}>
-                    <i className="fa fa-circle" aria-hidden="true"></i>
-                </button>
-            );
+                key="0"
+                type="button"
+                value="record"
+                onClick={this.record.bind(this)}
+                disabled={stopRecordDisabled}>
+                <i className="fa fa-circle" aria-hidden="true"></i>
+            </button>
+        );
 
 
         return (
@@ -206,10 +208,10 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 <div>
                     {
                         this.props.viewOnly ? null : (
-                                <div style={[RecorderPlayerPageComponent.styles.flex]}>
-                                    <ShareComponent viewToken={this.props.viewToken}/>
-                                </div>
-                            )
+                            <div style={[RecorderPlayerPageComponent.styles.flex]}>
+                                <ShareComponent viewToken={this.props.viewToken}/>
+                            </div>
+                        )
                     }
 
 
@@ -229,18 +231,18 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
                         <br/>
 
-                            <span
-                                data-tip="record/stop recording"
-                                data-for="record">
+                        <span
+                            data-tip="record/stop recording"
+                            data-for="record">
                                 {recordOrStopRecordingButton}
                             </span>
-                            <span
-                                data-tip="playback/stop playback"
-                                data-for="playback">
+                        <span
+                            data-tip="playback/stop playback"
+                            data-for="playback">
                                 {stopOrPlayButton}
                             </span>
-                            <ReactTooltip id="record" place="top" type="dark" effect="solid" delayHide={1}/>
-                            <ReactTooltip id="playback" place="top" type="dark" effect="solid" delayHide={1}/>
+                        <ReactTooltip id="record" place="top" type="dark" effect="solid" delayHide={1}/>
+                        <ReactTooltip id="playback" place="top" type="dark" effect="solid" delayHide={1}/>
 
                         <span
                             data-tip="reset"
@@ -318,6 +320,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                                 disabled={this.noteKeyboardManager.pitchShift >= 11 || this.state.stateName !== RecorderStateName.FreePlay}>
                                 <i className="fa fa-long-arrow-up" aria-hidden="true"></i>
                             </button>
+                            Current key: {NoteInfoList.notes[this.noteKeyboardManager.pitchShift].label}
                             <button
                                 style={[
                                     ButtonFont,
@@ -390,6 +393,29 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             onStateChange={this.onStateChange.bind(this)}
                             canInteract={this.canVideoPlayerInteract()}
                         />
+                    </div>
+
+                    <div>
+                        <ReactModal
+                            isOpen={this.state.showSilverModal}
+                            contentLabel="Upcoming Feature"
+                        >
+                            <div style={[
+                                RecorderPlayerPageComponent.styles.flex
+                            ]}>
+                                Sorry, this note (D#) is not available in the current version of floot.
+                            </div>
+                            <div style={[
+                                RecorderPlayerPageComponent.styles.flex
+                            ]}>
+                                Please check back regularly for more updates and new features!
+                            </div>
+                            <div style={[
+                                RecorderPlayerPageComponent.styles.flex
+                            ]}>
+                                <button onClick={this.handleCloseModal.bind(this)}>Got it!</button>
+                            </div>
+                        </ReactModal>
                     </div>
                 </div>
             </div>
@@ -615,6 +641,22 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         }
     }
 
+    handleOpenModal() {
+        console.log("handling open modal");
+        if (!this.state.hasShownSilverModal) {
+            this.setState({
+                showSilverModal: true,
+                hasShownSilverModal: true
+            });
+        }
+
+    }
+
+    handleCloseModal() {
+        console.log("handling close modal");
+        this.setState({showSilverModal: false});
+    }
+
     private static readonly buttonColor = "rgb(192, 192, 192)";
     private static styles = {
         base: {
@@ -710,6 +752,8 @@ export interface IRecorderPlayerPageComponentState {
     recording: ICompositionNote[];
     err: Error;
     canInteract: boolean;
+    showSilverModal: boolean;
+    hasShownSilverModal: boolean;
 }
 
 export enum RecorderStateName {

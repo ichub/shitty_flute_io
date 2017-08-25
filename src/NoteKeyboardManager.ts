@@ -5,6 +5,7 @@ import {
     getINoteInfoForPositionIndex, getUIPositionForNote, getUIPositionWithCharacter,
     NoteUIPositionList
 } from "./models/NoteUIPositionList";
+import {RecorderPlayerPageComponent} from "./components/pages/RecorderPlayerPageComponent";
 
 export class NoteKeyboardManager extends EventEmitter {
     public static readonly NOTE_START = "note_start";
@@ -15,14 +16,16 @@ export class NoteKeyboardManager extends EventEmitter {
     notes: INoteInfo[];
     down: IDownNote[];
     played: ICompositionNote[];
+    playerPageComponent: RecorderPlayerPageComponent;
 
-    constructor(notes: INoteInfo[], pitchShift: number) {
+    constructor(notes: INoteInfo[], pitchShift: number, playerPageComponent: RecorderPlayerPageComponent) {
         super();
 
         this.notes = notes;
         this.down = [];
         this.played = [];
         this.pitchShift = pitchShift;
+        this.playerPageComponent = playerPageComponent;
     }
 
     private isKeyboardEventForNote(note: INoteInfo, e: KeyboardEvent) {
@@ -56,7 +59,6 @@ export class NoteKeyboardManager extends EventEmitter {
     }
 
     private emitStateChanged() {
-        console.log("aaaaa");
         this.emit(NoteKeyboardManager.STATE_CHANGED, <ITotalNoteState> {
             down: this.down.slice(),
             played: this.played.slice()
@@ -67,6 +69,10 @@ export class NoteKeyboardManager extends EventEmitter {
         document.addEventListener("keydown", (e: KeyboardEvent) => {
             for (let note of this.notes) {
                 if (this.isKeyboardEventForNote(note, e)) {
+                    if (note.label == "D#") {
+                        this.playerPageComponent.handleOpenModal();
+                        break;
+                    }
                     if (this.addDownNote(note)) {
                         this.emit(NoteKeyboardManager.NOTE_START, note);
                         this.emitStateChanged();
@@ -78,6 +84,9 @@ export class NoteKeyboardManager extends EventEmitter {
         document.addEventListener("keyup", (e: KeyboardEvent) => {
             for (let note of this.notes) {
                 if (this.isKeyboardEventForNote(note, e)) {
+                    if (note.label == "D#") {
+                        break;
+                    }
                     this.removeDownNote(note);
                     this.emit(NoteKeyboardManager.NOTE_END, note);
                     this.emitStateChanged();
