@@ -319,7 +319,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                                 type="button"
                                 value="^"
                                 onClick={this.pitchUp.bind(this)}
-                                disabled={this.noteKeyboardManager.pitchShift >= 11 || this.state.stateName !== RecorderStateName.FreePlay}>
+                                disabled={this.props.viewOnly || this.noteKeyboardManager.pitchShift >= 11 || this.state.stateName !== RecorderStateName.FreePlay}>
                                 <i className="fa fa-long-arrow-up" aria-hidden="true"></i>
                             </button>
                             Current key: {NoteInfoList.notes[this.noteKeyboardManager.pitchShift].label}
@@ -333,7 +333,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                                 type="button"
                                 value="v"
                                 onClick={this.pitchDown.bind(this)}
-                                disabled={this.noteKeyboardManager.pitchShift <= 0 || this.state.stateName !== RecorderStateName.FreePlay}>
+                                disabled={this.props.viewOnly || this.noteKeyboardManager.pitchShift <= 0 || this.state.stateName !== RecorderStateName.FreePlay}>
                                 <i className="fa fa-long-arrow-down" aria-hidden="true"></i>
                             </button>
                         </div>
@@ -718,7 +718,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         },
         youtubeVolumeWrapper: {
             width: "200px",
-            margin: "50px",
+            margin: "10px",
         },
         youtubeIdInput: {
             width: "300px",
