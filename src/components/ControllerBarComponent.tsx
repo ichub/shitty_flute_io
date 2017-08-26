@@ -23,7 +23,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
     private static styles = {
         base: {
             width: "100%",
-            height: "60",
+            height: "60px",
             position: "fixed",
             bottom: "0",
             left: "0",
