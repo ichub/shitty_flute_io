@@ -1,6 +1,32 @@
 import * as React from "react";
 import * as Radium from "radium";
 import {GlobalFont} from "../styles/GlobalStyles";
+import {
+    ShareButtons,
+    ShareCounts,
+    generateShareIcon
+} from 'react-share';
+
+const FacebookIcon = generateShareIcon('facebook');
+const TwitterIcon = generateShareIcon('twitter');
+const GooglePlusIcon = generateShareIcon('google');
+const PinterestIcon = generateShareIcon('pinterest');
+const VKIcon = generateShareIcon('vk');
+const OKIcon = generateShareIcon('ok');
+const RedditIcon = generateShareIcon('reddit');
+
+const {
+    FacebookShareButton,
+    GooglePlusShareButton,
+    LinkedinShareButton,
+    TwitterShareButton,
+    PinterestShareButton,
+    VKShareButton,
+    OKShareButton,
+    TelegramShareButton,
+    WhatsappShareButton,
+    RedditShareButton,
+} = ShareButtons;
 
 @Radium
 export class ShareComponent extends React.Component<IShareComponentProps, IShareComponentState> {
@@ -21,15 +47,20 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
                 GlobalFont,
                 ShareComponent.styles.base
             ]}>
-                <span style={[ShareComponent.styles.sharePreamble]}>
-                    share your creation:
-                </span>
-                <span
-                    onClick={this.selectText.bind(this)}
-                    ref="urlText"
-                    style={[ShareComponent.styles.url]}>{`http://floot.io/recorder/view/${this.props.viewToken}`}</span>
+                <FacebookShareButton
+                    url={this.getViewUrl()}
+                    quote={""}
+                    className="Demo__some-network__share-button">
+                    <FacebookIcon
+                        size={32}
+                        round />
+                </FacebookShareButton>
             </div>
         );
+    }
+
+    getViewUrl() {
+        return `http://floot.io/recorder/view/${this.props.viewToken}`;
     }
 
     selectText() {
@@ -48,7 +79,6 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
     private static styles = {
         base: {
             display: "inline-block",
-            opacity: 0.5,
             margin: "20px"
         },
         url: {

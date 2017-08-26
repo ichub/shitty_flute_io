@@ -87,6 +87,7 @@
     "react-dom": "^15.4.2",
     "react-modal": "^1.9.7",
     "react-select": "^1.0.0-rc.5",
+    "react-share": "^1.15.1",
     "react-tooltip": "^3.3.0",
     "react-youtube": "^7.4.0",
     "sqlite3": "^3.1.8"
