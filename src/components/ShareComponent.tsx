@@ -55,7 +55,6 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
                 </div>
                 <div style={[ShareComponent.styles.button]}>
                     <TwitterShareButton
-                        style={[ShareComponent.styles.button]}
                         url={this.getViewUrl()}
                         quote={""}
                         className="Demo__some-network__share-button">
@@ -66,14 +65,34 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
                 </div>
                 <div style={[ShareComponent.styles.button]}>
                     <GooglePlusShareButton
-                        style={[ShareComponent.styles.button]}
                         url={this.getViewUrl()}
                         quote={""}
                         className="Demo__some-network__share-button">
                         <GooglePlusIcon
                             size={32}
                             round/>
-                    </GooglePlusShareButton></div>
+                    </GooglePlusShareButton>
+                </div>
+                <div style={[ShareComponent.styles.button]}>
+                    <RedditShareButton
+                        url={this.getViewUrl()}
+                        quote={""}
+                        className="Demo__some-network__share-button">
+                        <RedditIcon
+                            size={32}
+                            round/>
+                    </RedditShareButton>
+                </div>
+                <div style={[ShareComponent.styles.button]}>
+                    <VKShareButton
+                        url={this.getViewUrl()}
+                        quote={""}
+                        className="Demo__some-network__share-button">
+                        <VKIcon
+                            size={32}
+                            round/>
+                    </VKShareButton>
+                </div>
             </div>
         );
     }
@@ -127,7 +146,8 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
             marginRight: "10px",
         },
         button: {
-            margin: "10px"
+            margin: "10px",
+            cursor: "pointer"
         }
     }
 }
