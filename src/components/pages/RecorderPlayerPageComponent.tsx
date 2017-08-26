@@ -281,38 +281,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         RecorderPlayerPageComponent.styles.flex,
                         RecorderPlayerPageComponent.styles.keyboardContainer
                     ]}>
-                        <div style={[
-                            RecorderPlayerPageComponent.styles.flexCol,
-                            RecorderPlayerPageComponent.styles.pitchButtonsContainer
-                        ]}>
-                            <button
-                                style={[
-                                    ButtonFont,
-                                    RecorderPlayerPageComponent.styles.flex,
-                                    RecorderPlayerPageComponent.styles.button
-                                ]}
-                                key="7"
-                                type="button"
-                                value="^"
-                                onClick={this.pitchUp.bind(this)}
-                                disabled={this.props.viewOnly || this.noteKeyboardManager.pitchShift >= 11 || this.state.stateName !== RecorderStateName.FreePlay}>
-                                <i className="fa fa-long-arrow-up" aria-hidden="true"></i>
-                            </button>
-                            Current key: {NoteInfoList.notes[this.noteKeyboardManager.pitchShift].label}
-                            <button
-                                style={[
-                                    ButtonFont,
-                                    RecorderPlayerPageComponent.styles.flex,
-                                    RecorderPlayerPageComponent.styles.button
-                                ]}
-                                key="8"
-                                type="button"
-                                value="v"
-                                onClick={this.pitchDown.bind(this)}
-                                disabled={this.props.viewOnly || this.noteKeyboardManager.pitchShift <= 0 || this.state.stateName !== RecorderStateName.FreePlay}>
-                                <i className="fa fa-long-arrow-down" aria-hidden="true"></i>
-                            </button>
-                        </div>
                         <div>
                             <div style={[
                                 RecorderPlayerPageComponent.styles.flex,
