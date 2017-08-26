@@ -9,11 +9,10 @@ import {ITotalNoteState, makeNewITotalNoteState, NoteKeyboardManager} from "../.
 import {INoteInfo} from "../../models/INoteInfo";
 import {ICompositionNote} from "../../models/ICompositionNote";
 import {ICompositionState} from "../../models/ICompositionState";
-import {ButtonFont, GlobalFont, TitleFont} from "../../styles/GlobalStyles";
+import {GlobalFont, TitleFont} from "../../styles/GlobalStyles";
 import * as color from "color";
 import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
-import * as ReactTooltip from "react-tooltip";
 import * as ReactModal from "react-modal";
 import Slider from "rc-slider";
 import {ControllerBarComponent} from "../ControllerBarComponent";
@@ -228,7 +227,16 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             canInteract={this.canVideoPlayerInteract()}
                         />
                     </div>
-                    <ControllerBarComponent/>
+                    <ControllerBarComponent
+                        hasRecorded={this.state.hasRecorded}
+                        save={this.save.bind(this)}
+                        reset={this.reset.bind(this)}
+                        record={this.record.bind(this)}
+                        play={this.play.bind(this)}
+                        stopPlayback={this.stopPlayback.bind(this)}
+                        stopRecording={this.stopRecording.bind(this)}
+                        viewOnly={this.props.viewOnly}
+                        stateName={this.state.stateName}/>
                     <div>
                         <ReactModal
                             isOpen={this.state.showSilverModal}
