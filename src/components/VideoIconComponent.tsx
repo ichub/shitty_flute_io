@@ -44,14 +44,14 @@ export class VideoInfo extends React.Component<IVideoInfoComponentProps, IVideoI
             <div style={[
                 VideoInfo.styles.base
             ]}>
-                <div style={[
+                <span style={[
                     VideoInfo.styles.imgStyle,
                     backgroundStyle
                 ]}>
-                </div>
-                <div>
+                </span>
+                <span>
                     {this.state.title}
-                </div>
+                </span>
             </div>
         );
     }
@@ -79,13 +79,18 @@ export class VideoInfo extends React.Component<IVideoInfoComponentProps, IVideoI
     private static styles = {
         base: {
             width: "100%",
-            margin: "20px"
+            margin: "20px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
         },
         imgStyle: {
+            display: "inline-block",
             width: `${VideoInfo.WIDTH}px`,
             height: `${VideoInfo.WIDTH * 3 / 4}px`,
             backgroundPosition: "50% 50%",
             backgroundSize: "cover",
+            marginRight: "20px",
         }
     }
 }
