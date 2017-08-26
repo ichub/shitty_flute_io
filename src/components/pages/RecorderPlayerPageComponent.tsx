@@ -15,6 +15,8 @@ import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
 import * as ReactModal from "react-modal";
 import {ControllerBarComponent} from "../ControllerBarComponent";
+import Slider from "rc-slider";
+import {TimeSlider} from "../TimeSlider";
 
 const axios = require("axios");
 const getYoutubeId = require("get-youtube-id");
@@ -202,6 +204,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         </label>
                     </div>
 
+                    <TimeSlider duration={123}/>
 
                     <div style={[
                         RecorderPlayerPageComponent.styles.flex
