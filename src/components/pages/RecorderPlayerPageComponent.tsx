@@ -45,7 +45,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
         setInterval(() => {
             this.setState({
-                videoPosition: (typeof this.video === 'undefined' ? 1 : this.video.getCurrentTime() * 1000),
+                videoPosition: (typeof this.video === 'undefined' ? 1 : this.video.getCurrentTime()),
             });
             // get the video position, call this.setState({videoPosition: the one you got})
         }, 1000);

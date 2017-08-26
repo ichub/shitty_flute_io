@@ -48,7 +48,7 @@ export class TimeSlider extends React.Component<ITimeSliderProps, ITimeSliderSta
                     min={-1}
                     max={1001}
                     count={2}
-                    defaultValue={[-1, this.props.position / this.props.duration * 1000, 1001]}
+                    value={[-1, this.props.position / this.props.duration * 1000, 1001]}
                     pushable={1}
                     allowCross={false}
                     tipFormatter={this.thousandthsToTime.bind(this)}/>
