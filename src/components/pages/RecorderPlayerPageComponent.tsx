@@ -15,7 +15,6 @@ import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
 import * as ReactModal from "react-modal";
 import {ControllerBarComponent} from "../ControllerBarComponent";
-import Slider from "rc-slider";
 import {TimeSlider} from "../TimeSlider";
 
 const axios = require("axios");
@@ -118,7 +117,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         this.video.playVideo();
         setTimeout(() => {
             this.video.pauseVideo();
-            this.setState({ videoDuration: this.video.getDuration() });
+            this.setState({videoDuration: this.video.getDuration()});
         }, 5);
 
     }
@@ -227,7 +226,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             onVideoReady={this.onVideoReady.bind(this)}
                             onStateChange={this.onStateChange.bind(this)}
                             canInteract={this.canVideoPlayerInteract()}
-                        />
+                            hide={true}/>
                     </div>
                     <ControllerBarComponent
                         hasRecorded={this.state.hasRecorded}

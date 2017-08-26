@@ -24,8 +24,15 @@ export class VideoPlayer extends React.Component<IVideoPlayerProps, IVideoPlayer
             },
         };
 
+        const hideStyle = {
+            display: this.props.hide ? "none" : "initial",
+        };
+
         return (
-            <div style={[VideoPlayer.styles.base]}>
+            <div style={[
+                VideoPlayer.styles.base,
+                hideStyle
+            ]}>
                 <div style={[VideoPlayer.styles.videoContainer]}>
                     <ReactYoutube
                         videoId={this.props.videoId}
@@ -92,6 +99,7 @@ export interface IVideoPlayerProps {
     onStateChange: () => void;
     videoId: string;
     canInteract: boolean;
+    hide: boolean;
 }
 
 export interface IVideoPlayerState {
