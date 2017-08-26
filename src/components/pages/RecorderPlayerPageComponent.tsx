@@ -262,6 +262,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         if (this.state.stateName === RecorderStateName.FreePlay) {
             this.setState({
                 youtubeVideoId: id,
+            }, () => {
+                this.save();
             });
         }
     }
