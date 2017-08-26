@@ -2,7 +2,6 @@ import * as React from "react";
 import * as Radium from "radium";
 import {INoteInfo} from "../models/INoteInfo";
 import {GlobalFont} from "../styles/GlobalStyles";
-import {NoteType} from "../models/NoteInfoList";
 import {INoteUIPosition} from "../models/INoteUIPosition";
 
 @Radium
@@ -31,10 +30,12 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
         );
     }
 
+    private static readonly SIZE = 50;
+
     private static styles = {
         base: {
-            width: "75px",
-            height: "75px",
+            width: `${RecorderNote.SIZE}px`,
+            height: `${RecorderNote.SIZE}px`,
             fontWeight: "bold",
             backgroundColor: "white",
             color: "black",
