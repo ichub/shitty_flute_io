@@ -5,6 +5,7 @@ import * as ReactTooltip from "react-tooltip";
 import Slider from "rc-slider";
 import {VideoInfo} from "./VideoIconComponent";
 import {YoutubeVideoChangeComponent} from "./YoutubeVideoChangeComponent";
+import {GlobalFont} from "../styles/GlobalStyles";
 
 @Radium
 export class ControllerBarComponent extends React.Component<IControllerBarComponentProps, IControllerBarComponentState> {
@@ -76,7 +77,8 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
 
         return (
             <div style={[
-                ControllerBarComponent.styles.base
+                ControllerBarComponent.styles.base,
+                GlobalFont
             ]}>
                 <i className="fa fa-volume-up" aria-hidden="true"></i>
 

@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Radium from "radium";
+import {GlobalFont} from "../styles/GlobalStyles";
 
 const axios = require("axios");
 
@@ -42,14 +43,17 @@ export class VideoInfo extends React.Component<IVideoInfoComponentProps, IVideoI
 
         return (
             <div style={[
-                VideoInfo.styles.base
+                VideoInfo.styles.base,
+                GlobalFont
             ]}>
                 <span style={[
                     VideoInfo.styles.imgStyle,
                     backgroundStyle
                 ]}>
                 </span>
-                <span>
+                <span style={[
+                    GlobalFont
+                ]}>
                     {this.state.title}
                 </span>
             </div>
