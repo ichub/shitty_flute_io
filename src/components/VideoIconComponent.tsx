@@ -4,20 +4,22 @@ import * as Radium from "radium";
 const axios = require("axios");
 
 @Radium
-export class VideoIconComponent extends React.Component<IVideoIconComponentProps, IVideoIconComponentState> {
-    props: IVideoIconComponentProps;
-    state: IVideoIconComponentState;
+export class VideoInfo extends React.Component<IVideoInfoComponentProps, IVideoInfoComponentState> {
+    props: IVideoInfoComponentProps;
+    state: IVideoInfoComponentState;
 
-    constructor(props: IVideoIconComponentProps) {
+    constructor(props: IVideoInfoComponentProps) {
         super();
 
         this.state = {
-            thumbnailUrl: null
+            thumbnailUrl: null,
+            title: null
         };
     }
 
     componentDidMount() {
         this.fetchIconUrl();
+        this.fetchVideoTitle();
     }
 
     render() {
@@ -30,14 +32,15 @@ export class VideoIconComponent extends React.Component<IVideoIconComponentProps
 
         return (
             <div style={[
-                VideoIconComponent.styles.base
+                VideoInfo.styles.base
             ]}>
                 <div style={[
-                    VideoIconComponent.styles.imgStyle,
+                    VideoInfo.styles.imgStyle,
                     backgroundStyle
-                ]}
-                     src={this.state.thumbnailUrl || ""}>
-
+                ]}>
+                </div>
+                <div>
+                    {this.state.title}
                 </div>
             </div>
         );
@@ -52,6 +55,15 @@ export class VideoIconComponent extends React.Component<IVideoIconComponentProps
             });
     }
 
+    private fetchVideoTitle() {
+        axios.get(`/video-title/${this.props.youtubeVideoId}`)
+            .then(result => {
+                this.setState({
+                    title: result.data.title
+                });
+            });
+    }
+
     private static readonly WIDTH = 40;
 
     private static styles = {
@@ -60,18 +72,19 @@ export class VideoIconComponent extends React.Component<IVideoIconComponentProps
             margin: "20px"
         },
         imgStyle: {
-            width: `${VideoIconComponent.WIDTH}px`,
-            height: `${VideoIconComponent.WIDTH * 3 / 4}px`,
+            width: `${VideoInfo.WIDTH}px`,
+            height: `${VideoInfo.WIDTH * 3 / 4}px`,
             backgroundPosition: "50% 50%",
             backgroundSize: "cover",
         }
     }
 }
 
-export interface IVideoIconComponentProps {
+export interface IVideoInfoComponentProps {
     youtubeVideoId: string;
 }
 
-export interface IVideoIconComponentState {
+export interface IVideoInfoComponentState {
     thumbnailUrl: string;
+    title: string;
 }

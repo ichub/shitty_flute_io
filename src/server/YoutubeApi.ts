@@ -39,7 +39,7 @@ export class YoutubeApi {
         return this.getSnippetOnVideo(videoId)
             .then(info => {
                 let title = info.items[0].snippet.title;
-                return Promise.resolve(title);
+                return Promise.resolve({title});
             })
             .catch((err) => {
                 return Promise.reject(err);
