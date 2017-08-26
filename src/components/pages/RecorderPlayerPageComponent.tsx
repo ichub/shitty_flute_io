@@ -43,6 +43,13 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     constructor(props: IRecorderPlayerPageComponentProps) {
         super();
 
+        setInterval(() => {
+            this.setState({
+                videoPosition: (typeof this.video === 'undefined' ? 1 : this.video.getCurrentTime() * 1000),
+            });
+            // get the video position, call this.setState({videoPosition: the one you got})
+        }, 1000);
+
         this.state = {
             noteState: {
                 down: [],
@@ -61,7 +68,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             err: null,
             canInteract: true,
             showSilverModal: false,
-            hasShownSilverModal: false
+            hasShownSilverModal: false,
+            videoPosition: 0,
+            videoDuration: 1,
         };
 
         this.audioOutputHelper = AudioOutputHelper.getInstance(NoteInfoList.notes);
@@ -109,7 +118,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         this.video.playVideo();
         setTimeout(() => {
             this.video.pauseVideo();
+            this.setState({ videoDuration: this.video.getDuration() });
         }, 5);
+
     }
 
     private onStateChange(event) {
@@ -204,7 +215,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         </label>
                     </div>
 
-                    <TimeSlider duration={123}/>
+                    <div style={[{width: "200px"}]}>
+                        <TimeSlider duration={this.state.videoDuration} position={this.state.videoPosition}/>
+                    </div>
 
                     <div style={[
                         RecorderPlayerPageComponent.styles.flex
@@ -271,7 +284,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 videoId = "";
             }
             this.setState({
-                youtubeVideoId: videoId
+                youtubeVideoId: videoId,
             });
         }
     }
@@ -592,6 +605,8 @@ export interface IRecorderPlayerPageComponentState {
     canInteract: boolean;
     showSilverModal: boolean;
     hasShownSilverModal: boolean;
+    videoPosition: number;
+    videoDuration: number;
 }
 
 export enum RecorderStateName {

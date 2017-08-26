@@ -109,4 +109,6 @@ export interface IYoutubeVideoPlayer {
     setVolume(volume: number): void;
 
     getVolume(): number;
+
+    getDuration(): number;
 }
