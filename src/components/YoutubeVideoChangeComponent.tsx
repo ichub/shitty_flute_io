@@ -27,7 +27,7 @@ export class YoutubeVideoChangeComponent extends React.Component<IYoutubeVideoCh
             ]}>
                 <label>
                     <span>YouTube URL:</span>
-                    <input style={[]}
+                    <input style={[YoutubeVideoChangeComponent.styles.videoIdInput]}
                            ref="youtubeInput"
                            type="text"
                            placeholder={"Paste URL here!"}/>
@@ -53,6 +53,9 @@ export class YoutubeVideoChangeComponent extends React.Component<IYoutubeVideoCh
     private static styles = {
         base: {
             width: "100%"
+        },
+        videoIdInput: {
+            margin: "20px",
         }
     }
 }
