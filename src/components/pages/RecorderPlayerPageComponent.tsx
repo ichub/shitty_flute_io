@@ -195,10 +195,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         </div>
                     </div>
 
-                    <div style={[{width: "200px"}]}>
-                        <TimeSlider duration={this.state.videoDuration} position={this.state.videoPosition}/>
-                    </div>
-
                     <div style={[
                         RecorderPlayerPageComponent.styles.flex
                     ]}>
