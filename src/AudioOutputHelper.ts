@@ -67,7 +67,7 @@ export class AudioOutputHelper {
         ).then(audioBuffers => {
             return Promise.resolve({
                 audioBuffers: audioBuffers,
-                note: note,
+                note: note
             });
         });
     }
@@ -150,13 +150,15 @@ export class AudioOutputHelper {
         const stopping = [];
 
         for (let completedNote of notes) {
-            setTimeout(
-                () => {
-                    if (!stopped) {
-                        stopping.push(this.playNote(completedNote.noteInfo, false, completedNote.end - completedNote.start));
-                    }
-                },
-                completedNote.start - offset);
+            if (completedNote.start >= offset) {
+                setTimeout(
+                    () => {
+                        if (!stopped) {
+                            stopping.push(this.playNote(completedNote.noteInfo, false, completedNote.end - completedNote.start));
+                        }
+                    },
+                    completedNote.start - offset);
+            }
         }
 
         return {

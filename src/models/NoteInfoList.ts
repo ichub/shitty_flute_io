@@ -1,6 +1,7 @@
 import {INoteInfo, makeINoteInfo} from "./INoteInfo";
 import {resDir} from "../server/Server";
 import * as path from "path";
+import {rootPath} from "../server/Env";
 
 export enum NoteType {
     Regular = "regular",
@@ -45,5 +46,5 @@ export class NoteInfoList {
 }
 
 function makeSoundFileList(noteName: string): string[] {
-    return ["1", "2", "3", "4", "5", "6"].map(s => "../res/notes/" + noteName + "-" + s + ".mp3");
+    return ["1", "2", "3", "4", "5", "6"].map(s => rootPath + "res/notes/" + noteName + "-" + s + ".mp3");
 }

@@ -177,7 +177,7 @@ export class SQLiteDataLayer implements IDataLayer {
             "has_recorded," +
             "auto_recorded) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            [editToken, viewTokenIfNoneExists, "", "HQnC1UHBvWA", -1, -1, -1, (new Date()).getTime(), 0, 0, 0, 0]) // default song is shelter
+            [editToken, viewTokenIfNoneExists, "", "HQnC1UHBvWA", 0, 1, -1, (new Date()).getTime(), 0, 0, 0, 0]) // default song is shelter
             .then(result => {
                 console.log("inserted the new row");
             })

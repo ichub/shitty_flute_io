@@ -30,11 +30,11 @@ const handle = (props) => {
 const wrapperStyle = { width: 400, margin: 50 };
 
 @Radium
-export class TimeSlider extends React.Component<ITimeSliderProps, ITimeSliderState> {
-    props: ITimeSliderProps;
-    state: ITimeSliderState;
+export class TestSlider extends React.Component<ITestSliderProps, ITestSliderState> {
+    props: ITestSliderProps;
+    state: ITestSliderState;
 
-    constructor(props: ITimeSliderProps) {
+    constructor(props: ITestSliderProps) {
         super();
         console.log("constructing testslider");
         this.state = {value: [props.start / props.duration * 1000 -1,
@@ -46,15 +46,15 @@ export class TimeSlider extends React.Component<ITimeSliderProps, ITimeSliderSta
         return moment.duration(Math.round((value / 1000) * this.props.duration), "seconds").format("m:ss", {trim: false});
     }
 
-    componentWillReceiveProps(nextProps: ITimeSliderProps) {
+     componentWillReceiveProps(nextProps: ITestSliderProps) {
         console.log("receiving props:");
         console.log(nextProps);
 
-        this.setState({
-            value: [nextProps.start / nextProps.duration * 1000 - 1,
-                nextProps.position / nextProps.duration * 1000,
-                nextProps.end / nextProps.duration * 1000 + 1],
-        })
+         this.setState({
+             value: [nextProps.start / nextProps.duration * 1000 - 1,
+                 nextProps.position / nextProps.duration * 1000,
+                 nextProps.end / nextProps.duration * 1000 + 1],
+         })
     }
 
     private onChange(value: number[]) {
@@ -85,7 +85,7 @@ export class TimeSlider extends React.Component<ITimeSliderProps, ITimeSliderSta
     }
 }
 
-export interface ITimeSliderProps {
+export interface ITestSliderProps {
     duration: number; // duration of video, in seconds
     position: number; // current position in video
     start: number;
@@ -94,6 +94,6 @@ export interface ITimeSliderProps {
     locked: boolean;
 }
 
-export interface ITimeSliderState {
+export interface ITestSliderState {
     value: number[]
 }

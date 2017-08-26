@@ -15,6 +15,9 @@ import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
 import * as ReactModal from "react-modal";
 import {ControllerBarComponent} from "../ControllerBarComponent";
+import Slider from "rc-slider";
+import {TimeSlider} from "../TimeSlider";
+import {TestSlider} from "../TestSlider";
 
 const axios = require("axios");
 const getYoutubeId = require("get-youtube-id");
@@ -42,11 +45,16 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         super();
 
         setInterval(() => {
-            this.setState({
-                videoPosition: (typeof this.video === 'undefined' ? 1 : this.video.getCurrentTime()),
-            });
+            if (this.state.stateName === RecorderStateName.Recording || this.state.stateName === RecorderStateName.Playing) {
+                this.setState({
+                    videoPosition: (typeof this.video === 'undefined' ? 1 : this.video.getCurrentTime()),
+                });
+                if (this.video.getCurrentTime() >= this.state.recordingYoutubeEndTime) {
+                    this.stopRecording();
+                }
+            }
             // get the video position, call this.setState({videoPosition: the one you got})
-        }, 1000);
+        }, 100);
 
         this.state = {
             noteState: {
@@ -55,8 +63,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             },
             youtubeVideoId: "HQnC1UHBvWA",
             stateName: RecorderStateName.Loading,
-            recordingYoutubeStartTime: -1,
-            recordingYoutubeEndTime: -1,
+            recordingYoutubeStartTime: 0,
+            recordingYoutubeEndTime: 1,
             hasRecorded: false,
             autoRecorded: false,
             recording: [],
@@ -116,7 +124,18 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         this.video.playVideo();
         setTimeout(() => {
             this.video.pauseVideo();
-            this.setState({videoDuration: this.video.getDuration()});
+            this.setState({
+                videoDuration: this.video.getDuration(),
+            });
+            if (!this.state.hasRecorded) {
+                this.setState({
+                    recordingYoutubeEndTime: this.video.getDuration(),
+                });
+            } else {
+                this.setState({
+                    videoPosition: this.state.recordingYoutubeStartTime,
+                });
+            }
         }, 5);
 
     }
@@ -194,6 +213,33 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         </div>
                     </div>
 
+                    <br/>
+                    <div style={[
+                        RecorderPlayerPageComponent.styles.flex
+                    ]}>
+                        <label>
+                            <span>YouTube URL:</span>
+                            <input style={[RecorderPlayerPageComponent.styles.youtubeIdInput]}
+                                   ref="youtubeInput"
+                                   type="text"
+                                   placeholder={"Paste URL here!"}/>
+                            <input type="button"
+                                   value="Change Video"
+                                   disabled={this.state.stateName !== RecorderStateName.FreePlay}
+                                   onClick={this.handleVideoIdChange.bind(this)}/>
+                        </label>
+                    </div>
+
+                    <div style={[{width: "500px"}]}>
+                        <TimeSlider
+                            duration={this.state.videoDuration}
+                            position={Math.max(this.state.videoPosition, this.state.recordingYoutubeStartTime)}
+                            start={this.state.recordingYoutubeStartTime}
+                            end={this.state.recordingYoutubeEndTime}
+                            locked={this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}
+                            onChange={this.handleOnTimeChange.bind(this)}/>
+                    </div>
+
                     <div style={[
                         RecorderPlayerPageComponent.styles.flex
                     ]}>
@@ -245,6 +291,18 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         );
     }
 
+    private handleOnTimeChange(value: number[]) {
+        console.log("handling time change");
+        console.log(value);
+
+        this.setState({
+            recordingYoutubeStartTime: (value[0] + 1) / 1000 * this.state.videoDuration,
+            videoPosition: value[1] / 1000 * this.state.videoDuration,
+            recordingYoutubeEndTime: (value[2] - 1) / 1000 * this.state.videoDuration
+        });
+
+    }
+
     private handleVolumeChange(volume: number) {
         this.video.setVolume(volume);
     }
@@ -268,7 +326,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             this.noteKeyboardManager.clearPlayedNotes();
             this.setState({
                 recordingYoutubeStartTime: 0,
-                recordingYoutubeEndTime: 0,
+                recordingYoutubeEndTime: this.video.getDuration(),
                 stateName: RecorderStateName.FreePlay,
                 hasRecorded: false,
                 recording: [],
@@ -279,12 +337,13 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     private record() {
         if (this.state.stateName === RecorderStateName.FreePlay) {
-            this.reset();
+            this.noteKeyboardManager.clearPlayedNotes();
             this.setState({
+                recording:[],
                 stateName: RecorderStateName.Recording,
-                recordingYoutubeStartTime: this.video.getCurrentTime(),
                 startRecordingDateTime: new Date().getTime()
             });
+            this.video.seekTo(this.state.recordingYoutubeStartTime);
             this.video.playVideo();
         }
     }
@@ -293,7 +352,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         if (this.state.stateName === RecorderStateName.Recording) {
             this.setState({
                 stateName: RecorderStateName.FreePlay,
-                recordingYoutubeEndTime: this.video.getCurrentTime(),
                 hasRecorded: true,
                 recording: this.state.noteState.played.slice(),
                 lastEdited: Date.now()
