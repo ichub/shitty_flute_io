@@ -29,6 +29,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
 
         const stopOrPlayButton = this.props.stateName === RecorderStateName.Playing ? (
             <button
+                style={[ControllerBarComponent.styles.controllerButton]}
                 key="3"
                 type="button"
                 value="stop play back"
@@ -38,6 +39,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
             </button>
         ) : (
             <button
+                style={[ControllerBarComponent.styles.controllerButton]}
                 key="2"
                 type="button"
                 value="play back"
@@ -52,6 +54,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
 
         const recordOrStopRecordingButton = this.props.stateName === RecorderStateName.Recording ? (
             <button
+                style={[ControllerBarComponent.styles.controllerButton]}
                 key="1"
                 type="button"
                 value="stop recording"
@@ -61,6 +64,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
             </button>
         ) : (
             <button
+                style={[ControllerBarComponent.styles.controllerButton]}
                 key="0"
                 type="button"
                 value="record"
@@ -103,6 +107,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                     data-tip="reset"
                     data-for="reset">
                             <button
+                                style={[ControllerBarComponent.styles.controllerButton]}
                                 key="4"
                                 type="button"
                                 value="reset"
@@ -117,6 +122,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                     data-tip="save"
                     data-for="save">
                             <button
+                                style={[ControllerBarComponent.styles.controllerButton]}
                                 key="5"
                                 type="button"
                                 value="save"
@@ -149,6 +155,11 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
             width: "100px",
             height: "20px",
             margin: "20px",
+        },
+        controllerButton: {
+            backgroundColor: "transparent",
+            border: "transparent",
+            fontSize: "1.2em"
         }
     }
 }
