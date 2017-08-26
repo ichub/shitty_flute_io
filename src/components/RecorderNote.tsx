@@ -27,12 +27,13 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
         );
     }
 
-    private static readonly SIZE = 50;
+    private static readonly WIDTH = 40;
+    private static readonly HEIGHT = 100;
 
     private static styles = {
         base: {
-            width: `${RecorderNote.SIZE}px`,
-            height: `${RecorderNote.SIZE}px`,
+            width: `${RecorderNote.WIDTH}px`,
+            height: `${RecorderNote.HEIGHT}px`,
             fontWeight: "bold",
             backgroundColor: "white",
             color: "black",

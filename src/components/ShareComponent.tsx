@@ -118,7 +118,7 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
 
     private static styles = {
         base: {
-            margin: "20px",
+            margin: "50px",
 
         },
         flex: {
