@@ -15,7 +15,6 @@ import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
 import * as ReactModal from "react-modal";
 import {ControllerBarComponent} from "../ControllerBarComponent";
-import {TimeSlider} from "../TimeSlider";
 
 const axios = require("axios");
 const getYoutubeId = require("get-youtube-id");
@@ -507,7 +506,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         },
         noteContainer: {
             width: "100%",
-            height: "100px"
+            padding: "10px"
         },
         keyboardContainer: {
             width: "100%",
