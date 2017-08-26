@@ -36,7 +36,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     audioOutputStopper: { stop: () => void };
 
     refs: {
-        youtubeInput: HTMLInputElement
+        youtubeInput: HTMLInputElement,
+        youtubeVolume: HTMLInputElement
     };
 
     constructor(props: IRecorderPlayerPageComponentProps) {
@@ -390,9 +391,13 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         RecorderPlayerPageComponent.styles.flex,
                         RecorderPlayerPageComponent.styles.youtubeVolumeWrapper
                     ]}>
-                        <Slider min={0} max={20} defaultValue={3} style={[
-                            RecorderPlayerPageComponent.styles.flex
-                        ]}/>
+                        <Slider
+                            ref="youtubeVolume"
+                            min={0}
+                            max={100}
+                            defaultValue={(typeof this.video ==='undefined' ? 100 : this.video.getVolume())}
+                            onBeforeChange={this.handleVolumeSliderChange.bind(this)}
+                            onChange={this.handleVolumeSliderChange.bind(this)}/>
                     </div>
 
                     <div style={[
@@ -437,7 +442,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         return (this.state.stateName == RecorderStateName.FreePlay) && !this.props.viewOnly;
     }
 
-    private handleVideoIdChange() {
+    private handleVideoIdChange(): void {
         if (this.state.stateName === RecorderStateName.FreePlay) {
             let videoId = getYoutubeId(this.refs.youtubeInput.value);
             if (videoId == null) {
@@ -447,6 +452,11 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 youtubeVideoId: videoId
             });
         }
+    }
+
+    private handleVolumeSliderChange(): void {
+        let volume = parseInt(this.refs.youtubeVolume.state.value);
+        this.video.setVolume(volume);
     }
 
     private reset() {
