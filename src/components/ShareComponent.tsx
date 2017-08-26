@@ -43,55 +43,57 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
                 GlobalFont,
                 ShareComponent.styles.base
             ]}>
-                <div style={[ShareComponent.styles.button]}>
-                    <FacebookShareButton
-                        url={this.getViewUrl()}
-                        quote={""}
-                        className="Demo__some-network__share-button">
-                        <FacebookIcon
-                            size={32}
-                            round/>
-                    </FacebookShareButton>
-                </div>
-                <div style={[ShareComponent.styles.button]}>
-                    <TwitterShareButton
-                        url={this.getViewUrl()}
-                        quote={""}
-                        className="Demo__some-network__share-button">
-                        <TwitterIcon
-                            size={32}
-                            round/>
-                    </TwitterShareButton>
-                </div>
-                <div style={[ShareComponent.styles.button]}>
-                    <GooglePlusShareButton
-                        url={this.getViewUrl()}
-                        quote={""}
-                        className="Demo__some-network__share-button">
-                        <GooglePlusIcon
-                            size={32}
-                            round/>
-                    </GooglePlusShareButton>
-                </div>
-                <div style={[ShareComponent.styles.button]}>
-                    <RedditShareButton
-                        url={this.getViewUrl()}
-                        quote={""}
-                        className="Demo__some-network__share-button">
-                        <RedditIcon
-                            size={32}
-                            round/>
-                    </RedditShareButton>
-                </div>
-                <div style={[ShareComponent.styles.button]}>
-                    <VKShareButton
-                        url={this.getViewUrl()}
-                        quote={""}
-                        className="Demo__some-network__share-button">
-                        <VKIcon
-                            size={32}
-                            round/>
-                    </VKShareButton>
+                <div style={[ShareComponent.styles.flex]}>
+                    <div style={[ShareComponent.styles.button]}>
+                        <FacebookShareButton
+                            url={this.getViewUrl()}
+                            quote={""}
+                            className="Demo__some-network__share-button">
+                            <FacebookIcon
+                                size={32}
+                                round/>
+                        </FacebookShareButton>
+                    </div>
+                    <div style={[ShareComponent.styles.button]}>
+                        <TwitterShareButton
+                            url={this.getViewUrl()}
+                            quote={""}
+                            className="Demo__some-network__share-button">
+                            <TwitterIcon
+                                size={32}
+                                round/>
+                        </TwitterShareButton>
+                    </div>
+                    <div style={[ShareComponent.styles.button]}>
+                        <GooglePlusShareButton
+                            url={this.getViewUrl()}
+                            quote={""}
+                            className="Demo__some-network__share-button">
+                            <GooglePlusIcon
+                                size={32}
+                                round/>
+                        </GooglePlusShareButton>
+                    </div>
+                    <div style={[ShareComponent.styles.button]}>
+                        <RedditShareButton
+                            url={this.getViewUrl()}
+                            quote={""}
+                            className="Demo__some-network__share-button">
+                            <RedditIcon
+                                size={32}
+                                round/>
+                        </RedditShareButton>
+                    </div>
+                    <div style={[ShareComponent.styles.button]}>
+                        <VKShareButton
+                            url={this.getViewUrl()}
+                            quote={""}
+                            className="Demo__some-network__share-button">
+                            <VKIcon
+                                size={32}
+                                round/>
+                        </VKShareButton>
+                    </div>
                 </div>
             </div>
         );
@@ -116,10 +118,13 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
 
     private static styles = {
         base: {
-            display: "flex",
             margin: "20px",
+
+        },
+        flex: {
             justifyContent: "center",
             alignItems: "center",
+            display: "flex",
         },
         url: {
             padding: "5px 10px 5px 10px",

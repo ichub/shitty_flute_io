@@ -23,9 +23,6 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
                 RecorderNote.styles.dummyState(this.props.isDummy)
             ]}>
                 {this.props.notePosition.keyboardCharacter}
-                <div style={{alignSelf: "flex-end"}}>
-                    {this.props.note.label}
-                </div>
             </div>
         );
     }
