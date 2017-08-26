@@ -1,11 +1,7 @@
 import * as React from "react";
 import * as Radium from "radium";
 import {GlobalFont} from "../styles/GlobalStyles";
-import {
-    ShareButtons,
-    ShareCounts,
-    generateShareIcon
-} from 'react-share';
+import {generateShareIcon, ShareButtons, ShareCounts} from 'react-share';
 
 const FacebookIcon = generateShareIcon('facebook');
 const TwitterIcon = generateShareIcon('twitter');
@@ -47,14 +43,37 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
                 GlobalFont,
                 ShareComponent.styles.base
             ]}>
-                <FacebookShareButton
-                    url={this.getViewUrl()}
-                    quote={""}
-                    className="Demo__some-network__share-button">
-                    <FacebookIcon
-                        size={32}
-                        round />
-                </FacebookShareButton>
+                <div style={[ShareComponent.styles.button]}>
+                    <FacebookShareButton
+                        url={this.getViewUrl()}
+                        quote={""}
+                        className="Demo__some-network__share-button">
+                        <FacebookIcon
+                            size={32}
+                            round/>
+                    </FacebookShareButton>
+                </div>
+                <div style={[ShareComponent.styles.button]}>
+                    <TwitterShareButton
+                        style={[ShareComponent.styles.button]}
+                        url={this.getViewUrl()}
+                        quote={""}
+                        className="Demo__some-network__share-button">
+                        <TwitterIcon
+                            size={32}
+                            round/>
+                    </TwitterShareButton>
+                </div>
+                <div style={[ShareComponent.styles.button]}>
+                    <GooglePlusShareButton
+                        style={[ShareComponent.styles.button]}
+                        url={this.getViewUrl()}
+                        quote={""}
+                        className="Demo__some-network__share-button">
+                        <GooglePlusIcon
+                            size={32}
+                            round/>
+                    </GooglePlusShareButton></div>
             </div>
         );
     }
@@ -78,8 +97,10 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
 
     private static styles = {
         base: {
-            display: "inline-block",
-            margin: "20px"
+            display: "flex",
+            margin: "20px",
+            justifyContent: "center",
+            alignItems: "center",
         },
         url: {
             padding: "5px 10px 5px 10px",
@@ -104,6 +125,9 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
             lineHeight: "100%",
             textAlign: "center",
             marginRight: "10px",
+        },
+        button: {
+            margin: "10px"
         }
     }
 }
