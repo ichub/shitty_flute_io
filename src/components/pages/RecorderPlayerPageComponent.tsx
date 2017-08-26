@@ -227,7 +227,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         viewOnly={this.props.viewOnly}
                         stateName={this.state.stateName}
                         initialVolume={(typeof this.video === 'undefined' ? 100 : this.video.getVolume())}
-                        onVolumeChange={this.handleVolumeChange.bind(this)}/>
+                        onVolumeChange={this.handleVolumeChange.bind(this)}
+                        youtubeVideoId={this.state.youtubeVideoId}/>
                     <div>
                         <ReactModal
                             isOpen={this.state.showSilverModal}

@@ -156,6 +156,12 @@ ApiController.get("/video-duration/:youtubeId", (req: express.Request, res: expr
     );
 });
 
+ApiController.get("/video-thubmnail-url/:youtubeId", (req: express.Request, res: express.Response) => {
+    returnJson(res,
+        YoutubeApi.getThumbnailOnVideo(req.params.youtubeId)
+    );
+});
+
 export function cleanDB(): Promise<void> {
     return SQLiteDataLayer
         .getInstance()

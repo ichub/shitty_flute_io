@@ -3,6 +3,7 @@ import * as Radium from "radium";
 import {RecorderStateName} from "./pages/RecorderPlayerPageComponent";
 import * as ReactTooltip from "react-tooltip";
 import Slider from "rc-slider";
+import {VideoIconComponent} from "./VideoIconComponent";
 
 @Radium
 export class ControllerBarComponent extends React.Component<IControllerBarComponentProps, IControllerBarComponentState> {
@@ -124,6 +125,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                             </button>
                         </span>
                 <ReactTooltip id="save" place="top" type="dark" effect="solid" delayHide={1}/>
+                <VideoIconComponent youtubeVideoId={this.props.youtubeVideoId}/>
             </div>
         );
     }
@@ -160,6 +162,7 @@ export interface IControllerBarComponentProps {
     initialVolume: number;
     viewOnly: boolean;
     stateName: RecorderStateName;
+    youtubeVideoId: string;
 }
 
 export interface IControllerBarComponentState {
