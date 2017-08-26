@@ -126,72 +126,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         console.log("rendering...");
         console.log(this.state);
 
-        let playDisabled: boolean = this.state.stateName !== RecorderStateName.Playing;
-        let stopPlayDisabled: boolean = this.state.stateName !== RecorderStateName.FreePlay || !this.state.hasRecorded;
-
-        const stopOrPlayButton = this.state.stateName === RecorderStateName.Playing ? (
-            <button
-                style={[
-                    ButtonFont,
-                    RecorderPlayerPageComponent.styles.flex,
-                    RecorderPlayerPageComponent.styles.button
-                ]}
-                key="3"
-                type="button"
-                value="stop play back"
-                onClick={this.stopPlayback.bind(this)}
-                disabled={playDisabled}>
-                <i className="fa fa-stop" aria-hidden="true"></i>
-            </button>
-        ) : (
-            <button
-                style={[
-                    ButtonFont,
-                    RecorderPlayerPageComponent.styles.flex,
-                    RecorderPlayerPageComponent.styles.button
-                ]}
-                key="2"
-                type="button"
-                value="play back"
-                onClick={this.play.bind(this)}
-                disabled={stopPlayDisabled}>
-                <i className="fa fa-play" aria-hidden="true"></i>
-            </button>
-        );
-
-        let recordDisabled: boolean = this.props.viewOnly || this.state.stateName !== RecorderStateName.Recording;
-        let stopRecordDisabled: boolean = this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay;
-
-        const recordOrStopRecordingButton = this.state.stateName === RecorderStateName.Recording ? (
-            <button
-                style={[
-                    ButtonFont,
-                    RecorderPlayerPageComponent.styles.flex,
-                    RecorderPlayerPageComponent.styles.button
-                ]}
-                key="1"
-                type="button"
-                value="stop recording"
-                onClick={this.stopRecording.bind(this)}
-                disabled={recordDisabled}>
-                <i className="fa fa-stop" aria-hidden="true"></i>
-            </button>
-        ) : (
-            <button
-                style={[
-                    ButtonFont,
-                    RecorderPlayerPageComponent.styles.flex,
-                    RecorderPlayerPageComponent.styles.button
-                ]}
-                key="0"
-                type="button"
-                value="record"
-                onClick={this.record.bind(this)}
-                disabled={stopRecordDisabled}>
-                <i className="fa fa-circle" aria-hidden="true"></i>
-            </button>
-        );
-
         const wrapperStyle = {width: 400, margin: 50};
 
         return (
@@ -217,65 +151,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             </div>
                         )
                     }
-
-
-                    <div style={[
-                        RecorderPlayerPageComponent.styles.flex,
-                        RecorderPlayerPageComponent.styles.buttonContainer
-                    ]}>
-                        <span
-                            data-tip="record/stop recording"
-                            data-for="record">
-                                {recordOrStopRecordingButton}
-                            </span>
-                        <span
-                            data-tip="playback/stop playback"
-                            data-for="playback">
-                                {stopOrPlayButton}
-                            </span>
-                        <ReactTooltip id="record" place="top" type="dark" effect="solid" delayHide={1}/>
-                        <ReactTooltip id="playback" place="top" type="dark" effect="solid" delayHide={1}/>
-
-                        <span
-                            data-tip="reset"
-                            data-for="reset">
-                            <button
-                                style={[
-                                    ButtonFont,
-                                    RecorderPlayerPageComponent.styles.flex,
-                                    RecorderPlayerPageComponent.styles.button
-                                ]}
-                                key="4"
-                                type="button"
-                                value="reset"
-                                onClick={this.reset.bind(this)}
-                                disabled={!this.state.hasRecorded || this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}>
-                                <i className="fa fa-eraser" aria-hidden="true"></i>
-                            </button>
-                        </span>
-                        <ReactTooltip id="reset" place="top" type="dark" effect="solid" delayHide={1}/>
-
-                        <span
-                            data-tip="save"
-                            data-for="save">
-                            <button
-                                style={[
-                                    ButtonFont,
-                                    RecorderPlayerPageComponent.styles.flex,
-                                    RecorderPlayerPageComponent.styles.button
-                                ]}
-                                key="5"
-                                type="button"
-                                value="save"
-                                onClick={this.save.bind(this)}
-                                disabled={!this.state.hasRecorded || this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}>
-                                <i className="fa fa-floppy-o" aria-hidden="true"></i>
-                            </button>
-                        </span>
-                        <ReactTooltip id="save" place="top" type="dark" effect="solid" delayHide={1}/>
-                    </div>
-
-                    <br/>
 
                     <div style={[
                         RecorderPlayerPageComponent.styles.flex,
@@ -398,7 +273,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     }
 
     private handleVolumeSliderChange(): void {
-        let volume = parseInt(this.refs.youtubeVolume.state.value);
+        let volume = parseInt((this.refs.youtubeVolume as any).state.value);
         this.video.setVolume(volume);
     }
 
