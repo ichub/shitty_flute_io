@@ -44,7 +44,7 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
             alignItems: "center",
             justifyContent: "center",
             fontSize: "1em",
-            borderRadius: "10px",
+            borderRadius: "4px",
             border: "1px solid black"
         },
         downState: (isDown: boolean) => {
