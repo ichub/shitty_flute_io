@@ -18,8 +18,18 @@ export class VideoInfo extends React.Component<IVideoInfoComponentProps, IVideoI
     }
 
     componentDidMount() {
+        this.refresh();
+    }
+
+    refresh() {
         this.fetchIconUrl();
         this.fetchVideoTitle();
+    }
+
+    componentDidUpdate(prevProps: IVideoInfoComponentProps) {
+        if (prevProps.youtubeVideoId != this.props.youtubeVideoId) {
+            this.refresh();
+        }
     }
 
     render() {

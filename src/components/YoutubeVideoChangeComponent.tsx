@@ -14,9 +14,13 @@ export class YoutubeVideoChangeComponent extends React.Component<IYoutubeVideoCh
 
     constructor(props: IYoutubeVideoChangeComponentProps) {
         super();
+
+        console.log("FUCKKK");
     }
 
     render() {
+        console.log("IS ENABLED " + !this.props.isEnabled);
+
         return (
             <div style={[
                 YoutubeVideoChangeComponent.styles.base
@@ -29,7 +33,7 @@ export class YoutubeVideoChangeComponent extends React.Component<IYoutubeVideoCh
                            placeholder={"Paste URL here!"}/>
                     <input type="button"
                            value="Change Video"
-                           disabled={this.props.isEnabled}
+                           disabled={!this.props.isEnabled}
                            onClick={this.handleVideoIdChange.bind(this)}/>
                 </label>
             </div>
