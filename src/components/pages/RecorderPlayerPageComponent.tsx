@@ -223,18 +223,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         RecorderPlayerPageComponent.styles.flex,
                         RecorderPlayerPageComponent.styles.buttonContainer
                     ]}>
-                        {/*<div>*/}
-                        {/*youtubeVideoId: {this.state.youtubeVideoId} <br/>*/}
-                        {/*state: {this.state.stateName} <br/>*/}
-                        {/*record start: {this.state.recordingYoutubeStartTime} <br/>*/}
-                        {/*record end: {this.state.recordingYoutubeEndTime} <br/>*/}
-                        {/*has recorded: {this.state.hasRecorded.toString()} <br/>*/}
-                        {/*notes recorded: {this.state.recording.length} <br/>*/}
-                        {/*start offset: {this.state.startRecordingDateTime} <br/>*/}
-                        {/*</div>*/}
-
-                        <br/>
-
                         <span
                             data-tip="record/stop recording"
                             data-for="record">
@@ -285,20 +273,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             </button>
                         </span>
                         <ReactTooltip id="save" place="top" type="dark" effect="solid" delayHide={1}/>
-                        {/*<button*/}
-                        {/*style={[*/}
-                        {/*ButtonFont,*/}
-                        {/*RecorderPlayerPageComponent.styles.flex,*/}
-                        {/*RecorderPlayerPageComponent.styles.button*/}
-                        {/*]}*/}
-                        {/*key="6"*/}
-                        {/*type="button"*/}
-                        {/*value="flootify"*/}
-                        {/*onClick={this.flootify.bind(this)}*/}
-                        {/*disabled={this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}>*/}
-                        {/*<i className="fa fa-floppy-o" aria-hidden="true"></i>*/}
-                        {/*</button>*/}
-
                     </div>
 
                     <br/>
