@@ -78,6 +78,8 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
             <div style={[
                 ControllerBarComponent.styles.base
             ]}>
+                <i className="fa fa-volume-up" aria-hidden="true"></i>
+
                 <div style={[
                     ControllerBarComponent.styles.volume
                 ]}>
@@ -150,6 +152,8 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            paddingLeft: "20px",
+            paddingRight: "20px"
         },
         volume: {
             width: "100px",
