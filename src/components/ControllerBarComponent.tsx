@@ -4,6 +4,7 @@ import {RecorderStateName} from "./pages/RecorderPlayerPageComponent";
 import * as ReactTooltip from "react-tooltip";
 import Slider from "rc-slider";
 import {VideoInfo} from "./VideoIconComponent";
+import {YoutubeVideoChangeComponent} from "./YoutubeVideoChangeComponent";
 
 @Radium
 export class ControllerBarComponent extends React.Component<IControllerBarComponentProps, IControllerBarComponentState> {
@@ -126,6 +127,8 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                         </span>
                 <ReactTooltip id="save" place="top" type="dark" effect="solid" delayHide={1}/>
                 <VideoInfo youtubeVideoId={this.props.youtubeVideoId}/>
+                <YoutubeVideoChangeComponent isEnabled={this.props.stateName == RecorderStateName.FreePlay}
+                                             onVideoIdChange={this.props.onVideoIdChange}/>
             </div>
         );
     }
@@ -159,6 +162,7 @@ export interface IControllerBarComponentProps {
     stopPlayback: () => void;
     stopRecording: () => void;
     onVolumeChange: (value: number) => void;
+    onVideoIdChange: (value: string) => void;
     initialVolume: number;
     viewOnly: boolean;
     stateName: RecorderStateName;

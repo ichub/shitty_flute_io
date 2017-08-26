@@ -9,7 +9,7 @@ import {ITotalNoteState, makeNewITotalNoteState, NoteKeyboardManager} from "../.
 import {INoteInfo} from "../../models/INoteInfo";
 import {ICompositionNote} from "../../models/ICompositionNote";
 import {ICompositionState} from "../../models/ICompositionState";
-import {GlobalFont, TitleFont} from "../../styles/GlobalStyles";
+import {TitleFont} from "../../styles/GlobalStyles";
 import * as color from "color";
 import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
@@ -195,25 +195,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         </div>
                     </div>
 
-
-                    <br/>
-                    <div style={[
-                        GlobalFont,
-                        RecorderPlayerPageComponent.styles.flex
-                    ]}>
-                        <label>
-                            <span>YouTube URL:</span>
-                            <input style={[RecorderPlayerPageComponent.styles.youtubeIdInput]}
-                                   ref="youtubeInput"
-                                   type="text"
-                                   placeholder={"Paste URL here!"}/>
-                            <input type="button"
-                                   value="Change Video"
-                                   disabled={this.state.stateName !== RecorderStateName.FreePlay}
-                                   onClick={this.handleVideoIdChange.bind(this)}/>
-                        </label>
-                    </div>
-
                     <div style={[{width: "200px"}]}>
                         <TimeSlider duration={this.state.videoDuration} position={this.state.videoPosition}/>
                     </div>
@@ -240,7 +221,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         stateName={this.state.stateName}
                         initialVolume={(typeof this.video === 'undefined' ? 100 : this.video.getVolume())}
                         onVolumeChange={this.handleVolumeChange.bind(this)}
-                        youtubeVideoId={this.state.youtubeVideoId}/>
+                        youtubeVideoId={this.state.youtubeVideoId}
+                        onVideoIdChange={this.handleVideoIdChange.bind(this)}/>
                     <div>
                         <ReactModal
                             isOpen={this.state.showSilverModal}
@@ -276,14 +258,10 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         return (this.state.stateName == RecorderStateName.FreePlay) && !this.props.viewOnly;
     }
 
-    private handleVideoIdChange(): void {
+    private handleVideoIdChange(id: string): void {
         if (this.state.stateName === RecorderStateName.FreePlay) {
-            let videoId = getYoutubeId(this.refs.youtubeInput.value);
-            if (videoId == null) {
-                videoId = "";
-            }
             this.setState({
-                youtubeVideoId: videoId,
+                youtubeVideoId: id,
             });
         }
     }
