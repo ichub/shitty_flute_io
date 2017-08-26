@@ -16,6 +16,7 @@ import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/Not
 import * as ReactTooltip from "react-tooltip";
 import * as ReactModal from "react-modal";
 import Slider from "rc-slider";
+import {ControllerBarComponent} from "../ControllerBarComponent";
 
 const axios = require("axios");
 const getYoutubeId = require("get-youtube-id");
@@ -191,7 +192,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             </button>
         );
 
-        const wrapperStyle = { width: 400, margin: 50 };
+        const wrapperStyle = {width: 400, margin: 50};
 
         return (
             <div style={[
@@ -395,7 +396,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             ref="youtubeVolume"
                             min={0}
                             max={100}
-                            defaultValue={(typeof this.video ==='undefined' ? 100 : this.video.getVolume())}
+                            defaultValue={(typeof this.video === 'undefined' ? 100 : this.video.getVolume())}
                             onBeforeChange={this.handleVolumeSliderChange.bind(this)}
                             onChange={this.handleVolumeSliderChange.bind(this)}/>
                     </div>
@@ -410,7 +411,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             canInteract={this.canVideoPlayerInteract()}
                         />
                     </div>
-
+                    <ControllerBarComponent/>
                     <div>
                         <ReactModal
                             isOpen={this.state.showSilverModal}
