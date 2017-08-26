@@ -2,14 +2,23 @@ import * as React from "react";
 import * as Radium from "radium";
 import {RecorderStateName} from "./pages/RecorderPlayerPageComponent";
 import * as ReactTooltip from "react-tooltip";
+import Slider from "rc-slider";
 
 @Radium
 export class ControllerBarComponent extends React.Component<IControllerBarComponentProps, IControllerBarComponentState> {
     props: IControllerBarComponentProps;
     state: IControllerBarComponentState;
 
+    refs: {
+        youtubeVolume: HTMLInputElement
+    };
+
     constructor(props: IControllerBarComponentProps) {
         super();
+    }
+
+    onSliderValueChange() {
+        this.props.onVolumeChange(parseInt((this.refs.youtubeVolume as any).state.value));
     }
 
     render() {
@@ -63,6 +72,18 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
             <div style={[
                 ControllerBarComponent.styles.base
             ]}>
+                <div style={[
+                    ControllerBarComponent.styles.volume
+                ]}>
+                    <Slider
+                        ref="youtubeVolume"
+                        min={0}
+                        max={100}
+                        defaultValue={this.props.initialVolume}
+                        onBeforeChange={this.onSliderValueChange.bind(this)}
+                        onChange={this.onSliderValueChange.bind(this)}/>
+                </div>
+
                 <span
                     data-tip="record/stop recording"
                     data-for="record">
@@ -118,6 +139,11 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+        },
+        volume: {
+            width: "100px",
+            height: "20px",
+            margin: "20px",
         }
     }
 }
@@ -130,6 +156,8 @@ export interface IControllerBarComponentProps {
     play: () => void;
     stopPlayback: () => void;
     stopRecording: () => void;
+    onVolumeChange: (value: number) => void;
+    initialVolume: number;
     viewOnly: boolean;
     stateName: RecorderStateName;
 }

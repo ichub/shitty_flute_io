@@ -14,7 +14,6 @@ import * as color from "color";
 import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
 import * as ReactModal from "react-modal";
-import Slider from "rc-slider";
 import {ControllerBarComponent} from "../ControllerBarComponent";
 
 const axios = require("axios");
@@ -37,7 +36,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     refs: {
         youtubeInput: HTMLInputElement,
-        youtubeVolume: HTMLInputElement
     };
 
     constructor(props: IRecorderPlayerPageComponentProps) {
@@ -204,18 +202,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         </label>
                     </div>
 
-                    <div style={[
-                        RecorderPlayerPageComponent.styles.flex,
-                        RecorderPlayerPageComponent.styles.youtubeVolumeWrapper
-                    ]}>
-                        <Slider
-                            ref="youtubeVolume"
-                            min={0}
-                            max={100}
-                            defaultValue={(typeof this.video === 'undefined' ? 100 : this.video.getVolume())}
-                            onBeforeChange={this.handleVolumeSliderChange.bind(this)}
-                            onChange={this.handleVolumeSliderChange.bind(this)}/>
-                    </div>
 
                     <div style={[
                         RecorderPlayerPageComponent.styles.flex
@@ -236,7 +222,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         stopPlayback={this.stopPlayback.bind(this)}
                         stopRecording={this.stopRecording.bind(this)}
                         viewOnly={this.props.viewOnly}
-                        stateName={this.state.stateName}/>
+                        stateName={this.state.stateName}
+                        initialVolume={(typeof this.video === 'undefined' ? 100 : this.video.getVolume())}
+                        onVolumeChange={this.handleVolumeChange.bind(this)}/>
                     <div>
                         <ReactModal
                             isOpen={this.state.showSilverModal}
@@ -264,6 +252,10 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         );
     }
 
+    private handleVolumeChange(volume: number) {
+        this.video.setVolume(volume);
+    }
+
     private canVideoPlayerInteract(): boolean {
         return (this.state.stateName == RecorderStateName.FreePlay) && !this.props.viewOnly;
     }
@@ -278,11 +270,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 youtubeVideoId: videoId
             });
         }
-    }
-
-    private handleVolumeSliderChange(): void {
-        let volume = parseInt((this.refs.youtubeVolume as any).state.value);
-        this.video.setVolume(volume);
     }
 
     private reset() {
@@ -551,10 +538,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 backgroundColor: color(RecorderPlayerPageComponent.buttonColor).lighten(0.2).hex(),
                 cursor: "initial"
             }
-        },
-        youtubeVolumeWrapper: {
-            width: "200px",
-            margin: "10px",
         },
         youtubeIdInput: {
             width: "300px",
