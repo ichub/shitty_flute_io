@@ -214,21 +214,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     </div>
 
                     <br/>
-                    <div style={[
-                        RecorderPlayerPageComponent.styles.flex
-                    ]}>
-                        <label>
-                            <span>YouTube URL:</span>
-                            <input style={[RecorderPlayerPageComponent.styles.youtubeIdInput]}
-                                   ref="youtubeInput"
-                                   type="text"
-                                   placeholder={"Paste URL here!"}/>
-                            <input type="button"
-                                   value="Change Video"
-                                   disabled={this.state.stateName !== RecorderStateName.FreePlay}
-                                   onClick={this.handleVideoIdChange.bind(this)}/>
-                        </label>
-                    </div>
 
                     <div style={[{width: "500px"}]}>
                         <TimeSlider
