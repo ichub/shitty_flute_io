@@ -147,6 +147,16 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 this.video.pauseVideo();
             }, 5);
         }
+
+        if (event.data == 1) {
+            this.audioOutputHelper.then(helper => {
+                this.audioOutputStopper = helper.playListOfNotes(this.state.videoPosition * 1000, this.state.recording);
+            });
+            this.stopPlayingTimeout = setTimeout(() => {
+                this.stopPlayingTimeout = null;
+                this.stopPlayback();
+            }, (this.state.recordingYoutubeEndTime - this.state.videoPosition) * 1000) as any;
+        }
     }
 
     render() {
@@ -324,9 +334,10 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         if (this.state.stateName === RecorderStateName.FreePlay) {
             this.noteKeyboardManager.clearPlayedNotes();
             this.setState({
-                recording:[],
+                recording: [],
                 stateName: RecorderStateName.Recording,
-                startRecordingDateTime: new Date().getTime()
+                startRecordingDateTime: new Date().getTime(),
+                videoPosition: this.state.recordingYoutubeStartTime
             });
             this.video.seekTo(this.state.recordingYoutubeStartTime);
             this.video.playVideo();
@@ -335,14 +346,26 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     private stopRecording() {
         if (this.state.stateName === RecorderStateName.Recording) {
+            let endTime = this.state.videoPosition;
             this.setState({
                 stateName: RecorderStateName.FreePlay,
                 hasRecorded: true,
-                recording: this.state.noteState.played.slice(),
-                lastEdited: Date.now()
+                recording: this.state.recording.concat(this.state.noteState.played.slice()),
+                lastEdited: Date.now(),
+                videoPosition: this.state.recordingYoutubeStartTime,
+                recordingYoutubeEndTime: endTime,
             }, () => this.save());
             this.video.pauseVideo();
             this.video.seekTo(this.state.recordingYoutubeStartTime);
+
+            if (this.stopPlayingTimeout) {
+                clearTimeout(this.stopPlayingTimeout);
+            }
+
+            if (this.audioOutputStopper) {
+                this.audioOutputStopper.stop();
+                this.audioOutputStopper = null;
+            }
         }
     }
 
@@ -352,17 +375,26 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 stateName: RecorderStateName.Playing
             });
 
-            this.stopPlayingTimeout = setTimeout(() => {
-                this.stopPlayingTimeout = null;
-                this.stopPlayback();
-            }, (this.state.recordingYoutubeEndTime - this.state.recordingYoutubeStartTime) * 1000) as any;
-
-            this.video.seekTo(this.state.recordingYoutubeStartTime);
+            this.video.seekTo(this.state.videoPosition);
             this.video.playVideo();
+        }
+    }
 
-            this.audioOutputHelper.then(helper => {
-                this.audioOutputStopper = helper.playListOfNotes(this.state.startRecordingDateTime, this.state.recording);
+    private stopPlayback() {
+        if (this.state.stateName === RecorderStateName.Playing) {
+            this.setState({
+                stateName: RecorderStateName.FreePlay
             });
+            this.video.pauseVideo();
+            
+            if (this.stopPlayingTimeout) {
+                clearTimeout(this.stopPlayingTimeout);
+            }
+
+            if (this.audioOutputStopper) {
+                this.audioOutputStopper.stop();
+                this.audioOutputStopper = null;
+            }
         }
     }
 
@@ -487,26 +519,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             notes: this.state.recording
         };
         return compositionState as ICompositionState;
-    }
-
-    private stopPlayback() {
-        if (this.state.stateName === RecorderStateName.Playing) {
-            this.setState({
-                stateName: RecorderStateName.FreePlay
-            });
-
-            this.video.seekTo(this.state.recordingYoutubeStartTime);
-            this.video.pauseVideo();
-
-            if (this.stopPlayingTimeout) {
-                clearTimeout(this.stopPlayingTimeout);
-            }
-
-            if (this.audioOutputStopper) {
-                this.audioOutputStopper.stop();
-                this.audioOutputStopper = null;
-            }
-        }
     }
 
     handleOpenModal() {

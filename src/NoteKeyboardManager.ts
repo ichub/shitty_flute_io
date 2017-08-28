@@ -50,10 +50,11 @@ export class NoteKeyboardManager extends EventEmitter {
     private removeDownNote(note: INoteInfo) {
         const toRemove = this.down.filter(down => note.name === down.note.name)[0] as IDownNote;
         this.down = this.down.filter(down => note.name !== down.note.name);
+        let endTime = new Date().getTime();
         const toPush: ICompositionNote = {
             noteInfo: toRemove.note,
-            start: toRemove.start,
-            end: new Date().getTime()
+            start: this.playerPageComponent.state.videoPosition * 1000 - (endTime - toRemove.start),
+            end: this.playerPageComponent.state.videoPosition * 1000
         };
         this.played.push(toPush);
     }

@@ -149,7 +149,13 @@ export class AudioOutputHelper {
         let stopped = false;
         const stopping = [];
 
+        console.log("playing list of notes");
+
         for (let completedNote of notes) {
+            console.log("attempting to play note: ");
+            console.log(completedNote);
+            console.log(completedNote.start);
+            console.log(offset);
             if (completedNote.start >= offset) {
                 setTimeout(
                     () => {

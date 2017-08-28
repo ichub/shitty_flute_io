@@ -9,8 +9,8 @@ var moment = require("moment");
 require("moment-duration-format");
 
 const createSliderWithTooltip = (Slider as any).createSliderWithTooltip;
-const Range = createSliderWithTooltip(Slider.Range);
-const Handle = Slider.Handle;
+const Range = createSliderWithTooltip((Slider as any).Range);
+const Handle = (Slider as any).Handle;
 
 const handle = (props) => {
     const { value, dragging, index, ...restProps } = props;
