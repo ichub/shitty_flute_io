@@ -51,6 +51,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 });
                 if (this.video.getCurrentTime() >= this.state.recordingYoutubeEndTime) {
                     this.stopRecording();
+
                 }
             }
             // get the video position, call this.setState({videoPosition: the one you got})
@@ -156,6 +157,17 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 this.stopPlayingTimeout = null;
                 this.stopPlayback();
             }, (this.state.recordingYoutubeEndTime - this.state.videoPosition) * 1000) as any;
+        }
+
+        if (event.data == 3) {
+            if (this.stopPlayingTimeout) {
+                clearTimeout(this.stopPlayingTimeout);
+            }
+
+            if (this.audioOutputStopper) {
+                this.audioOutputStopper.stop();
+                this.audioOutputStopper = null;
+            }
         }
     }
 
@@ -386,7 +398,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 stateName: RecorderStateName.FreePlay
             });
             this.video.pauseVideo();
-            
+
             if (this.stopPlayingTimeout) {
                 clearTimeout(this.stopPlayingTimeout);
             }
