@@ -237,16 +237,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
                     <br/>
 
-                    <div style={[{width: "500px"}]}>
-                        <TimeSlider
-                            duration={this.state.videoDuration}
-                            position={Math.max(this.state.videoPosition, this.state.recordingYoutubeStartTime)}
-                            start={this.state.recordingYoutubeStartTime}
-                            end={this.state.recordingYoutubeEndTime}
-                            locked={this.props.viewOnly || this.state.stateName !== RecorderStateName.FreePlay}
-                            onChange={this.handleOnTimeChange.bind(this)}/>
-                    </div>
-
                     <div style={[
                         RecorderPlayerPageComponent.styles.flex
                     ]}>
@@ -270,7 +260,12 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         initialVolume={(typeof this.video === 'undefined' ? 100 : this.video.getVolume())}
                         onVolumeChange={this.handleVolumeChange.bind(this)}
                         youtubeVideoId={this.state.youtubeVideoId}
-                        onVideoIdChange={this.handleVideoIdChange.bind(this)}/>
+                        onVideoIdChange={this.handleVideoIdChange.bind(this)}
+                        videoDuration={this.state.videoDuration}
+                        videoPosition={Math.max(this.state.videoPosition, this.state.recordingYoutubeStartTime)}
+                        startTime={this.state.recordingYoutubeStartTime}
+                        endTime={this.state.recordingYoutubeEndTime}
+                        onTimeSliderChange={this.handleOnTimeChange.bind(this)}/>
                     <div>
                         <ReactModal
                             isOpen={this.state.showSilverModal}

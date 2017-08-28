@@ -6,6 +6,7 @@ import Slider from "rc-slider";
 import {VideoInfo} from "./VideoIconComponent";
 import {YoutubeVideoChangeComponent} from "./YoutubeVideoChangeComponent";
 import {GlobalFont} from "../styles/GlobalStyles";
+import {TimeSlider} from "./TimeSlider";
 
 @Radium
 export class ControllerBarComponent extends React.Component<IControllerBarComponentProps, IControllerBarComponentState> {
@@ -137,6 +138,15 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                         </span>
                 <ReactTooltip id="save" place="top" type="dark" effect="solid" delayHide={1}/>
                 <VideoInfo youtubeVideoId={this.props.youtubeVideoId}/>
+                <span>
+                    <TimeSlider
+                        duration={this.props.videoDuration}
+                        position={Math.max(this.props.videoPosition, this.props.startTime)}
+                        start={this.props.startTime}
+                        end={this.props.endTime}
+                        locked={this.props.viewOnly || this.props.stateName !== RecorderStateName.FreePlay}
+                        onChange={this.props.onTimeSliderChange}/>
+                </span>
                 <YoutubeVideoChangeComponent isEnabled={this.props.stateName == RecorderStateName.FreePlay}
                                              onVideoIdChange={this.props.onVideoIdChange}/>
             </div>
@@ -184,6 +194,11 @@ export interface IControllerBarComponentProps {
     viewOnly: boolean;
     stateName: RecorderStateName;
     youtubeVideoId: string;
+    videoDuration: number;
+    videoPosition: number;
+    startTime: number;
+    endTime: number;
+    onTimeSliderChange: (value: number[]) => void;
 }
 
 export interface IControllerBarComponentState {
