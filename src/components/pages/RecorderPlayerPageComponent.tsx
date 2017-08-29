@@ -17,7 +17,6 @@ import * as ReactModal from "react-modal";
 import {ControllerBarComponent} from "../ControllerBarComponent";
 import Slider from "rc-slider";
 import {TimeSlider} from "../TimeSlider";
-import {TestSlider} from "../TestSlider";
 
 const axios = require("axios");
 const getYoutubeId = require("get-youtube-id");

@@ -264,7 +264,7 @@ export class SQLiteDataLayer implements IDataLayer {
             })
             .catch(err => {
                 console.log("Failed to retrieve top 10.");
-                Promise.reject(err);
+                return Promise.reject(err);
             });
     }
 
@@ -291,7 +291,7 @@ export class SQLiteDataLayer implements IDataLayer {
             })
             .catch((err) => {
                 console.log("Could not flootify.");
-                Promise.reject(err);
+                return Promise.reject(err);
             });
     }
 

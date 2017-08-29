@@ -105,8 +105,8 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                     data-for="playback">
                                 {stopOrPlayButton}
                             </span>
-                <ReactTooltip id="record" place="top" type="dark" effect="solid" delayHide={1}/>
-                <ReactTooltip id="playback" place="top" type="dark" effect="solid" delayHide={1}/>
+                <ReactTooltip id="record" place="top" type="light" effect="solid" delayHide={1}/>
+                <ReactTooltip id="playback" place="top" type="light" effect="solid" delayHide={1}/>
 
                 <span
                     data-tip="reset"
@@ -121,7 +121,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                                 <i className="fa fa-eraser" aria-hidden="true"></i>
                             </button>
                         </span>
-                <ReactTooltip id="reset" place="top" type="dark" effect="solid" delayHide={1}/>
+                <ReactTooltip id="reset" place="top" type="light" effect="solid" delayHide={1}/>
 
                 <span
                     data-tip="save"
@@ -136,7 +136,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                                 <i className="fa fa-floppy-o" aria-hidden="true"></i>
                             </button>
                         </span>
-                <ReactTooltip id="save" place="top" type="dark" effect="solid" delayHide={1}/>
+                <ReactTooltip id="save" place="top" type="light" effect="solid" delayHide={1}/>
                 <VideoInfo youtubeVideoId={this.props.youtubeVideoId}/>
                 <span>
                     <TimeSlider
@@ -200,7 +200,7 @@ export interface IControllerBarComponentProps {
     startTime: number;
     endTime: number;
     onTimeSliderChange: (value: number[]) => void;
-    videoBuffering: number;
+    videoBuffering: boolean;
 }
 
 export interface IControllerBarComponentState {

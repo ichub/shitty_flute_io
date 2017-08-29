@@ -1,19 +1,18 @@
 import * as React from "react";
 import * as Radium from "radium";
-import ReactDOM from "react-dom";
-import Tooltip from "rc-tooltip";
 import Slider from "rc-slider";
 import Range from "rc-slider";
-
 var moment = require("moment");
 require("moment-duration-format");
+const Tooltip = require("rc-tooltip");
+
 
 const createSliderWithTooltip = (Slider as any).createSliderWithTooltip;
 const Range = createSliderWithTooltip((Slider as any).Range);
 const Handle = (Slider as any).Handle;
 
 const handle = (props) => {
-    const { value, dragging, index, ...restProps } = props;
+    const {value, dragging, index, ...restProps} = props;
     return (
         <Tooltip
             prefixCls="rc-slider-tooltip"
@@ -27,7 +26,7 @@ const handle = (props) => {
     );
 };
 
-const wrapperStyle = { width: 400, margin: 50 };
+const wrapperStyle = {width: 400, margin: 50};
 
 @Radium
 export class TimeSlider extends React.Component<ITimeSliderProps, ITimeSliderState> {
@@ -37,9 +36,11 @@ export class TimeSlider extends React.Component<ITimeSliderProps, ITimeSliderSta
     constructor(props: ITimeSliderProps) {
         super();
         console.log("constructing testslider");
-        this.state = {value: [props.start / props.duration * 1000 -1,
-            props.position / props.duration * 1000,
-            props.end / props.duration * 1000 + 1]};
+        this.state = {
+            value: [props.start / props.duration * 1000 - 1,
+                props.position / props.duration * 1000,
+                props.end / props.duration * 1000 + 1]
+        };
     }
 
     private thousandthsToTime(value: number) {
@@ -57,17 +58,17 @@ export class TimeSlider extends React.Component<ITimeSliderProps, ITimeSliderSta
         this.setState({
             value: [nextProps.start / nextProps.duration * 1000 - 1,
                 nextProps.position / nextProps.duration * 1000,
-                nextProps.end / nextProps.duration * 1000 + 1],
-        })
+                nextProps.end / nextProps.duration * 1000 + 1]
+        });
     }
 
     private onChange(value: number[]) {
         /*
-        if (!this.props.locked) {
-            this.props.onChange(value);
-            this.setState({value: value});
-        }
-        */
+         if (!this.props.locked) {
+         this.props.onChange(value);
+         this.setState({value: value});
+         }
+         */
         this.props.onChange(value);
         this.setState({value: value});
     }
@@ -93,7 +94,7 @@ export class TimeSlider extends React.Component<ITimeSliderProps, ITimeSliderSta
                             pushable={1}
                             onChange={this.onChange.bind(this)}
                             value={this.state.value}
-                            tipFormatter={this.thousandthsToTime.bind(this)} />
+                            tipFormatter={this.thousandthsToTime.bind(this)}/>
                     </span>
                 </div>
             </div>

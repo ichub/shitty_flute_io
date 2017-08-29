@@ -1,4 +1,4 @@
-import {parse, toSeconds, pattern} from 'iso8601-duration';
+import {parse, toSeconds, pattern} from "iso8601-duration";
 
 const axios = require("axios");
 
@@ -35,7 +35,7 @@ export class YoutubeApi {
             });
     }
 
-    public static getTitleOnVideo(videoId: string): Promise<string> {
+    public static getTitleOnVideo(videoId: string): Promise<{ title: string }> {
         return this.getSnippetOnVideo(videoId)
             .then(info => {
                 let title = info.items[0].snippet.title;
@@ -61,11 +61,11 @@ export class YoutubeApi {
         return this.getSnippetOnVideo(videoId)
             .then(info => {
                 let thumbnailURL = info.items[0].snippet.thumbnails.default.url;
-                return Promise.resolve({ url: thumbnailURL });
+                return Promise.resolve({url: thumbnailURL});
             })
             .catch((err) => {
                 return Promise.reject(err);
-            })
+            });
 
     }
 

@@ -21,7 +21,7 @@ export function makeICompositionPreviewPromise(viewToken: string,
                                                youtubeId: string): Promise<ICompositionPreview> {
     let videoTitle = YoutubeApi.getTitleOnVideo(youtubeId);
     let thumbnail = YoutubeApi.getThumbnailOnVideo(youtubeId);
-    return Promise.all([videoTitle, thumbnail]).then((values) => {
+    return Promise.all([videoTitle, thumbnail]).then((values: any[]) => {
         return Promise.resolve({
             viewToken: viewToken,
             compName: compName,
