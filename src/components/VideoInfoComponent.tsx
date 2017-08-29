@@ -52,7 +52,8 @@ export class VideoInfo extends React.Component<IVideoInfoComponentProps, IVideoI
                 ]}>
                 </span>
                 <span style={[
-                    GlobalFont
+                    GlobalFont,
+                    VideoInfo.styles.title
                 ]}>
                     {this.state.title}
                 </span>
@@ -82,7 +83,7 @@ export class VideoInfo extends React.Component<IVideoInfoComponentProps, IVideoI
 
     private static styles = {
         base: {
-            width: "250px",
+            width: "300px",
             margin: "20px",
             display: "flex",
             justifyContent: "center",
@@ -90,11 +91,17 @@ export class VideoInfo extends React.Component<IVideoInfoComponentProps, IVideoI
         },
         imgStyle: {
             display: "inline-block",
+            minWidth: `${VideoInfo.WIDTH}px`,
             width: `${VideoInfo.WIDTH}px`,
             height: `${VideoInfo.WIDTH * 3 / 4}px`,
             backgroundPosition: "50% 50%",
             backgroundSize: "cover",
             marginRight: "20px",
+        },
+        title: {
+            overflow: "hidden",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis"
         }
     }
 }

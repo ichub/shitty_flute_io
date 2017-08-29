@@ -179,7 +179,8 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
         controllerButton: {
             backgroundColor: "transparent",
             border: "transparent",
-            fontSize: "1em"
+            fontSize: "1em",
+            margin: "5px"
         }
     }
 }
