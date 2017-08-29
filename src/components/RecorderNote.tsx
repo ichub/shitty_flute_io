@@ -27,8 +27,8 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
         );
     }
 
-    private static readonly WIDTH = 40;
-    private static readonly HEIGHT = 100;
+    private static readonly WIDTH = 50;
+    private static readonly HEIGHT = 50;
 
     private static styles = {
         base: {
@@ -68,9 +68,9 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
         dummyState: (isDummy: boolean) => {
             if (isDummy) {
                 return {
-                    border: "1px solid rgb(225, 225, 225)",
+                    border: "none",
                     color: "rgb(225, 225, 225)",
-                    backgroundColor: "rgb(225, 225, 225)"
+                    backgroundColor: "rgba(225, 225, 225, 0)"
                 };
             }
 

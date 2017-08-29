@@ -27,7 +27,7 @@ function makeMinorRow(): INoteUIRow {
             makeINoteUIPosition("", -1, true, true),
             makeINoteUIPosition("O", 13, true, false),
             makeINoteUIPosition("P", 15, true, false),
-            makeINoteUIPosition("", -1, true, true)
+            // makeINoteUIPosition("", -1, true, true)
         ],
         rowType: UIRowType.Minor
     };
@@ -46,7 +46,7 @@ function makeMajorRow(): INoteUIRow {
             makeINoteUIPosition("K", 12, false, false),
             makeINoteUIPosition("L", 14, false, false),
             makeINoteUIPosition(";", 16, false, false),
-            makeINoteUIPosition("'", 17, false, false)
+            // makeINoteUIPosition("'", 17, false, false)
         ],
         rowType: UIRowType.Major
     };
