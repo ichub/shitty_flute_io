@@ -233,12 +233,11 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                 background: '#fff',
                 overflow: 'auto',
                 WebkitOverflowScrolling: 'touch',
-                borderRadius: '4px',
+                borderRadius: '0px',
                 outline: 'none',
                 padding: '20px',
-                width: "300px",
+                width: "400px",
                 height: "200px",
-
             }
         }
     };

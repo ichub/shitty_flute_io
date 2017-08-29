@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as Radium from "radium";
+import {GlobalFont} from "../styles/GlobalStyles";
 
 const getYoutubeId = require("get-youtube-id");
 
@@ -12,27 +13,23 @@ export class YoutubeVideoChangeComponent extends React.Component<IYoutubeVideoCh
         youtubeInput: HTMLInputElement;
     };
 
-    constructor(props: IYoutubeVideoChangeComponentProps) {
-        super();
-
-        console.log("FUCKKK");
-    }
-
     render() {
-        console.log("IS ENABLED " + !this.props.isEnabled);
-
         return (
             <div style={[
-                YoutubeVideoChangeComponent.styles.base
+                YoutubeVideoChangeComponent.styles.base,
+                GlobalFont
             ]}>
                 <label>
-                    <span>YouTube URL:</span>
+                    <span style={[YoutubeVideoChangeComponent.styles.header]}>Change YouTube Url</span>
+                    <br/>
                     <input style={[YoutubeVideoChangeComponent.styles.videoIdInput]}
                            ref="youtubeInput"
                            type="text"
-                           placeholder={"Paste URL here!"}/>
+                           placeholder={"Paste URL here!"}
+                           className="form-control form-control-sm"/>
                     <input type="button"
                            value="Change Video"
+                           className="btn btn-primary btn-sm"
                            disabled={!this.props.isEnabled}
                            onClick={this.handleVideoIdChange.bind(this)}/>
                 </label>
@@ -55,7 +52,14 @@ export class YoutubeVideoChangeComponent extends React.Component<IYoutubeVideoCh
             width: "100%"
         },
         videoIdInput: {
-            margin: "20px",
+            display: "inline-block",
+            marginTop: "40px",
+            marginBottom: "10px"
+        },
+        header: {
+            fontWeight: "bold",
+            fontSize: "1em",
+            marginBottom: "30px",
         }
     }
 }

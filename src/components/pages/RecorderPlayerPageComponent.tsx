@@ -669,7 +669,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-
             },
             content: {
                 position: "relative",
@@ -677,12 +676,11 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 background: '#fff',
                 overflow: 'auto',
                 WebkitOverflowScrolling: 'touch',
-                borderRadius: '4px',
+                borderRadius: '0px',
                 outline: 'none',
                 padding: '20px',
-                width: "300px",
+                width: "400px",
                 height: "200px",
-
             }
         }
     };
