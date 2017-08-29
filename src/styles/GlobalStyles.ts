@@ -9,7 +9,9 @@ export const BigText = {
 };
 
 export const GlobalFont = {
-    fontFamily: "'Oswald', sans-serif"
+    fontFamily: "'Open Sans', sans-serif",
+    fontSize: "0.8em"
+
 };
 
 export const TitleFont = {

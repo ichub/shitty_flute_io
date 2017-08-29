@@ -15,8 +15,6 @@ import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
 import * as ReactModal from "react-modal";
 import {ControllerBarComponent} from "../ControllerBarComponent";
-import Slider from "rc-slider";
-import {TimeSlider} from "../TimeSlider";
 
 const axios = require("axios");
 const getYoutubeId = require("get-youtube-id");
@@ -143,7 +141,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     private onStateChange(event) {
         if (event.data == 5) { // we want to play/pause when video cued
-            this.setState({ videoBuffering: false });
+            this.setState({videoBuffering: false});
             this.video.playVideo();
             setTimeout(() => {
                 this.video.pauseVideo();
@@ -151,7 +149,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         }
 
         if (event.data == 1) { // playing
-            this.setState({ videoBuffering: false });
+            this.setState({videoBuffering: false});
             this.audioOutputHelper.then(helper => {
                 this.audioOutputStopper = helper.playListOfNotes(this.state.videoPosition * 1000, this.state.recording);
             });
@@ -171,7 +169,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 this.audioOutputStopper = null;
             }
 
-            this.setState({ videoBuffering: true });
+            this.setState({videoBuffering: true});
         }
     }
 
@@ -555,7 +553,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     private static styles = {
         base: {
             width: "100vw",
-            height: "100vh"
+            height: `calc(100vh - ${ControllerBarComponent.HEIGHT})`
         },
         flex: {
             display: "flex",

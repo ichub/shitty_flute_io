@@ -33,10 +33,6 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
         urlText: HTMLElement
     };
 
-    constructor(props: IShareComponentProps) {
-        super();
-    }
-
     render() {
         return (
 
@@ -131,8 +127,7 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
 
     private static styles = {
         base: {
-            margin: "50px"
-
+            margin: "0 50px 50px 50px"
         },
         flex: {
             justifyContent: "center",

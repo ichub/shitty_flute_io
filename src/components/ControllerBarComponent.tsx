@@ -154,10 +154,12 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
         );
     }
 
+    public static readonly HEIGHT = "60px";
+
     private static styles = {
         base: {
             width: "100%",
-            height: "60px",
+            height: ControllerBarComponent.HEIGHT,
             position: "fixed",
             bottom: "0",
             left: "0",
@@ -166,7 +168,8 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
             justifyContent: "center",
             alignItems: "center",
             paddingLeft: "20px",
-            paddingRight: "20px"
+            paddingRight: "20px",
+            borderTop: "1px solid rgb(200, 200, 200)"
         },
         volume: {
             width: "100px",
