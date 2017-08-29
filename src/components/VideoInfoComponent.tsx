@@ -45,7 +45,8 @@ export class VideoInfo extends React.Component<IVideoInfoComponentProps, IVideoI
             <div style={[
                 VideoInfo.styles.base,
                 GlobalFont
-            ]}>
+            ]}
+            onClick={this.props.openModal}>
                 <span style={[
                     VideoInfo.styles.imgStyle,
                     backgroundStyle
@@ -115,6 +116,7 @@ export class VideoInfo extends React.Component<IVideoInfoComponentProps, IVideoI
 
 export interface IVideoInfoComponentProps {
     youtubeVideoId: string;
+    openModal: () => void;
 }
 
 export interface IVideoInfoComponentState {

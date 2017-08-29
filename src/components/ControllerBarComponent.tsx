@@ -85,9 +85,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
             <div style={[
                 ControllerBarComponent.styles.base,
                 GlobalFont
-            ]}
-                 onClick={this.openModal.bind(this)}
-            >
+            ]}>
                 <i className="fa fa-volume-up" aria-hidden="true"></i>
 
                 <div style={[
@@ -144,7 +142,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                             </button>
                         </span>
                 <ReactTooltip id="save" place="top" type="light" effect="solid" delayHide={1}/>
-                <VideoInfo youtubeVideoId={this.props.youtubeVideoId}/>
+                <VideoInfo openModal={this.openModal.bind(this)} youtubeVideoId={this.props.youtubeVideoId}/>
                 <ReactModal
                     style={ControllerBarComponent.styles.modal}
                     isOpen={this.state.isEditYoutubeLinkOpen}
