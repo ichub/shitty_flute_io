@@ -392,7 +392,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     }
 
     private play() {
-        if (this.state.stateName === RecorderStateName.FreePlay && this.state.hasRecorded) {
+        if (this.state.stateName === RecorderStateName.FreePlay) {
             this.setState({
                 stateName: RecorderStateName.Playing
             });
