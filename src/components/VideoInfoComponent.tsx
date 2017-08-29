@@ -82,7 +82,7 @@ export class VideoInfo extends React.Component<IVideoInfoComponentProps, IVideoI
 
     private static styles = {
         base: {
-            width: "100%",
+            width: "250px",
             margin: "20px",
             display: "flex",
             justifyContent: "center",

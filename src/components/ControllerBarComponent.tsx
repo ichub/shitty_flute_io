@@ -3,10 +3,10 @@ import * as Radium from "radium";
 import {RecorderStateName} from "./pages/RecorderPlayerPageComponent";
 import * as ReactTooltip from "react-tooltip";
 import Slider from "rc-slider";
-import {VideoInfo} from "./VideoIconComponent";
 import {YoutubeVideoChangeComponent} from "./YoutubeVideoChangeComponent";
 import {GlobalFont} from "../styles/GlobalStyles";
 import {TimeSlider} from "./TimeSlider";
+import {VideoInfo} from "./VideoInfoComponent";
 
 @Radium
 export class ControllerBarComponent extends React.Component<IControllerBarComponentProps, IControllerBarComponentState> {
