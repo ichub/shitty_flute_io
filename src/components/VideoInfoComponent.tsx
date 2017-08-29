@@ -87,7 +87,14 @@ export class VideoInfo extends React.Component<IVideoInfoComponentProps, IVideoI
             margin: "20px",
             display: "flex",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
+            height: "100%",
+            cursor: "pointer",
+            padding: "20px",
+            boxSizing: "border-box",
+            ":hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.2)"
+            }
         },
         imgStyle: {
             display: "inline-block",
