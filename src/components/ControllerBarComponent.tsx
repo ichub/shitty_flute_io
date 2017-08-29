@@ -157,7 +157,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                         position={Math.max(this.props.videoPosition, this.props.startTime)}
                         start={this.props.startTime}
                         end={this.props.endTime}
-                        locked={this.props.viewOnly || this.props.stateName !== RecorderStateName.FreePlay}
+                        locked={this.props.stateName !== RecorderStateName.FreePlay}
                         onChange={this.props.onTimeSliderChange}
                         buffering={this.props.videoBuffering}/>
                 </span>
