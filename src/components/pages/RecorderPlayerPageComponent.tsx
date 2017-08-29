@@ -120,7 +120,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         console.log("video ready");
 
         this.video = event.target as IYoutubeVideoPlayer;
-
         this.video.playVideo();
         setTimeout(() => {
             this.video.pauseVideo();
@@ -141,29 +140,46 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     }
 
     private onStateChange(event) {
-        if (event.data == 5) { // video cued
-            this.onVideoReady(event);
+        if (event.data == 5) {
+            console.log("new video cued");
+
+            this.reset();
+
+            this.setState({ stateName: RecorderStateName.Loading });
+            this.video.playVideo();
         }
 
         if (event.data == 1) { // playing
-            console.log("playing");
-            console.log(this.video.getDuration());
-            this.setState({
-                videoBuffering: false,
-                videoStarted: true,
-            });
-            this.audioOutputHelper.then(helper => {
-                this.audioOutputStopper = helper.playListOfNotes(this.state.videoPosition * 1000, this.state.recording);
-            });
-            this.stopPlayingTimeout = setTimeout(() => {
-                this.stopPlayingTimeout = null;
-                this.stopPlayback();
-            }, (this.state.recordingYoutubeEndTime - this.state.videoPosition) * 1000) as any;
+            if (this.state.stateName === RecorderStateName.Loading) {
+                this.setState({
+                    videoDuration: this.video.getDuration(),
+                    videoPosition: 0,
+                    recordingYoutubeStartTime: 0,
+                    recordingYoutubeEndTime: this.video.getDuration(),
+                    hasRecorded: false,
+                });
+                this.video.pauseVideo();
+            } else {
+                this.setState({
+                    videoBuffering: false,
+                    videoStarted: true,
+                });
+                this.audioOutputHelper.then(helper => {
+                    this.audioOutputStopper = helper.playListOfNotes(this.state.videoPosition * 1000, this.state.recording);
+                });
+                this.stopPlayingTimeout = setTimeout(() => {
+                    this.stopPlayingTimeout = null;
+                    this.stopPlayback();
+                }, (this.state.recordingYoutubeEndTime - this.state.videoPosition) * 1000) as any;
+            }
         }
 
         if (event.data == 2) { //paused
             console.log("paused");
-            this.setState({videoBuffering: false});
+            this.setState({
+                stateName: RecorderStateName.FreePlay,
+                videoBuffering: false
+            });
         }
 
         if (event.data == 3) { // buffering
