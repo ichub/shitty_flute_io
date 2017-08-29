@@ -146,10 +146,12 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                 <ReactTooltip id="save" place="top" type="light" effect="solid" delayHide={1}/>
                 <VideoInfo youtubeVideoId={this.props.youtubeVideoId}/>
                 <ReactModal
+                    style={ControllerBarComponent.styles.modal}
                     isOpen={this.state.isEditYoutubeLinkOpen}
                     contentLabel="Upcoming Feature"
                 >
-                    <button onClick={this.handleCloseModal.bind(this)}>Got it!</button>
+                    <YoutubeVideoChangeComponent isEnabled={this.props.stateName == RecorderStateName.FreePlay}
+                                                 onVideoIdChange={this.onVideoChange.bind(this)}/>
                 </ReactModal>
                 <span>
                     <TimeSlider
@@ -161,10 +163,17 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                         onChange={this.props.onTimeSliderChange}
                         buffering={this.props.videoBuffering}/>
                 </span>
-                <YoutubeVideoChangeComponent isEnabled={this.props.stateName == RecorderStateName.FreePlay}
-                                             onVideoIdChange={this.props.onVideoIdChange}/>
+
             </div>
         );
+    }
+
+    onVideoChange(id: string) {
+        this.setState({
+            isEditYoutubeLinkOpen: false
+        });
+
+        this.props.onVideoIdChange(id);
     }
 
     openModal() {
@@ -206,8 +215,35 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
             border: "transparent",
             fontSize: "1em",
             margin: "5px"
+        },
+        modal: {
+            overlay: {
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: "100vw",
+                height: "100vh",
+                backgroundColor: 'rgba(255, 255, 255, 0.75)',
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+
+            },
+            content: {
+                position: "relative",
+                border: '1px solid #ccc',
+                background: '#fff',
+                overflow: 'auto',
+                WebkitOverflowScrolling: 'touch',
+                borderRadius: '4px',
+                outline: 'none',
+                padding: '20px',
+                width: "300px",
+                height: "200px",
+
+            }
         }
-    }
+    };
 }
 
 export interface IControllerBarComponentProps {
