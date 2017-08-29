@@ -7,6 +7,7 @@ import {YoutubeVideoChangeComponent} from "./YoutubeVideoChangeComponent";
 import {GlobalFont} from "../styles/GlobalStyles";
 import {TimeSlider} from "./TimeSlider";
 import {VideoInfo} from "./VideoInfoComponent";
+import * as ReactModal from "react-modal";
 
 @Radium
 export class ControllerBarComponent extends React.Component<IControllerBarComponentProps, IControllerBarComponentState> {
@@ -19,6 +20,10 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
 
     constructor(props: IControllerBarComponentProps) {
         super();
+
+        this.state = {
+            isEditYoutubeLinkOpen: false,
+        }
     }
 
     onSliderValueChange() {
@@ -80,7 +85,9 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
             <div style={[
                 ControllerBarComponent.styles.base,
                 GlobalFont
-            ]}>
+            ]}
+                 onClick={this.openModal.bind(this)}
+            >
                 <i className="fa fa-volume-up" aria-hidden="true"></i>
 
                 <div style={[
@@ -138,6 +145,12 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                         </span>
                 <ReactTooltip id="save" place="top" type="light" effect="solid" delayHide={1}/>
                 <VideoInfo youtubeVideoId={this.props.youtubeVideoId}/>
+                <ReactModal
+                    isOpen={this.state.isEditYoutubeLinkOpen}
+                    contentLabel="Upcoming Feature"
+                >
+                    <button onClick={this.handleCloseModal.bind(this)}>Got it!</button>
+                </ReactModal>
                 <span>
                     <TimeSlider
                         duration={this.props.videoDuration}
@@ -152,6 +165,18 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                                              onVideoIdChange={this.props.onVideoIdChange}/>
             </div>
         );
+    }
+
+    openModal() {
+        this.setState({
+            isEditYoutubeLinkOpen: true
+        })
+    }
+
+    private handleCloseModal() {
+        this.setState({
+            isEditYoutubeLinkOpen: false
+        })
     }
 
     public static readonly HEIGHT = "60px";
@@ -208,5 +233,5 @@ export interface IControllerBarComponentProps {
 }
 
 export interface IControllerBarComponentState {
-
+    isEditYoutubeLinkOpen: boolean;
 }
