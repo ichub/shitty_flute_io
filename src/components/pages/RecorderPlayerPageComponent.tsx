@@ -283,6 +283,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         <ReactModal
                             isOpen={this.state.showSilverModal}
                             contentLabel="Upcoming Feature"
+                            style={RecorderPlayerPageComponent.styles.modal}
                         >
                             <div style={[
                                 RecorderPlayerPageComponent.styles.flex
@@ -631,6 +632,33 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             alignItems: "center",
             color: "black",
             backgroundColor: "rgba(255, 255, 255, 0.8)"
+        },
+        modal: {
+            overlay: {
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: "100vw",
+                height: "100vh",
+                backgroundColor: 'rgba(255, 255, 255, 0.75)',
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+
+            },
+            content: {
+                position: "relative",
+                border: '1px solid #ccc',
+                background: '#fff',
+                overflow: 'auto',
+                WebkitOverflowScrolling: 'touch',
+                borderRadius: '4px',
+                outline: 'none',
+                padding: '20px',
+                width: "300px",
+                height: "200px",
+
+            }
         }
     };
 }
