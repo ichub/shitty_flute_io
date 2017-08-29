@@ -196,6 +196,11 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         }
     }
 
+    private onPlayNote(note: ICompositionNote) {
+        this.noteKeyboardManager.addDownNote(note);
+
+    }
+
     render() {
         console.log("rendering...");
         console.log(this.state);
@@ -258,6 +263,13 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                                 }
                             </div>
                         </div>
+                    </div>
+
+                    <div style={[
+                        RecorderPlayerPageComponent.styles.flex,
+                        TitleFont
+                    ]}>
+                        (Hint: the leftmost white note is C)
                     </div>
 
                     <br/>

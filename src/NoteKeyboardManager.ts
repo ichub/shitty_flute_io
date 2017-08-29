@@ -33,7 +33,7 @@ export class NoteKeyboardManager extends EventEmitter {
         return position.keyboardCharacter.toLowerCase() === e.key.toLowerCase();
     }
 
-    private addDownNote(note: INoteInfo): boolean {
+    addDownNote(note: INoteInfo): boolean {
         if (!this.down.filter(down => note.name === down.note.name)[0]) {
             console.log("adding down note");
 
@@ -47,7 +47,7 @@ export class NoteKeyboardManager extends EventEmitter {
         return false;
     }
 
-    private removeDownNote(note: INoteInfo) {
+    removeDownNote(note: INoteInfo) {
         const toRemove = this.down.filter(down => note.name === down.note.name)[0] as IDownNote;
         this.down = this.down.filter(down => note.name !== down.note.name);
         let endTime = new Date().getTime();
