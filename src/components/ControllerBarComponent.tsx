@@ -32,7 +32,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
 
     render() {
         let playDisabled: boolean = this.props.stateName !== RecorderStateName.Playing;
-        let stopPlayDisabled: boolean = this.props.stateName !== RecorderStateName.FreePlay || !this.props.hasRecorded;
+        let stopPlayDisabled: boolean = this.props.stateName !== RecorderStateName.FreePlay;
 
         const stopOrPlayButton = this.props.stateName === RecorderStateName.Playing ? (
             <button

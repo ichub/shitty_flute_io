@@ -76,6 +76,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             videoPosition: 0,
             videoDuration: 1,
             videoBuffering: false,
+            videoStarted: false,
         };
 
         this.audioOutputHelper = AudioOutputHelper.getInstance(NoteInfoList.notes);
@@ -140,16 +141,20 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     }
 
     private onStateChange(event) {
-        if (event.data == 5) { // we want to play/pause when video cued
-            this.setState({videoBuffering: false});
+        /*
+        if (event.data == 5) { // video cued
             this.video.playVideo();
             setTimeout(() => {
                 this.video.pauseVideo();
             }, 5);
         }
+        */
 
         if (event.data == 1) { // playing
-            this.setState({videoBuffering: false});
+            this.setState({
+                videoBuffering: false,
+                videoStarted: true,
+            });
             this.audioOutputHelper.then(helper => {
                 this.audioOutputStopper = helper.playListOfNotes(this.state.videoPosition * 1000, this.state.recording);
             });
@@ -157,6 +162,11 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 this.stopPlayingTimeout = null;
                 this.stopPlayback();
             }, (this.state.recordingYoutubeEndTime - this.state.videoPosition) * 1000) as any;
+        }
+
+        if (event.data == 2) { //paused
+            console.log("paused");
+            this.setState({videoBuffering: false});
         }
 
         if (event.data == 3) { // buffering
@@ -169,7 +179,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 this.audioOutputStopper = null;
             }
 
-            this.setState({videoBuffering: true});
+            this.setState({videoBuffering: this.state.videoStarted});
         }
     }
 
@@ -320,6 +330,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         if (this.state.stateName === RecorderStateName.FreePlay) {
             this.setState({
                 youtubeVideoId: id,
+                recording: [],
+                videoStarted: false,
             }, () => {
                 this.save();
             });
@@ -649,6 +661,7 @@ export interface IRecorderPlayerPageComponentState {
     videoPosition: number;
     videoDuration: number;
     videoBuffering: boolean;
+    videoStarted: boolean;
 }
 
 export enum RecorderStateName {
