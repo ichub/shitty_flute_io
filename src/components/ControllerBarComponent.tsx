@@ -37,7 +37,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                 value="stop play back"
                 onClick={this.props.stopPlayback}
                 disabled={playDisabled}>
-                <i className="fa fa-stop" aria-hidden="true"></i>
+                <i className="fa fa-pause" aria-hidden="true"></i>
             </button>
         ) : (
             <button
