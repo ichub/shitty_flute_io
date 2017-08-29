@@ -1,15 +1,15 @@
 import * as React from "react";
 import * as Radium from "radium";
 import {GlobalFont} from "../styles/GlobalStyles";
-import {generateShareIcon, ShareButtons, ShareCounts} from 'react-share';
+import {generateShareIcon, ShareButtons, ShareCounts} from "react-share";
 
-const FacebookIcon = generateShareIcon('facebook');
-const TwitterIcon = generateShareIcon('twitter');
-const GooglePlusIcon = generateShareIcon('google');
-const PinterestIcon = generateShareIcon('pinterest');
-const VKIcon = generateShareIcon('vk');
-const OKIcon = generateShareIcon('ok');
-const RedditIcon = generateShareIcon('reddit');
+const FacebookIcon = generateShareIcon("facebook");
+const TwitterIcon = generateShareIcon("twitter");
+const GooglePlusIcon = generateShareIcon("google");
+const PinterestIcon = generateShareIcon("pinterest");
+const VKIcon = generateShareIcon("vk");
+const OKIcon = generateShareIcon("ok");
+const RedditIcon = generateShareIcon("reddit");
 
 const {
     FacebookShareButton,
@@ -21,7 +21,7 @@ const {
     OKShareButton,
     TelegramShareButton,
     WhatsappShareButton,
-    RedditShareButton,
+    RedditShareButton
 } = ShareButtons;
 
 @Radium
@@ -39,10 +39,23 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
 
     render() {
         return (
+
             <div style={[
                 GlobalFont,
                 ShareComponent.styles.base
             ]}>
+                <div>
+                    <span style={[ShareComponent.styles.sharePreamble]}>
+                            share your creation:
+                            </span>
+                    <span
+                        onClick={this.selectText.bind(this)}
+                        ref="urlText"
+                        style={[ShareComponent.styles.url]}>{`http://floot.io/recorder/view/${this.props.viewToken}`}</span>
+                </div>
+
+                <br/>
+
                 <div style={[ShareComponent.styles.flex]}>
                     <div style={[ShareComponent.styles.button]}>
                         <FacebookShareButton
@@ -118,13 +131,13 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
 
     private static styles = {
         base: {
-            margin: "50px",
+            margin: "50px"
 
         },
         flex: {
             justifyContent: "center",
             alignItems: "center",
-            display: "flex",
+            display: "flex"
         },
         url: {
             padding: "5px 10px 5px 10px",
@@ -133,7 +146,7 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
             fontWeight: "bold",
             marginTop: "20px",
             marginBottom: "15px",
-            cursor: "pointer",
+            cursor: "pointer"
         },
         share: {
             margin: "10px",
@@ -148,13 +161,13 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
             height: "100%",
             lineHeight: "100%",
             textAlign: "center",
-            marginRight: "10px",
+            marginRight: "10px"
         },
         button: {
             margin: "10px",
             cursor: "pointer"
         }
-    }
+    };
 }
 
 export interface IShareComponentProps {

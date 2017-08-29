@@ -46,6 +46,10 @@ export class TimeSlider extends React.Component<ITimeSliderProps, ITimeSliderSta
         return moment.duration(Math.round((value / 1000) * this.props.duration), "seconds").format("m:ss", {trim: false});
     }
 
+    private secondsToTime(value: number) {
+        return moment.duration(value, "seconds").format("m:ss", {trim: false});
+    }
+
     componentWillReceiveProps(nextProps: ITimeSliderProps) {
         console.log("receiving props:");
         console.log(nextProps);
@@ -68,17 +72,25 @@ export class TimeSlider extends React.Component<ITimeSliderProps, ITimeSliderSta
         console.log("rendering testslider");
         console.log(this.state.value);
         return (
+
             <div>
                 <div style={wrapperStyle}>
-                    <p></p>
-                    <Range
-                        min={-1}
-                        max={1001}
-                        count={2}
-                        pushable={1}
-                        onChange={this.onChange.bind(this)}
-                        value={this.state.value}
-                        tipFormatter={this.thousandthsToTime.bind(this)} />
+                    <span>
+                        {this.secondsToTime(this.props.position)}
+                        {
+                            this.props.buffering ? " (video buffering)" : ""
+                        }
+                    </span>
+                    <span>
+                        <Range
+                            min={-1}
+                            max={1001}
+                            count={2}
+                            pushable={1}
+                            onChange={this.onChange.bind(this)}
+                            value={this.state.value}
+                            tipFormatter={this.thousandthsToTime.bind(this)} />
+                    </span>
                 </div>
             </div>
         );
@@ -92,6 +104,7 @@ export interface ITimeSliderProps {
     end: number;
     onChange: (value: number[]) => void;
     locked: boolean;
+    buffering: boolean;
 }
 
 export interface ITimeSliderState {

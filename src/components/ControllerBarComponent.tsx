@@ -145,7 +145,8 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                         start={this.props.startTime}
                         end={this.props.endTime}
                         locked={this.props.viewOnly || this.props.stateName !== RecorderStateName.FreePlay}
-                        onChange={this.props.onTimeSliderChange}/>
+                        onChange={this.props.onTimeSliderChange}
+                        buffering={this.props.videoBuffering}/>
                 </span>
                 <YoutubeVideoChangeComponent isEnabled={this.props.stateName == RecorderStateName.FreePlay}
                                              onVideoIdChange={this.props.onVideoIdChange}/>
@@ -199,6 +200,7 @@ export interface IControllerBarComponentProps {
     startTime: number;
     endTime: number;
     onTimeSliderChange: (value: number[]) => void;
+    videoBuffering: number;
 }
 
 export interface IControllerBarComponentState {

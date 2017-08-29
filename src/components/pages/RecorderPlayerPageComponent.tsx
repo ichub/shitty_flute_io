@@ -78,6 +78,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             hasShownSilverModal: false,
             videoPosition: 0,
             videoDuration: 1,
+            videoBuffering: false,
         };
 
         this.audioOutputHelper = AudioOutputHelper.getInstance(NoteInfoList.notes);
@@ -143,13 +144,15 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     private onStateChange(event) {
         if (event.data == 5) { // we want to play/pause when video cued
+            this.setState({ videoBuffering: false });
             this.video.playVideo();
             setTimeout(() => {
                 this.video.pauseVideo();
             }, 5);
         }
 
-        if (event.data == 1) {
+        if (event.data == 1) { // playing
+            this.setState({ videoBuffering: false });
             this.audioOutputHelper.then(helper => {
                 this.audioOutputStopper = helper.playListOfNotes(this.state.videoPosition * 1000, this.state.recording);
             });
@@ -159,7 +162,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             }, (this.state.recordingYoutubeEndTime - this.state.videoPosition) * 1000) as any;
         }
 
-        if (event.data == 3) {
+        if (event.data == 3) { // buffering
             if (this.stopPlayingTimeout) {
                 clearTimeout(this.stopPlayingTimeout);
             }
@@ -168,6 +171,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 this.audioOutputStopper.stop();
                 this.audioOutputStopper = null;
             }
+
+            this.setState({ videoBuffering: true });
         }
     }
 
@@ -265,7 +270,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         videoPosition={Math.max(this.state.videoPosition, this.state.recordingYoutubeStartTime)}
                         startTime={this.state.recordingYoutubeStartTime}
                         endTime={this.state.recordingYoutubeEndTime}
-                        onTimeSliderChange={this.handleOnTimeChange.bind(this)}/>
+                        onTimeSliderChange={this.handleOnTimeChange.bind(this)}
+                        videoBuffering={this.state.videoBuffering}/>
                     <div>
                         <ReactModal
                             isOpen={this.state.showSilverModal}
@@ -361,6 +367,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 lastEdited: Date.now(),
                 videoPosition: this.state.recordingYoutubeStartTime,
                 recordingYoutubeEndTime: endTime,
+                videoBuffering: false,
             }, () => this.save());
             this.video.pauseVideo();
             this.video.seekTo(this.state.recordingYoutubeStartTime);
@@ -390,7 +397,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     private stopPlayback() {
         if (this.state.stateName === RecorderStateName.Playing) {
             this.setState({
-                stateName: RecorderStateName.FreePlay
+                stateName: RecorderStateName.FreePlay,
+                videoBuffering: false,
             });
             this.video.pauseVideo();
 
@@ -643,6 +651,7 @@ export interface IRecorderPlayerPageComponentState {
     hasShownSilverModal: boolean;
     videoPosition: number;
     videoDuration: number;
+    videoBuffering: boolean;
 }
 
 export enum RecorderStateName {
