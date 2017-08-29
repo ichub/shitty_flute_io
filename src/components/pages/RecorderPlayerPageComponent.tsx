@@ -141,16 +141,13 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     }
 
     private onStateChange(event) {
-        /*
         if (event.data == 5) { // video cued
-            this.video.playVideo();
-            setTimeout(() => {
-                this.video.pauseVideo();
-            }, 5);
+            this.onVideoReady(event);
         }
-        */
 
         if (event.data == 1) { // playing
+            console.log("playing");
+            console.log(this.video.getDuration());
             this.setState({
                 videoBuffering: false,
                 videoStarted: true,
