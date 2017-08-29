@@ -62,10 +62,14 @@ export class TimeSlider extends React.Component<ITimeSliderProps, ITimeSliderSta
     }
 
     private onChange(value: number[]) {
+        /*
         if (!this.props.locked) {
             this.props.onChange(value);
             this.setState({value: value});
         }
+        */
+        this.props.onChange(value);
+        this.setState({value: value});
     }
 
     render() {
