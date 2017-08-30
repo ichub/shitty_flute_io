@@ -142,7 +142,14 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                             </button>
                         </span>
                 <ReactTooltip id="save" place="top" type="dark" effect="solid" delayHide={1}/>
-                <VideoInfo openModal={this.openModal.bind(this)} youtubeVideoId={this.props.youtubeVideoId}/>
+                <span
+                    data-tip="change video"
+                    data-for="change video">
+                    <VideoInfo
+                        openModal={this.openModal.bind(this)}
+                        youtubeVideoId={this.props.youtubeVideoId}/>
+                    <ReactTooltip id="change video" place="top" type="dark" effect="solid" delayHide={1}/>
+                </span>
                 <ReactModal
                     style={ControllerBarComponent.styles.modal}
                     isOpen={this.state.isEditYoutubeLinkOpen}
@@ -182,9 +189,11 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
     }
 
     openModal() {
-        this.setState({
-            isEditYoutubeLinkOpen: true
-        })
+        if (this.props.stateName == RecorderStateName.FreePlay) {
+            this.setState({
+                isEditYoutubeLinkOpen: true
+            });
+        }
     }
 
     private handleCloseModal() {
@@ -212,8 +221,9 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
         },
         volume: {
             width: "100px",
-            height: "20px",
-            margin: "20px",
+            height: "30px",
+            margin: "30px",
+            marginTop: "40px",
         },
         controllerButton: {
             backgroundColor: "transparent",

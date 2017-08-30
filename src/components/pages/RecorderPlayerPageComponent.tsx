@@ -9,7 +9,7 @@ import {ITotalNoteState, makeNewITotalNoteState, NoteKeyboardManager} from "../.
 import {INoteInfo} from "../../models/INoteInfo";
 import {ICompositionNote} from "../../models/ICompositionNote";
 import {ICompositionState} from "../../models/ICompositionState";
-import {TitleFont} from "../../styles/GlobalStyles";
+import {GlobalFont, TitleFont} from "../../styles/GlobalStyles";
 import * as color from "color";
 import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
@@ -48,7 +48,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 });
                 if (this.video.getCurrentTime() >= this.state.recordingYoutubeEndTime) {
                     this.stopRecording();
-
                 }
             }
             // get the video position, call this.setState({videoPosition: the one you got})
@@ -322,6 +321,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             ]}>
                                 Please check back regularly for more updates and new features!
                             </div>
+                            <br/>
                             <div style={[
                                 RecorderPlayerPageComponent.styles.flex
                             ]}>
@@ -684,7 +684,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 outline: 'none',
                 padding: '20px',
                 width: "400px",
-                height: "200px",
+                height: "150px",
+                textAlign: "center",
             }
         }
     };

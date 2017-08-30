@@ -63,7 +63,7 @@ export class VideoInfo extends React.Component<IVideoInfoComponentProps, IVideoI
     }
 
     private fetchIconUrl() {
-        axios.get(`/video-thubmnail-url/${this.props.youtubeVideoId}`)
+        axios.get(`/video-thumbnail-url/${this.props.youtubeVideoId}`)
             .then(result => {
                 this.setState({
                     thumbnailUrl: result.data.url
@@ -109,7 +109,8 @@ export class VideoInfo extends React.Component<IVideoInfoComponentProps, IVideoI
         title: {
             overflow: "hidden",
             whiteSpace: "nowrap",
-            textOverflow: "ellipsis"
+            textOverflow: "ellipsis",
+            fontSize: "1.2em",
         }
     }
 }

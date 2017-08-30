@@ -156,7 +156,7 @@ ApiController.get("/video-duration/:youtubeId", (req: express.Request, res: expr
     );
 });
 
-ApiController.get("/video-thubmnail-url/:youtubeId", (req: express.Request, res: express.Response) => {
+ApiController.get("/video-thumbnail-url/:youtubeId", (req: express.Request, res: express.Response) => {
     returnJson(res,
         YoutubeApi.getThumbnailOnVideo(req.params.youtubeId)
     );
