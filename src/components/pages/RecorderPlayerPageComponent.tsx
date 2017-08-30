@@ -16,6 +16,7 @@ import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/Not
 import * as ReactModal from "react-modal";
 import {ControllerBarComponent} from "../ControllerBarComponent";
 import {UnavailableNoteModal} from "../UnavailableNoteModal";
+import {YoutubeApi} from "../../server/YoutubeApi";
 
 const axios = require("axios");
 const getYoutubeId = require("get-youtube-id");
@@ -59,7 +60,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 down: [],
                 played: []
             },
-            youtubeVideoId: "FHG2oizTlpY",
+            youtubeVideoId: "",
             stateName: RecorderStateName.Loading,
             recordingYoutubeStartTime: 0,
             recordingYoutubeEndTime: 1,
@@ -77,6 +78,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             videoDuration: 1,
             videoBuffering: false,
             videoStarted: false,
+            initialized: false,
         };
 
         this.audioOutputHelper = AudioOutputHelper.getInstance(NoteInfoList.notes);
@@ -106,7 +108,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         setTimeout(() => {
             console.log("attempting to load data");
             this.loadData();
-            this.setState({});
         }, 0);
     }
 
@@ -124,55 +125,41 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         this.video.playVideo();
         setTimeout(() => {
             this.video.pauseVideo();
-            this.setState({
-                videoDuration: this.video.getDuration(),
-            });
-            if (!this.state.hasRecorded) {
-                this.setState({
-                    recordingYoutubeEndTime: this.video.getDuration(),
-                });
-            } else {
-                this.setState({
-                    videoPosition: this.state.recordingYoutubeStartTime,
-                });
-            }
         }, 5);
-
     }
 
     private onStateChange(event) {
         if (event.data == 5) {
             console.log("new video cued");
-
-            this.reset();
-
-            this.setState({ stateName: RecorderStateName.Loading });
-            this.video.playVideo();
+            YoutubeApi.getDurationOnVideo(this.state.youtubeVideoId)
+                .then((duration) => {
+                    this.setState({
+                        videoDuration: duration,
+                    }, () => {
+                        if (this.state.initialized) {
+                            this.reset();
+                        } else {
+                            this.setState({
+                                initialized: true,
+                            })
+                        }
+                    })
+                });
         }
 
         if (event.data == 1) { // playing
-            if (this.state.stateName === RecorderStateName.Loading) {
-                this.setState({
-                    videoDuration: this.video.getDuration(),
-                    videoPosition: 0,
-                    recordingYoutubeStartTime: 0,
-                    recordingYoutubeEndTime: this.video.getDuration(),
-                    hasRecorded: false,
-                });
-                this.video.pauseVideo();
-            } else {
-                this.setState({
-                    videoBuffering: false,
-                    videoStarted: true,
-                });
-                this.audioOutputHelper.then(helper => {
-                    this.audioOutputStopper = helper.playListOfNotes(this.state.videoPosition * 1000, this.state.recording);
-                });
-                this.stopPlayingTimeout = setTimeout(() => {
-                    this.stopPlayingTimeout = null;
-                    this.stopPlayback();
-                }, (this.state.recordingYoutubeEndTime - this.state.videoPosition) * 1000) as any;
-            }
+            console.log("state change to playing");
+            this.setState({
+                videoBuffering: false,
+                videoStarted: true,
+            });
+            this.audioOutputHelper.then(helper => {
+                this.audioOutputStopper = helper.playListOfNotes(this.state.videoPosition * 1000, this.state.recording);
+            });
+            this.stopPlayingTimeout = setTimeout(() => {
+                this.stopPlayingTimeout = null;
+                this.stopPlayback();
+            }, (this.state.recordingYoutubeEndTime - this.state.videoPosition) * 1000) as any;
         }
 
         if (event.data == 2) { //paused
@@ -184,6 +171,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         }
 
         if (event.data == 3) { // buffering
+            console.log("state changed to buffering");
             if (this.stopPlayingTimeout) {
                 clearTimeout(this.stopPlayingTimeout);
             }
@@ -362,13 +350,15 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     private reset() {
         if (this.state.stateName === RecorderStateName.FreePlay) {
             this.noteKeyboardManager.clearPlayedNotes();
+            let duration = this.state.videoDuration;
             this.setState({
                 recordingYoutubeStartTime: 0,
-                recordingYoutubeEndTime: this.video.getDuration(),
+                recordingYoutubeEndTime: duration,
                 stateName: RecorderStateName.FreePlay,
                 hasRecorded: false,
                 recording: [],
-                startRecordingDateTime: 0
+                startRecordingDateTime: 0,
+                videoPosition: 0,
             });
         }
     }
@@ -544,6 +534,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             lastEdited: compositionState.lastEdited,
             viewCount: compositionState.viewCount,
             recording: compositionState.notes,
+            videoDuration: compositionState.videoDuration,
+            videoPosition: compositionState.recordingYoutubeStartTime,
             err: null
         });
         this.noteKeyboardManager.pitchShift = compositionState.pitchShift;
@@ -564,6 +556,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             videoDuration: this.state.videoDuration,
             notes: this.state.recording
         };
+        console.log("making uploadable composition");
+        console.log(this.state.recordingYoutubeEndTime);
+        console.log(this.state.youtubeVideoId);
         return compositionState as ICompositionState;
     }
 
@@ -754,6 +749,7 @@ export interface IRecorderPlayerPageComponentState {
     videoDuration: number;
     videoBuffering: boolean;
     videoStarted: boolean;
+    initialized: boolean;
 }
 
 export enum RecorderStateName {

@@ -82,8 +82,8 @@ export class SQLiteDataLayer implements IDataLayer {
             "view_token VARCHAR(100), " +
             "name VARCHAR(100), " +
             "youtube_id VARCHAR(100), " +
-            "recording_youtube_start BIGINT, " +
-            "recording_youtube_end BIGINT, " +
+            "recording_youtube_start DOUBLE, " +
+            "recording_youtube_end DOUBLE, " +
             "start_recording_time BIGINT, " +
             "last_edited BIGINT, " +
             "view_count INT, " +
@@ -326,6 +326,7 @@ export class SQLiteDataLayer implements IDataLayer {
             .then(() => {
                 console.log("inserted new notes");
                 console.log(editToken);
+                console.log("record end time is " + compositionState.recordingYoutubeEndTime);
                 return this.execRunWithPromise(
                     "UPDATE compositions " +
                     "SET name=?, " +
@@ -337,7 +338,7 @@ export class SQLiteDataLayer implements IDataLayer {
                     "view_count=0, " +
                     "pitch_shift=?, " +
                     "has_recorded=?, " +
-                    "auto_recorded=? " +
+                    "auto_recorded=?, " +
                     "video_duration=? " +
                     "WHERE edit_token=?",
                     [compositionState.compName,
