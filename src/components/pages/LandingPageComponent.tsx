@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Radium from "radium";
 import * as color from "color";
-import {ButtonFont, TitleFont} from "../../styles/GlobalStyles";
+import {ButtonFont, GlobalFont, TitleFont} from "../../styles/GlobalStyles";
 
 @Radium
 export class LandingPageComponent extends React.Component<any, ILandingPageComponentState> {
@@ -15,7 +15,13 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                     LandingPageComponent.styles.title,
                     LandingPageComponent.styles.easeIn(0),
                 ]}>
-                    welcome to floot
+                    floot
+                </div>
+                <div style={[
+                    TitleFont,
+                    LandingPageComponent.styles.subtitle,
+                ]}>
+                    make recorder covers of everything
                 </div>
                 <div style={[
                     LandingPageComponent.styles.videoContainer,
@@ -36,12 +42,12 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                 ]}>
                     <input
                         style={[
-                            ButtonFont,
+                            GlobalFont,
                             LandingPageComponent.styles.composeButton,
                             LandingPageComponent.styles.pulse(0.50),
                         ]}
                         type="button"
-                        value="COMPOSE"
+                        value="RECORD"
                         onClick={this.onComposeClick.bind(this)}/>
                 </div>
                 {/*<div*/}
@@ -97,6 +103,9 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
         },
         title: {
             fontSize: "4em",
+        },
+        subtitle: {
+            fontSize: "1.5em",
         },
         composeButton: {
             padding: "10px 5px 10px 5px",

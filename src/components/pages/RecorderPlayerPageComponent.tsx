@@ -261,11 +261,19 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         </div>
                     </div>
 
-                    <div style={[
-                        RecorderPlayerPageComponent.styles.flex,
-                        TitleFont
-                    ]}>
-                        (Hint: the leftmost white note is C)
+                    <div>
+                        <div style={[
+                            RecorderPlayerPageComponent.styles.flex,
+                            TitleFont
+                        ]}>
+                            instructions: play from the heart.
+                        </div>
+                        <div style={[
+                            RecorderPlayerPageComponent.styles.flex,
+                            TitleFont
+                        ]}>
+                            (hint: it's like a piano/the leftmost white note is C)
+                        </div>
                     </div>
 
                     <br/>
@@ -715,7 +723,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 borderRadius: '0px',
                 outline: 'none',
                 padding: '20px',
-                width: "450px",
+                width: "475px",
                 height: "175px",
                 textAlign: "left",
             }
