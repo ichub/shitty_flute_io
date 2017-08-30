@@ -105,6 +105,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         setTimeout(() => {
             console.log("attempting to load data");
             this.loadData();
+            this.setState({});
         }, 0);
     }
 
@@ -545,7 +546,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             youtubeVideoId: compositionState.youtubeVideoId,
             noteState: makeNewITotalNoteState(),
             recordingYoutubeStartTime: compositionState.recordingYoutubeStartTime,
-            recordingYoutubeEndTime: compositionState.recordingYoutubeEndTime,
+            recordingYoutubeEndTime: (compositionState.hasRecorded ? compositionState.recordingYoutubeEndTime: compositionState.videoDuration),
             startRecordingDateTime: compositionState.startRecordingDateTime,
             hasRecorded: compositionState.hasRecorded,
             autoRecorded: compositionState.autoRecorded,
@@ -569,6 +570,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             lastEdited: this.state.lastEdited,
             viewCount: this.state.viewCount,
             pitchShift: this.noteKeyboardManager.pitchShift,
+            videoDuration: this.state.videoDuration,
             notes: this.state.recording
         };
         return compositionState as ICompositionState;

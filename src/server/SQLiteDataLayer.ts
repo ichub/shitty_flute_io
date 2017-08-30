@@ -90,6 +90,7 @@ export class SQLiteDataLayer implements IDataLayer {
             "pitch_shift INT, " +
             "has_recorded BIT, " +
             "auto_recorded BIT, " +
+            "video_duration DOUBLE, " +
             "PRIMARY KEY (edit_token), " +
             "UNIQUE (view_token)) ")
             .then(() => {
@@ -117,6 +118,7 @@ export class SQLiteDataLayer implements IDataLayer {
         let pitchShift = (row as any).pitch_shift;
         let hasRecorded = (row as any).has_recorded == 1;
         let autoRecorded = (row as any).auto_recorded == 1;
+        let videoDuration = (row as any).video_duration;
 
         return this.execAllWithPromise(
             "SELECT * from compositions_notes_map WHERE composition_edit_token=?",
@@ -142,6 +144,7 @@ export class SQLiteDataLayer implements IDataLayer {
                     pitchShift,
                     hasRecorded,
                     autoRecorded,
+                    videoDuration,
                     notes);
                 let composition = makeIComposition(editToken, viewToken, compositionState);
                 return composition;
@@ -175,9 +178,10 @@ export class SQLiteDataLayer implements IDataLayer {
             "view_count," +
             "pitch_shift," +
             "has_recorded," +
-            "auto_recorded) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            [editToken, viewTokenIfNoneExists, "", "FHG2oizTlpY", 0, 1, -1, (new Date()).getTime(), 0, 0, 0, 0]) // default song is shelter
+            "auto_recorded, " +
+            "video_duration) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [editToken, viewTokenIfNoneExists, "", "FHG2oizTlpY", 0, 1, -1, (new Date()).getTime(), 0, 0, 0, 0, 276.0]) // default song is my heart will go on
             .then(result => {
                 console.log("inserted the new row");
             })
@@ -334,6 +338,7 @@ export class SQLiteDataLayer implements IDataLayer {
                     "pitch_shift=?, " +
                     "has_recorded=?, " +
                     "auto_recorded=? " +
+                    "video_duration=? " +
                     "WHERE edit_token=?",
                     [compositionState.compName,
                         compositionState.youtubeVideoId,
@@ -344,6 +349,7 @@ export class SQLiteDataLayer implements IDataLayer {
                         compositionState.pitchShift,
                         compositionState.hasRecorded,
                         compositionState.autoRecorded,
+                        compositionState.videoDuration,
                         editToken] // note that we reset the view_count when a composition is updated
                 );
             })

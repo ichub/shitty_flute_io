@@ -18,6 +18,7 @@ export interface ICompositionState {
     pitchShift: number
     hasRecorded: boolean
     autoRecorded: boolean
+    videoDuration: number
     notes: ICompositionNote[]
 }
 
@@ -26,7 +27,7 @@ export interface ICompositionState {
 
 export function makeNewICompositionState(): ICompositionState {
     let notes: ICompositionNote[] = [];
-    return makeICompositionState("", "", -1, -1, -1, -1, 0, 0, false, false, notes);
+    return makeICompositionState("", "", -1, -1, -1, -1, 0, 0, false, false, -1, notes);
 }
 
 export function makeICompositionState(name: string,
@@ -39,6 +40,7 @@ export function makeICompositionState(name: string,
                                       pitchShift: number,
                                       hasRecorded: boolean,
                                       autoRecorded: boolean,
+                                      videoDuration: number,
                                       notes: ICompositionNote[]): ICompositionState {
     return {
         compName: name,
@@ -51,6 +53,7 @@ export function makeICompositionState(name: string,
         pitchShift: pitchShift,
         hasRecorded: hasRecorded,
         autoRecorded: autoRecorded,
+        videoDuration: videoDuration,
         notes: notes
     };
 }
