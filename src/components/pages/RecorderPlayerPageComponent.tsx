@@ -197,6 +197,10 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         }
     }
 
+    private onHomeClick() {
+        window.location.href = "/";
+    }
+
     render() {
         console.log("rendering...");
         console.log(this.state);
@@ -218,7 +222,20 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         </div> :
                         null
                 }
+
                 <div>
+                    <input
+                        style={[
+                            TitleFont,
+                            RecorderPlayerPageComponent.styles.homeButton,
+                        ]}
+                        type="button"
+                        value="floot"
+                        onClick={this.onHomeClick.bind(this)}/>
+                </div>
+
+                <div>
+
                     {
                         this.props.viewOnly ? null : (
                             <div style={[RecorderPlayerPageComponent.styles.flex]}>
@@ -588,6 +605,18 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             alignItems: "center",
             justifyContent: "center",
             flexDirection: "column"
+        },
+        homeButton: {
+            padding: "10px 5px 10px 5px",
+            backgroundColor: "white",
+            position: "absolute",
+            top: "10px",
+            left: "10px",
+            color: "black",
+            border: "none",
+            cursor: "pointer",
+            transition: "200ms",
+            fontSize: "4em",
         },
         pitchButtonsContainer: {
             width: "15%",
