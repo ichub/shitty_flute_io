@@ -197,13 +197,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         }
     }
 
-    /*
-    private onPlayNote(note: ICompositionNote) {
-        this.noteKeyboardManager.addDownNote(note);
-
-    }
-    */
-
     render() {
         console.log("rendering...");
         console.log(this.state);
