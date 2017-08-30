@@ -189,10 +189,12 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
     }
 
     openModal() {
-        if (this.props.stateName == RecorderStateName.FreePlay) {
-            this.setState({
-                isEditYoutubeLinkOpen: true
-            });
+        if (!this.props.viewOnly) {
+            if (this.props.stateName == RecorderStateName.FreePlay) {
+                this.setState({
+                    isEditYoutubeLinkOpen: true
+                });
+            }
         }
     }
 

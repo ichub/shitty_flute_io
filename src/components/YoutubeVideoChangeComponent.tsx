@@ -72,7 +72,8 @@ export class YoutubeVideoChangeComponent extends React.Component<IYoutubeVideoCh
         },
         button: {
             marginLeft: "5px",
-            marginRight: "5px"
+            marginRight: "5px",
+            cursor: "pointer",
         },
         header: {
             fontWeight: "bold",
