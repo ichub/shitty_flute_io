@@ -28,7 +28,7 @@ export class UnavailableNoteModal extends React.Component<IUnavailableNoteModalP
                     <div>
                         Sorry, this note (D#) is not available in the current version of floot.
                         <br/>
-                        Please check back regularly for more updates and new features, including auto-flootify and custom shittiness levels!
+                        Please check back regularly for more updates and new features, including auto-flootify and custom audio quality levels!
                     </div>
 
                     <br/>
