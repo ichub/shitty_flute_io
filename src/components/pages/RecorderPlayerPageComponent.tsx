@@ -610,13 +610,19 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             padding: "10px 5px 10px 5px",
             backgroundColor: "white",
             position: "absolute",
-            top: "10px",
-            left: "10px",
+            top: "20px",
+            left: "20px",
             color: "black",
             border: "none",
             cursor: "pointer",
             transition: "200ms",
-            fontSize: "4em",
+            fontSize: "3em",
+            opacity: 0.4,
+            transition: "200ms",
+            ":hover": {
+                opacity: 1,
+                transform: "scale(1.1)"
+            }
         },
         pitchButtonsContainer: {
             width: "15%",
