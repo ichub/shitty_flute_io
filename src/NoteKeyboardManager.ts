@@ -70,7 +70,7 @@ export class NoteKeyboardManager extends EventEmitter {
         document.addEventListener("keydown", (e: KeyboardEvent) => {
             for (let note of this.notes) {
                 if (this.isKeyboardEventForNote(note, e)) {
-                    if (note.label == "D#") {
+                    if (note.name == "Ds4") {
                         this.playerPageComponent.handleOpenModal();
                         break;
                     }
@@ -85,7 +85,7 @@ export class NoteKeyboardManager extends EventEmitter {
         document.addEventListener("keyup", (e: KeyboardEvent) => {
             for (let note of this.notes) {
                 if (this.isKeyboardEventForNote(note, e)) {
-                    if (note.label == "D#") {
+                    if (note.name == "Ds4") {
                         break;
                     }
                     this.removeDownNote(note);

@@ -59,7 +59,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 down: [],
                 played: []
             },
-            youtubeVideoId: "HQnC1UHBvWA",
+            youtubeVideoId: "FHG2oizTlpY",
             stateName: RecorderStateName.Loading,
             recordingYoutubeStartTime: 0,
             recordingYoutubeEndTime: 1,
