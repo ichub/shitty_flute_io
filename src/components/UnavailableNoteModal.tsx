@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Radium from "radium";
 import {GlobalFont} from "../styles/GlobalStyles";
+import {RecorderPlayerPageComponent} from "./pages/RecorderPlayerPageComponent";
 
 const getYoutubeId = require("get-youtube-id");
 
@@ -20,45 +21,24 @@ export class UnavailableNoteModal extends React.Component<IUnavailableNoteModalP
                 GlobalFont
             ]}>
                 <label>
-                    <span style={[UnavailableNoteModal.styles.header]}>Feature Unavailable</span>
+                    <div style={[UnavailableNoteModal.styles.header]}>Feature Unavailable</div>
+
                     <br/>
-                    <input style={[UnavailableNoteModal.styles.videoIdInput]}
-                           ref="youtubeInput"
-                           type="text"
-                           placeholder={"Paste URL here!"}
-                           className="form-control form-control-sm"/>
+
+                    <div>
+                        Sorry, this note (D#) is not available in the current version of floot. Please check back regularly for more updates and new features!
+                    </div>
+
+                    <br/>
+
                     <input style={[UnavailableNoteModal.styles.button]}
                            type="button"
-                           value="Change Video"
+                           value="OK"
                            className="btn btn-primary btn-sm"
-                           disabled={!this.props.isEnabled}
-                           onClick={this.handleVideoIdChange.bind(this)}/>
-                    <span>  </span>
-                    <input style={[UnavailableNoteModal.styles.button]}
-                           type="button"
-                           value="Cancel"
-                           className="btn btn-default btn-sm"
-                           disabled={!this.props.isEnabled}
-                           onClick={this.handleCancel.bind(this)}/>
+                           onClick={this.props.onDone}/>
                 </label>
             </div>
         );
-    }
-
-    private handleVideoIdChange(): void {
-        if (this.props.isEnabled) {
-            let videoId = getYoutubeId(this.refs.youtubeInput.value);
-            if (videoId == null) {
-                videoId = "";
-            }
-            this.props.onVideoIdChange(videoId);
-        }
-    }
-
-    private handleCancel(): void {
-        if (this.props.isEnabled) {
-            this.props.onDone();
-        }
     }
 
     private static styles = {
@@ -77,7 +57,7 @@ export class UnavailableNoteModal extends React.Component<IUnavailableNoteModalP
         header: {
             fontWeight: "bold",
             fontSize: "1em",
-            marginBottom: "30px",
+            marginBottom: "15px",
         }
     }
 }

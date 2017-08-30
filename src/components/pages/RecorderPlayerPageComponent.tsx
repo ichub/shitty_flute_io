@@ -15,6 +15,7 @@ import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
 import * as ReactModal from "react-modal";
 import {ControllerBarComponent} from "../ControllerBarComponent";
+import {UnavailableNoteModal} from "../UnavailableNoteModal";
 
 const axios = require("axios");
 const getYoutubeId = require("get-youtube-id");
@@ -310,24 +311,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         <ReactModal
                             isOpen={this.state.showSilverModal}
                             contentLabel="Upcoming Feature"
-                            style={RecorderPlayerPageComponent.styles.modal}
+                            style={RecorderPlayerPageComponent.styles.featureModal}
                         >
-                            <div style={[
-                                RecorderPlayerPageComponent.styles.flex
-                            ]}>
-                                Sorry, this note (D#) is not available in the current version of floot.
-                            </div>
-                            <div style={[
-                                RecorderPlayerPageComponent.styles.flex
-                            ]}>
-                                Please check back regularly for more updates and new features!
-                            </div>
-                            <br/>
-                            <div style={[
-                                RecorderPlayerPageComponent.styles.flex
-                            ]}>
-                                <button onClick={this.handleCloseModal.bind(this)}>Got it!</button>
-                            </div>
+                            <UnavailableNoteModal onDone={this.handleCloseModal.bind(this)}/>
                         </ReactModal>
                     </div>
                 </div>
@@ -687,6 +673,32 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 padding: '20px',
                 width: "400px",
                 height: "150px",
+                textAlign: "center",
+            }
+        },
+        featureModal: {
+            overlay: {
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: "100vw",
+                height: "100vh",
+                backgroundColor: 'rgba(255, 255, 255, 0.75)',
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+            },
+            content: {
+                position: "relative",
+                border: '1px solid #ccc',
+                background: '#fff',
+                overflow: 'auto',
+                WebkitOverflowScrolling: 'touch',
+                borderRadius: '0px',
+                outline: 'none',
+                padding: '20px',
+                width: "400px",
+                height: "170px",
                 textAlign: "center",
             }
         }

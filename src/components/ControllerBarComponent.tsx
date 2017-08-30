@@ -110,8 +110,8 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                     data-for="playback">
                                 {stopOrPlayButton}
                             </span>
-                <ReactTooltip id="record" place="top" type="dark" effect="solid" delayHide={1}/>
-                <ReactTooltip id="playback" place="top" type="dark" effect="solid" delayHide={1}/>
+                <ReactTooltip id="record" place="top" effect="solid" delayHide={1}/>
+                <ReactTooltip id="playback" place="top" effect="solid" delayHide={1}/>
 
                 <span
                     data-tip="reset"
@@ -126,7 +126,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                                 <i className="fa fa-eraser" aria-hidden="true"></i>
                             </button>
                         </span>
-                <ReactTooltip id="reset" place="top" type="dark" effect="solid" delayHide={1}/>
+                <ReactTooltip id="reset" place="top" effect="solid" delayHide={1}/>
 
                 <span
                     data-tip="save"
@@ -141,14 +141,14 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                                 <i className="fa fa-floppy-o" aria-hidden="true"></i>
                             </button>
                         </span>
-                <ReactTooltip id="save" place="top" type="dark" effect="solid" delayHide={1}/>
+                <ReactTooltip id="save" place="top" effect="solid" delayHide={1}/>
                 <span
                     data-tip="change video"
                     data-for="change video">
                     <VideoInfo
                         openModal={this.openModal.bind(this)}
                         youtubeVideoId={this.props.youtubeVideoId}/>
-                    <ReactTooltip id="change video" place="top" type="dark" effect="solid" delayHide={1}/>
+                    <ReactTooltip id="change video" place="top" effect="solid" delayHide={1}/>
                 </span>
                 <ReactModal
                     style={ControllerBarComponent.styles.modal}
