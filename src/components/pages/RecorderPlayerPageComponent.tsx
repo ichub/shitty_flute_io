@@ -715,9 +715,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 borderRadius: '0px',
                 outline: 'none',
                 padding: '20px',
-                width: "400px",
-                height: "170px",
-                textAlign: "center",
+                width: "450px",
+                height: "175px",
+                textAlign: "left",
             }
         }
     };
