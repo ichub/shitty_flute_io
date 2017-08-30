@@ -196,10 +196,12 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         }
     }
 
+    /*
     private onPlayNote(note: ICompositionNote) {
         this.noteKeyboardManager.addDownNote(note);
 
     }
+    */
 
     render() {
         console.log("rendering...");
@@ -354,12 +356,14 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     private handleVideoIdChange(id: string): void {
         if (this.state.stateName === RecorderStateName.FreePlay) {
-            this.setState({
-                youtubeVideoId: id,
-                videoStarted: false,
-            }, () => {
-                this.reset();
-            });
+            if (id !== "") {
+                this.setState({
+                    youtubeVideoId: id,
+                    videoStarted: false,
+                }, () => {
+                    this.reset();
+                });
+            }
         }
     }
 

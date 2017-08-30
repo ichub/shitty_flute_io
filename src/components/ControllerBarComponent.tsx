@@ -149,7 +149,8 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                     contentLabel="Upcoming Feature"
                 >
                     <YoutubeVideoChangeComponent isEnabled={this.props.stateName == RecorderStateName.FreePlay}
-                                                 onVideoIdChange={this.onVideoChange.bind(this)}/>
+                                                 onVideoIdChange={this.onVideoChange.bind(this)}
+                                                 onChangeModalCancel={this.onChangeModalCancel.bind(this)}/>
                 </ReactModal>
                 <span>
                     <TimeSlider
@@ -172,6 +173,12 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
         });
 
         this.props.onVideoIdChange(id);
+    }
+
+    onChangeModalCancel() {
+        this.setState({
+            isEditYoutubeLinkOpen: false
+        });
     }
 
     openModal() {

@@ -27,11 +27,19 @@ export class YoutubeVideoChangeComponent extends React.Component<IYoutubeVideoCh
                            type="text"
                            placeholder={"Paste URL here!"}
                            className="form-control form-control-sm"/>
-                    <input type="button"
+                    <input style={[YoutubeVideoChangeComponent.styles.button]}
+                           type="button"
                            value="Change Video"
                            className="btn btn-primary btn-sm"
                            disabled={!this.props.isEnabled}
                            onClick={this.handleVideoIdChange.bind(this)}/>
+                    <span>  </span>
+                    <input style={[YoutubeVideoChangeComponent.styles.button]}
+                           type="button"
+                           value="Cancel"
+                           className="btn btn-default btn-sm"
+                           disabled={!this.props.isEnabled}
+                           onClick={this.handleCancel.bind(this)}/>
                 </label>
             </div>
         );
@@ -47,6 +55,12 @@ export class YoutubeVideoChangeComponent extends React.Component<IYoutubeVideoCh
         }
     }
 
+    private handleCancel(): void {
+        if (this.props.isEnabled) {
+            this.props.onChangeModalCancel();
+        }
+    }
+
     private static styles = {
         base: {
             width: "100%"
@@ -55,6 +69,10 @@ export class YoutubeVideoChangeComponent extends React.Component<IYoutubeVideoCh
             display: "inline-block",
             marginTop: "40px",
             marginBottom: "10px"
+        },
+        button: {
+            marginLeft: "5px",
+            marginRight: "5px"
         },
         header: {
             fontWeight: "bold",
@@ -67,6 +85,7 @@ export class YoutubeVideoChangeComponent extends React.Component<IYoutubeVideoCh
 export interface IYoutubeVideoChangeComponentProps {
     isEnabled: boolean;
     onVideoIdChange: (id: string) => void;
+    onChangeModalCancel: () => void;
 }
 
 export interface IYoutubeVideoChangeComponentState {
