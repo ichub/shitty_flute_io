@@ -66,11 +66,7 @@ export class SQLiteDataLayer implements IDataLayer {
                 if (err) {
                     return reject(err);
                 }
-                if (stderr) {
-                    return reject(stderr);
-                } else {
-                    return resolve(stdout);
-                }
+                return resolve(stdout);
             });
         });
     }
