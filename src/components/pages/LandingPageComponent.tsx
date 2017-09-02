@@ -41,15 +41,33 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                 <div style={[
                     LandingPageComponent.styles.easeIn(0.50),
                 ]}>
-                    <input
-                        style={[
-                            GlobalFont,
+                    <div style={[
+                        LandingPageComponent.styles.pulse(0.50),
+                        TitleFont
+                    ]}>
+                        <input
+                            key="0"
+                            style={[
                             LandingPageComponent.styles.composeButton,
-                            LandingPageComponent.styles.pulse(0.50),
                         ]}
-                        type="button"
-                        value="RECORD"
-                        onClick={this.onComposeClick.bind(this)}/>
+                            type="button"
+                            value="(AUTO COMPOSE)"
+                            onClick={this.onComposeClick.bind(this)}/>
+
+                        <input
+                            key="1"
+                            style={[
+                            LandingPageComponent.styles.advancedEditorButton,
+                        ]}
+                            type="button"
+                            value="(RECORD)"
+                            onClick={this.onComposeClick.bind(this)}/>
+                    </div>
+                </div>
+                <div style={[
+                    LandingPageComponent.styles.easeIn(0.7),
+                ]}>
+
                 </div>
             </div>
         );
@@ -64,7 +82,7 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
 
     private static readonly pulseKeyframes = Radium.keyframes({
         "0%": {
-            transform: "scale(0.5)",
+            transform: "scale(0.9)",
         },
         "100%": {
             transform: "scale(1)",
@@ -105,8 +123,21 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
             cursor: "pointer",
             transition: "200ms",
             fontSize: "1.5em",
+            marginRight: "20px",
             ":hover": {
-                textDecoration: "underline",
+                fontWeight: "bold"
+            },
+        },
+        advancedEditorButton: {
+            padding: "10px 5px 10px 5px",
+            backgroundColor: "white",
+            color: "black",
+            border: "none",
+            cursor: "pointer",
+            fontSize: "1.5em",
+            opacity: 0.9,
+            ":hover": {
+                fontWeight: "bold"
             },
         },
         videoContainer: {
