@@ -33,13 +33,6 @@ export class YoutubeVideoChangeComponent extends React.Component<IYoutubeVideoCh
                            className="btn btn-primary btn-sm"
                            disabled={!this.props.isEnabled}
                            onClick={this.handleVideoIdChange.bind(this)}/>
-                    <span>  </span>
-                    <input style={[YoutubeVideoChangeComponent.styles.button]}
-                           type="button"
-                           value="Cancel"
-                           className="btn btn-default btn-sm"
-                           disabled={!this.props.isEnabled}
-                           onClick={this.handleCancel.bind(this)}/>
                 </label>
             </div>
         );
@@ -54,13 +47,6 @@ export class YoutubeVideoChangeComponent extends React.Component<IYoutubeVideoCh
             this.props.onVideoIdChange(videoId);
         }
     }
-
-    private handleCancel(): void {
-        if (this.props.isEnabled) {
-            this.props.onChangeModalCancel();
-        }
-    }
-
     private static styles = {
         base: {
             width: "100%"
@@ -86,7 +72,6 @@ export class YoutubeVideoChangeComponent extends React.Component<IYoutubeVideoCh
 export interface IYoutubeVideoChangeComponentProps {
     isEnabled: boolean;
     onVideoIdChange: (id: string) => void;
-    onChangeModalCancel: () => void;
 }
 
 export interface IYoutubeVideoChangeComponentState {

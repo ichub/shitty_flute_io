@@ -35,51 +35,51 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
         let stopPlayDisabled: boolean = this.props.stateName !== RecorderStateName.FreePlay;
 
         const stopOrPlayButton = this.props.stateName === RecorderStateName.Playing ? (
-            <button
-                style={[ControllerBarComponent.styles.controllerButton]}
-                key="3"
-                type="button"
-                value="stop play back"
-                onClick={this.props.stopPlayback}
-                disabled={playDisabled}>
-                <i className="fa fa-pause" aria-hidden="true"></i>
-            </button>
-        ) : (
-            <button
-                style={[ControllerBarComponent.styles.controllerButton]}
-                key="2"
-                type="button"
-                value="play back"
-                onClick={this.props.play}
-                disabled={stopPlayDisabled}>
-                <i className="fa fa-play" aria-hidden="true"></i>
-            </button>
-        );
+                <button
+                    style={[ControllerBarComponent.styles.controllerButton]}
+                    key="3"
+                    type="button"
+                    value="stop play back"
+                    onClick={this.props.stopPlayback}
+                    disabled={playDisabled}>
+                    <i className="fa fa-pause" aria-hidden="true"></i>
+                </button>
+            ) : (
+                <button
+                    style={[ControllerBarComponent.styles.controllerButton]}
+                    key="2"
+                    type="button"
+                    value="play back"
+                    onClick={this.props.play}
+                    disabled={stopPlayDisabled}>
+                    <i className="fa fa-play" aria-hidden="true"></i>
+                </button>
+            );
 
         let recordDisabled: boolean = this.props.viewOnly || this.props.stateName !== RecorderStateName.Recording;
         let stopRecordDisabled: boolean = this.props.viewOnly || this.props.stateName !== RecorderStateName.FreePlay;
 
         const recordOrStopRecordingButton = this.props.stateName === RecorderStateName.Recording ? (
-            <button
-                style={[ControllerBarComponent.styles.controllerButton]}
-                key="1"
-                type="button"
-                value="stop recording"
-                onClick={this.props.stopRecording}
-                disabled={recordDisabled}>
-                <i className="fa fa-stop" aria-hidden="true"></i>
-            </button>
-        ) : (
-            <button
-                style={[ControllerBarComponent.styles.controllerButton]}
-                key="0"
-                type="button"
-                value="record"
-                onClick={this.props.record}
-                disabled={stopRecordDisabled}>
-                <i className="fa fa-circle" aria-hidden="true"></i>
-            </button>
-        );
+                <button
+                    style={[ControllerBarComponent.styles.controllerButton]}
+                    key="1"
+                    type="button"
+                    value="stop recording"
+                    onClick={this.props.stopRecording}
+                    disabled={recordDisabled}>
+                    <i className="fa fa-stop" aria-hidden="true"></i>
+                </button>
+            ) : (
+                <button
+                    style={[ControllerBarComponent.styles.controllerButton]}
+                    key="0"
+                    type="button"
+                    value="record"
+                    onClick={this.props.record}
+                    disabled={stopRecordDisabled}>
+                    <i className="fa fa-circle" aria-hidden="true"></i>
+                </button>
+            );
 
         return (
             <div style={[
@@ -154,10 +154,10 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                     style={ModalStyle}
                     isOpen={this.state.isEditYoutubeLinkOpen}
                     contentLabel="Upcoming Feature"
+                    onRequestClose={this.onChangeModalCancel.bind(this)}
                 >
                     <YoutubeVideoChangeComponent isEnabled={this.props.stateName == RecorderStateName.FreePlay}
-                                                 onVideoIdChange={this.onVideoChange.bind(this)}
-                                                 onChangeModalCancel={this.onChangeModalCancel.bind(this)}/>
+                                                 onVideoIdChange={this.onVideoChange.bind(this)}/>
                 </ReactModal>
                 <span>
                     <TimeSlider

@@ -239,7 +239,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     <ReactModal
                         isOpen={this.state.showShareModal}
                         style={ModalStyle}
-                        contentLabel="share">
+                        contentLabel="share"
+                        onRequestClose={this.boundHandleCloseShareModal}>
                         <ShareComponent viewToken={this.props.viewToken}/>
                     </ReactModal>
 
@@ -327,7 +328,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     <ReactModal
                         isOpen={this.state.showSilverModal}
                         style={ModalStyle}
-                        contentLabel="unavailable">
+                        contentLabel="unavailable"
+                        onRequestClose={this.boundHandleCloseModal}>
                         <UnavailableNoteModal onDone={this.boundHandleCloseModal}/>
                     </ReactModal>
                 </div>
