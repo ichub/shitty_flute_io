@@ -585,7 +585,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             transition: "200ms",
             fontSize: "3em",
             opacity: 0.4,
-            transition: "200ms",
             ":hover": {
                 opacity: 1,
                 transform: "scale(1.1)"

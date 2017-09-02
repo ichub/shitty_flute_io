@@ -224,7 +224,9 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
         volume: {
             width: "100px",
             height: "30px",
-            margin: "30px",
+            marginLeft: "30px",
+            marginBottom: "30px",
+            marginRight: "30px",
             marginTop: "40px",
         },
         controllerButton: {
