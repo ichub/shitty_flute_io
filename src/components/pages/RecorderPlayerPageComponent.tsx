@@ -40,6 +40,20 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         youtubeInput: HTMLInputElement,
     };
 
+    boundOnHomeClick;
+    boundOnVideoReady;
+    boundOnStateChange;
+    boundSave;
+    boundReset;
+    boundRecord;
+    boundPlay;
+    boundStopPlayback;
+    boundStopRecording;
+    boundHandleVolumeChange;
+    boundHandleVideoIdChange;
+    boundHandleOnTimeChange;
+    boundHandleCloseModal;
+;
     constructor(props: IRecorderPlayerPageComponentProps) {
         super();
 
@@ -105,10 +119,27 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             });
         });
 
-        setTimeout(() => {
-            console.log("attempting to load data");
-            this.loadData();
-        }, 0);
+        this.initializeHandlers();
+    }
+
+    componentDidMount() {
+        this.loadData();
+    }
+
+    initializeHandlers() {
+        this.boundOnHomeClick = this.onHomeClick.bind(this);
+        this.boundOnVideoReady = this.onVideoReady.bind(this);
+        this.boundOnStateChange = this.onStateChange.bind(this);
+        this.boundSave = this.save.bind(this);
+        this.boundReset = this.reset.bind(this);
+        this.boundRecord = this.record.bind(this);
+        this.boundPlay = this.play.bind(this);
+        this.boundStopPlayback = this.stopPlayback.bind(this);
+        this.boundStopRecording = this.stopRecording.bind(this);
+        this.boundHandleVolumeChange = this.handleVolumeChange.bind(this);
+        this.boundHandleVideoIdChange = this.handleVideoIdChange.bind(this);
+        this.boundHandleOnTimeChange = this.handleOnTimeChange.bind(this);
+        this.boundHandleCloseModal = this.handleCloseModal.bind(this);
     }
 
     private isNoteDown(note: INoteInfo): boolean {
@@ -204,7 +235,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         ]}
                         type="button"
                         value="floot"
-                        onClick={this.onHomeClick.bind(this)}/>
+                        onClick={this.boundOnHomeClick}/>
                 </div>
 
                 <div>
@@ -268,30 +299,30 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     ]}>
                         <VideoPlayer
                             videoId={this.state.youtubeVideoId}
-                            onVideoReady={this.onVideoReady.bind(this)}
-                            onStateChange={this.onStateChange.bind(this)}
+                            onVideoReady={this.boundOnVideoReady}
+                            onStateChange={this.boundOnStateChange}
                             canInteract={this.canVideoPlayerInteract()}
                             hide={true}/>
                     </div>
                     <ControllerBarComponent
                         hasRecorded={this.state.hasRecorded}
-                        save={this.save.bind(this)}
-                        reset={this.reset.bind(this)}
-                        record={this.record.bind(this)}
-                        play={this.play.bind(this)}
-                        stopPlayback={this.stopPlayback.bind(this)}
-                        stopRecording={this.stopRecording.bind(this)}
+                        save={this.boundSave}
+                        reset={this.boundReset}
+                        record={this.boundRecord}
+                        play={this.boundPlay}
+                        stopPlayback={this.boundStopPlayback}
+                        stopRecording={this.boundStopRecording}
                         viewOnly={this.props.viewOnly}
                         stateName={this.state.stateName}
                         initialVolume={(typeof this.video === 'undefined' ? 100 : this.video.getVolume())}
-                        onVolumeChange={this.handleVolumeChange.bind(this)}
+                        onVolumeChange={this.boundHandleVolumeChange}
                         youtubeVideoId={this.state.youtubeVideoId}
-                        onVideoIdChange={this.handleVideoIdChange.bind(this)}
+                        onVideoIdChange={this.boundHandleVideoIdChange}
                         videoDuration={this.state.videoDuration}
                         videoPosition={Math.max(this.state.videoPosition, this.state.recordingYoutubeStartTime)}
                         startTime={this.state.recordingYoutubeStartTime}
                         endTime={this.state.recordingYoutubeEndTime}
-                        onTimeSliderChange={this.handleOnTimeChange.bind(this)}
+                        onTimeSliderChange={this.boundHandleOnTimeChange}
                         videoBuffering={this.state.videoBuffering}/>
                     <div>
                         <ReactModal
@@ -299,7 +330,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             contentLabel="Upcoming Feature"
                             style={RecorderPlayerPageComponent.styles.featureModal}
                         >
-                            <UnavailableNoteModal onDone={this.handleCloseModal.bind(this)}/>
+                            <UnavailableNoteModal onDone={this.boundHandleCloseModal}/>
                         </ReactModal>
                     </div>
                 </div>
@@ -313,7 +344,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             videoPosition: value[1] / 1000 * this.state.videoDuration,
             recordingYoutubeEndTime: (value[2] - 1) / 1000 * this.state.videoDuration
         });
-
     }
 
     private handleVolumeChange(volume: number) {
@@ -446,42 +476,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         return Promise.resolve();
     }
 
-    private flootify() {
-        this.setState({
-            canInteract: false
-        });
-        let query = `/flootify/${this.state.youtubeVideoId}`;
-        axios.get(query)
-            .then((result) => {
-                let compositionState = result.data as ICompositionState;
-                this.updateWithCompositionState(compositionState);
-            })
-            .then(() => {
-                return this.save();
-            })
-            .then(() => {
-                window.location.href = "/recorder/view/" + this.props.viewToken;
-            })
-            .catch(err => {
-                console.log(err);
-                Promise.reject(err);
-            });
-    }
-
-    private pitchUp() {
-        if (this.state.stateName === RecorderStateName.FreePlay) {
-            this.noteKeyboardManager.pitchShift += 1;
-        }
-        this.setState(this.state); // force re-render
-    }
-
-    private pitchDown() {
-        if (this.state.stateName === RecorderStateName.FreePlay) {
-            this.noteKeyboardManager.pitchShift -= 1;
-        }
-        this.setState(this.state); // force re-render
-    }
-
     private loadData() {
         let query: string = "";
         if (this.props.viewOnly) {
@@ -548,7 +542,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 hasShownSilverModal: true
             });
         }
-
     }
 
     handleCloseModal() {
