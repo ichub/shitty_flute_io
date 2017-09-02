@@ -17,9 +17,7 @@ import * as ReactModal from "react-modal";
 import {ControllerBarComponent} from "../ControllerBarComponent";
 import {UnavailableNoteModal} from "../UnavailableNoteModal";
 import {YoutubeApi} from "../../server/YoutubeApi";
-
 const axios = require("axios");
-const getYoutubeId = require("get-youtube-id");
 
 @Radium
 export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayerPageComponentProps, IRecorderPlayerPageComponentState> {
@@ -30,14 +28,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     singleNotePlayer: SingleNotePlayer;
     noteKeyboardManager: NoteKeyboardManager;
     video: IYoutubeVideoPlayer;
-
     stopPlayingTimeout: NodeJS.Timer;
-
     audioOutputStopper: {stop: () => void};
-
-    refs: {
-        youtubeInput: HTMLInputElement,
-    };
 
     boundOnHomeClick;
     boundOnVideoReady;
