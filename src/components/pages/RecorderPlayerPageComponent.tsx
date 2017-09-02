@@ -17,6 +17,7 @@ import * as ReactModal from "react-modal";
 import {ControllerBarComponent} from "../ControllerBarComponent";
 import {UnavailableNoteModal} from "../UnavailableNoteModal";
 import {YoutubeApi} from "../../server/YoutubeApi";
+import {BufferingComponent} from "../BufferingComponent";
 const axios = require("axios");
 
 @Radium
@@ -212,6 +213,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 RecorderPlayerPageComponent.styles.base,
                 RecorderPlayerPageComponent.styles.flex
             ]}>
+                <BufferingComponent isBuffering={this.state.videoBuffering}/>
                 <input
                     style={[
                         TitleFont,

@@ -69,9 +69,6 @@ export class TimeSlider extends React.Component<ITimeSliderProps, ITimeSliderSta
             <div style={[TimeSlider.styles.base]}>
                 <div style={[TimeSlider.styles.time, TimeSlider.styles.flex]}>
                     {this.secondsToTime(this.props.position)}
-                    {
-                        this.props.buffering ? " (video buffering)" : ""
-                    }
                 </div>
                 <div style={[TimeSlider.styles.sliderContainer, TimeSlider.styles.flex]}>
                     <Range
