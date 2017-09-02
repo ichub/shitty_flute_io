@@ -21,7 +21,6 @@ import {YoutubeApi} from "../../server/YoutubeApi";
 const axios = require("axios");
 const getYoutubeId = require("get-youtube-id");
 
-
 @Radium
 export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayerPageComponentProps, IRecorderPlayerPageComponentState> {
     props: IRecorderPlayerPageComponentProps;
@@ -278,33 +277,13 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         </div>
                     </div>
 
-                    <div>
-                        <div style={[
-                            RecorderPlayerPageComponent.styles.flex,
-                            TitleFont
-                        ]}>
-                            instructions: play from the heart.
-                        </div>
-                        <div style={[
-                            RecorderPlayerPageComponent.styles.flex,
-                            TitleFont
-                        ]}>
-                            (hint: it's like a piano/the leftmost white note is C)
-                        </div>
-                    </div>
+                    <VideoPlayer
+                        videoId={this.state.youtubeVideoId}
+                        onVideoReady={this.boundOnVideoReady}
+                        onStateChange={this.boundOnStateChange}
+                        canInteract={this.canVideoPlayerInteract()}
+                        hide={true}/>
 
-                    <br/>
-
-                    <div style={[
-                        RecorderPlayerPageComponent.styles.flex
-                    ]}>
-                        <VideoPlayer
-                            videoId={this.state.youtubeVideoId}
-                            onVideoReady={this.boundOnVideoReady}
-                            onStateChange={this.boundOnStateChange}
-                            canInteract={this.canVideoPlayerInteract()}
-                            hide={true}/>
-                    </div>
                     <ControllerBarComponent
                         hasRecorded={this.state.hasRecorded}
                         save={this.boundSave}
