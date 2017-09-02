@@ -154,7 +154,7 @@ if __name__ == "__main__":
 	        if this_id is not None:
 	            current_start = timestamps[i]
 	            current_id = this_id
-	            i += 75 # all notes should be at least 75 ticks long
+	            i += 120 # all notes should be at least 75 ticks long
 	    else:
 	        if this_id is None or this_id != current_id:
 	            if this_id is None and np.random.random() < 0.998:
