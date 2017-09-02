@@ -110,6 +110,7 @@ export class VideoInfo extends React.Component<IVideoInfoComponentProps, IVideoI
             overflow: "hidden",
             whiteSpace: "nowrap",
             textOverflow: "ellipsis",
+            fontWeight: "bold",
             fontSize: "1.2em",
         }
     }
