@@ -52,7 +52,7 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                         ]}
                             type="button"
                             value="(AUTO COMPOSE)"
-                            onClick={this.onComposeClick.bind(this)}/>
+                            onClick={this.onAutoComposeClick.bind(this)}/>
 
                         <input
                             key="1"
@@ -71,6 +71,10 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                 </div>
             </div>
         );
+    }
+
+    onAutoComposeClick() {
+        window.location.href = "/auto-compose";
     }
 
     onComposeClick() {

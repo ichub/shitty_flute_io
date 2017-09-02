@@ -5,6 +5,7 @@ import {LandingPageComponent} from "../components/pages/LandingPageComponent";
 import {RecorderPlayerPageComponent} from "../components/pages/RecorderPlayerPageComponent";
 import {StyleRoot} from "radium";
 import {ErrorPageComponent} from "../components/pages/ErrorPageComponent";
+import {AutoComposePageComponent} from "../components/pages/AutoComposePageComponent";
 
 declare const initializedState: InitializationState;
 
@@ -31,6 +32,15 @@ if (initializedState.pageName === "landing") {
     ReactDom.render(
         <StyleRoot>
             <ErrorPageComponent error={initializedState.error} isProd={initializedState.isProd}/>
+        </StyleRoot>,
+        document.getElementById("app-container"));
+} else if (initializedState.pageName === "auto-compose") {
+    ReactDom.render(
+        <StyleRoot>
+            <AutoComposePageComponent
+                isProd={initializedState.isProd}
+                editToken={initializedState.editToken}
+                viewToken={initializedState.viewToken}/>
         </StyleRoot>,
         document.getElementById("app-container"));
 }

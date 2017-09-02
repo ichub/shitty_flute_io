@@ -8,7 +8,8 @@ export enum ReactPage {
     Landing = "landing",
     Recorder = "recorder",
     RecorderView = "recorder-view",
-    Error = "error"
+    Error = "error",
+    AutoCompose = "auto-compose",
 }
 
 declare namespace Express {

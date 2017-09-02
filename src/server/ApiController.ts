@@ -124,6 +124,39 @@ ApiController.get("/topten/:timeLimit", (req: express.Request, res: express.Resp
     );
 });
 
+ApiController.get("/auto-compose", (req: express.Request, res: express.Response, next) => {
+    let editToken = generateToken();
+    SQLiteDataLayer
+        .getInstance()
+        .then((dataLayer: IDataLayer) => {
+            return dataLayer.createCompositionIfNoneExists(editToken);
+        })
+        .then(() => res.redirect(302, "/auto-compose/" + editToken))
+        .catch(err => {
+            next(err);
+        });
+});
+
+ApiController.get("/auto-compose/:editToken", (req: express.Request, res: express.Response, next) => {
+    console.log("retrieving composition with edit token: " + req.params.editToken);
+
+    SQLiteDataLayer
+        .getInstance()
+        .then((dataLayer: IDataLayer) => {
+            return dataLayer.getViewToken(req.params.editToken);
+        })
+        .then(viewToken => {
+            res.render("index", {
+                pageName: ReactPage.AutoCompose,
+                editToken: req.params.editToken,
+                viewToken: viewToken
+            });
+        })
+        .catch(err => {
+            next(err);
+        });
+});
+
 ApiController.get("/flootify/:youtubeId", (req: express.Request, res: express.Response) => {
     returnJson(
         res,
