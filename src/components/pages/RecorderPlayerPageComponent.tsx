@@ -120,6 +120,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     private onVideoReady(event) {
         console.log("video ready");
+        this.video = event.target as IYoutubeVideoPlayer;
     }
 
     private onStateChange(event) {
