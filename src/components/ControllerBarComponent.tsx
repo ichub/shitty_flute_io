@@ -4,7 +4,7 @@ import {RecorderStateName} from "./pages/RecorderPlayerPageComponent";
 import * as ReactTooltip from "react-tooltip";
 import Slider from "rc-slider";
 import {YoutubeVideoChangeComponent} from "./YoutubeVideoChangeComponent";
-import {GlobalFont} from "../styles/GlobalStyles";
+import {GlobalFont, ModalStyle} from "../styles/GlobalStyles";
 import {TimeSlider} from "./TimeSlider";
 import {VideoInfo} from "./VideoInfoComponent";
 import * as ReactModal from "react-modal";
@@ -151,7 +151,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                     <ReactTooltip id="change video" place="top" effect="solid" delayHide={1}/>
                 </span>
                 <ReactModal
-                    style={ControllerBarComponent.styles.modal}
+                    style={ModalStyle}
                     isOpen={this.state.isEditYoutubeLinkOpen}
                     contentLabel="Upcoming Feature"
                 >
@@ -235,32 +235,6 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
             fontSize: "1em",
             margin: "5px"
         },
-        modal: {
-            overlay: {
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: "100vw",
-                height: "100vh",
-                backgroundColor: 'rgba(255, 255, 255, 0.75)',
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-
-            },
-            content: {
-                position: "relative",
-                border: '1px solid #ccc',
-                background: '#fff',
-                overflow: 'auto',
-                WebkitOverflowScrolling: 'touch',
-                borderRadius: '0px',
-                outline: 'none',
-                padding: '20px',
-                width: "400px",
-                height: "200px",
-            }
-        }
     };
 }
 
