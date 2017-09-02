@@ -2,6 +2,7 @@ import * as React from "react";
 import * as Radium from "radium";
 import Slider from "rc-slider";
 import Range from "rc-slider";
+import {AccentColor} from "../styles/GlobalStyles";
 var moment = require("moment");
 require("moment-duration-format");
 const Tooltip = require("rc-tooltip");
@@ -25,8 +26,6 @@ const handle = (props) => {
         </Tooltip>
     );
 };
-
-const wrapperStyle = {width: 400, margin: 50};
 
 @Radium
 export class TimeSlider extends React.Component<ITimeSliderProps, ITimeSliderState> {
@@ -67,27 +66,49 @@ export class TimeSlider extends React.Component<ITimeSliderProps, ITimeSliderSta
 
     render() {
         return (
-            <div>
-                <div style={wrapperStyle}>
-                    <span>
-                        {this.secondsToTime(this.props.position)}
-                        {
-                            this.props.buffering ? " (video buffering)" : ""
-                        }
-                    </span>
-                    <span>
-                        <Range
-                            min={-1}
-                            max={1001}
-                            count={2}
-                            pushable={1}
-                            onChange={this.onChange.bind(this)}
-                            value={this.state.value}
-                            tipFormatter={this.thousandthsToTime.bind(this)}/>
-                    </span>
+            <div style={[TimeSlider.styles.base]}>
+                <div style={[TimeSlider.styles.time, TimeSlider.styles.flex]}>
+                    {this.secondsToTime(this.props.position)}
+                    {
+                        this.props.buffering ? " (video buffering)" : ""
+                    }
+                </div>
+                <div style={[TimeSlider.styles.sliderContainer, TimeSlider.styles.flex]}>
+                    <Range
+                        min={-1}
+                        max={1001}
+                        count={2}
+                        pushable={1}
+                        onChange={this.onChange.bind(this)}
+                        value={this.state.value}
+                        tipFormatter={this.thousandthsToTime.bind(this)}/>
                 </div>
             </div>
         );
+    }
+
+    private static readonly styles = {
+        base: {
+            height: "100%",
+        },
+        flex: {
+            display: "inline-flex",
+            justifyContent: "center",
+            alignItems: "center",
+        },
+        time: {
+            display: "inline-block",
+            width: "40px",
+            height: "100%",
+            marginRight: "20px",
+            fontWeight: "bolder",
+            color: AccentColor
+        },
+        sliderContainer: {
+            display: "inline-block",
+            height: "100%",
+            width: "400px"
+        }
     }
 }
 

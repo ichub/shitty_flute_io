@@ -116,46 +116,37 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                 <span
                     data-tip="reset"
                     data-for="reset">
-                            <button
-                                style={[ControllerBarComponent.styles.controllerButton]}
-                                key="4"
-                                type="button"
-                                value="reset"
-                                onClick={this.props.reset}
-                                disabled={!this.props.hasRecorded || this.props.viewOnly || this.props.stateName !== RecorderStateName.FreePlay}>
-                                <i className="fa fa-eraser" aria-hidden="true"></i>
-                            </button>
-                        </span>
+                    <button
+                        style={[ControllerBarComponent.styles.controllerButton]}
+                        key="4"
+                        type="button"
+                        value="reset"
+                        onClick={this.props.reset}
+                        disabled={!this.props.hasRecorded || this.props.viewOnly || this.props.stateName !== RecorderStateName.FreePlay}>
+                        <i className="fa fa-eraser" aria-hidden="true"></i>
+                    </button>
+                </span>
                 <ReactTooltip id="reset" place="top" effect="solid" delayHide={1}/>
 
                 <span
                     data-tip="save"
                     data-for="save">
-                            <button
-                                style={[ControllerBarComponent.styles.controllerButton]}
-                                key="5"
-                                type="button"
-                                value="save"
-                                onClick={this.props.save}
-                                disabled={!this.props.hasRecorded || this.props.viewOnly || this.props.stateName !== RecorderStateName.FreePlay}>
-                                <i className="fa fa-floppy-o" aria-hidden="true"></i>
-                            </button>
-                        </span>
-                <ReactTooltip id="save" place="top" effect="solid" delayHide={1}/>
-                <span
-                    data-tip="change video"
-                    data-for="change video">
-                    <VideoInfo
-                        openModal={this.openModal.bind(this)}
-                        youtubeVideoId={this.props.youtubeVideoId}/>
-                    <ReactTooltip id="change video" place="top" effect="solid" delayHide={1}/>
+                    <button
+                        style={[ControllerBarComponent.styles.controllerButton]}
+                        key="5"
+                        type="button"
+                        value="save"
+                        onClick={this.props.save}
+                        disabled={!this.props.hasRecorded || this.props.viewOnly || this.props.stateName !== RecorderStateName.FreePlay}>
+                        <i className="fa fa-floppy-o" aria-hidden="true"></i>
+                    </button>
                 </span>
+                <ReactTooltip id="save" place="top" effect="solid" delayHide={1}/>
                 <ReactModal
                     style={ModalStyle}
                     isOpen={this.state.isEditYoutubeLinkOpen}
                     contentLabel="Upcoming Feature"
-                    onRequestClose={this.onChangeModalCancel.bind(this)}
-                >
+                    onRequestClose={this.onChangeModalCancel.bind(this)}>
                     <YoutubeVideoChangeComponent isEnabled={this.props.stateName == RecorderStateName.FreePlay}
                                                  onVideoIdChange={this.onVideoChange.bind(this)}/>
                 </ReactModal>
@@ -169,7 +160,14 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                         onChange={this.props.onTimeSliderChange}
                         buffering={this.props.videoBuffering}/>
                 </span>
-
+                <span
+                    data-tip="change video"
+                    data-for="change video">
+                    <VideoInfo
+                        openModal={this.openModal.bind(this)}
+                        youtubeVideoId={this.props.youtubeVideoId}/>
+                    <ReactTooltip id="change video" place="top" effect="solid" delayHide={1}/>
+                </span>
             </div>
         );
     }
