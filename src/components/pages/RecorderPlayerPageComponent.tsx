@@ -9,7 +9,7 @@ import {ITotalNoteState, makeNewITotalNoteState, NoteKeyboardManager} from "../.
 import {INoteInfo} from "../../models/INoteInfo";
 import {ICompositionNote} from "../../models/ICompositionNote";
 import {ICompositionState} from "../../models/ICompositionState";
-import {GlobalFont, TitleFont} from "../../styles/GlobalStyles";
+import {GlobalFont, TitleFont, ModalStyle} from "../../styles/GlobalStyles";
 import * as color from "color";
 import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
@@ -34,7 +34,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     stopPlayingTimeout: NodeJS.Timer;
 
-    audioOutputStopper: { stop: () => void };
+    audioOutputStopper: {stop: () => void};
 
     refs: {
         youtubeInput: HTMLInputElement,
@@ -216,17 +216,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 RecorderPlayerPageComponent.styles.base,
                 RecorderPlayerPageComponent.styles.flex
             ]}>
-                {
-                    !this.state.canInteract ?
-                        <div style={[
-                            TitleFont,
-                            RecorderPlayerPageComponent.styles.overlay
-                        ]}>
-                            flootifying for you...
-                        </div> :
-                        null
-                }
-
                 <div>
                     <input
                         style={[
@@ -328,8 +317,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         <ReactModal
                             isOpen={this.state.showSilverModal}
                             contentLabel="Upcoming Feature"
-                            style={RecorderPlayerPageComponent.styles.featureModal}
-                        >
+                            style={ModalStyle}>
                             <UnavailableNoteModal onDone={this.boundHandleCloseModal}/>
                         </ReactModal>
                     </div>
@@ -502,7 +490,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             youtubeVideoId: compositionState.youtubeVideoId,
             noteState: makeNewITotalNoteState(),
             recordingYoutubeStartTime: compositionState.recordingYoutubeStartTime,
-            recordingYoutubeEndTime: (compositionState.hasRecorded ? compositionState.recordingYoutubeEndTime: compositionState.videoDuration),
+            recordingYoutubeEndTime: (compositionState.hasRecorded ? compositionState.recordingYoutubeEndTime : compositionState.videoDuration),
             startRecordingDateTime: compositionState.startRecordingDateTime,
             hasRecorded: compositionState.hasRecorded,
             autoRecorded: compositionState.autoRecorded,
@@ -636,58 +624,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             alignItems: "center",
             color: "black",
             backgroundColor: "rgba(255, 255, 255, 0.8)"
-        },
-        modal: {
-            overlay: {
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: "100vw",
-                height: "100vh",
-                backgroundColor: 'rgba(255, 255, 255, 0.75)',
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-            },
-            content: {
-                position: "relative",
-                border: '1px solid #ccc',
-                background: '#fff',
-                overflow: 'auto',
-                WebkitOverflowScrolling: 'touch',
-                borderRadius: '0px',
-                outline: 'none',
-                padding: '20px',
-                width: "400px",
-                height: "150px",
-                textAlign: "center",
-            }
-        },
-        featureModal: {
-            overlay: {
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: "100vw",
-                height: "100vh",
-                backgroundColor: 'rgba(255, 255, 255, 0.75)',
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-            },
-            content: {
-                position: "relative",
-                border: '1px solid #ccc',
-                background: '#fff',
-                overflow: 'auto',
-                WebkitOverflowScrolling: 'touch',
-                borderRadius: '0px',
-                outline: 'none',
-                padding: '20px',
-                width: "475px",
-                height: "175px",
-                textAlign: "left",
-            }
         }
     };
 }

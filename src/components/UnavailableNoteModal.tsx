@@ -3,8 +3,6 @@ import * as Radium from "radium";
 import {GlobalFont} from "../styles/GlobalStyles";
 import {RecorderPlayerPageComponent} from "./pages/RecorderPlayerPageComponent";
 
-const getYoutubeId = require("get-youtube-id");
-
 @Radium
 export class UnavailableNoteModal extends React.Component<IUnavailableNoteModalProps, IUnavailableNoteModalState> {
     props: IUnavailableNoteModalProps;
