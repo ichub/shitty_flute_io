@@ -119,13 +119,11 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     }
 
     private onVideoReady(event) {
-        console.log("video ready");
         this.video = event.target as IYoutubeVideoPlayer;
     }
 
     private onStateChange(event) {
         if (event.data == 5) {
-            console.log("new video cued");
             YoutubeApi.getDurationOnVideo(this.state.youtubeVideoId)
                 .then((duration) => {
                     this.setState({
@@ -143,7 +141,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         }
 
         if (event.data == 1) { // playing
-            console.log("state change to playing");
             this.setState({
                 videoBuffering: false,
                 videoStarted: true,
@@ -158,7 +155,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         }
 
         if (event.data == 2) { //paused
-            console.log("paused");
             this.setState({
                 stateName: RecorderStateName.FreePlay,
                 videoBuffering: false
@@ -166,7 +162,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         }
 
         if (event.data == 3) { // buffering
-            console.log("state changed to buffering");
             if (this.stopPlayingTimeout) {
                 clearTimeout(this.stopPlayingTimeout);
             }
@@ -185,11 +180,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     }
 
     render() {
-        console.log("rendering...");
-        console.log(this.state);
-
-        const wrapperStyle = {width: 400, margin: 50};
-
         return (
             <div style={[
                 RecorderPlayerPageComponent.styles.base,
@@ -318,9 +308,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     }
 
     private handleOnTimeChange(value: number[]) {
-        console.log("handling time change");
-        console.log(value);
-
         this.setState({
             recordingYoutubeStartTime: (value[0] + 1) / 1000 * this.state.videoDuration,
             videoPosition: value[1] / 1000 * this.state.videoDuration,
@@ -445,11 +432,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
             axios.post(`/recorder/${this.props.editToken}/save`, this.getUploadableComposition())
                 .then((result) => {
-                    console.log("save complete");
                     this.setState({
                         stateName: RecorderStateName.FreePlay
                     });
-                    return Promise.resolve();
                 })
                 .catch((err) => {
                     console.log(err);
@@ -466,13 +451,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             canInteract: false
         });
         let query = `/flootify/${this.state.youtubeVideoId}`;
-        console.log("sending flootify query...");
         axios.get(query)
             .then((result) => {
-                console.log("here's the result i got back:");
-                console.log(result);
                 let compositionState = result.data as ICompositionState;
-                console.log("load complete");
                 this.updateWithCompositionState(compositionState);
             })
             .then(() => {
@@ -510,10 +491,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         }
         axios.get(query)
             .then((result) => {
-                console.log("here's the result i got back:");
-                console.log(result);
                 let compositionState = result.data as ICompositionState;
-                console.log("load complete");
                 this.updateWithCompositionState(compositionState);
             })
             .catch((err) => {
@@ -559,14 +537,11 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             videoDuration: this.state.videoDuration,
             notes: this.state.recording
         };
-        console.log("making uploadable composition");
-        console.log(this.state.recordingYoutubeEndTime);
-        console.log(this.state.youtubeVideoId);
+
         return compositionState as ICompositionState;
     }
 
     handleOpenModal() {
-        console.log("handling open modal");
         if (!this.state.hasShownSilverModal) {
             this.setState({
                 showSilverModal: true,
@@ -577,7 +552,6 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     }
 
     handleCloseModal() {
-        console.log("handling close modal");
         this.setState({showSilverModal: false});
     }
 

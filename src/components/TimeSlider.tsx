@@ -35,7 +35,6 @@ export class TimeSlider extends React.Component<ITimeSliderProps, ITimeSliderSta
 
     constructor(props: ITimeSliderProps) {
         super();
-        console.log("constructing testslider");
         this.state = {
             value: [props.start / props.duration * 1000 - 1,
                 props.position / props.duration * 1000,
@@ -52,9 +51,6 @@ export class TimeSlider extends React.Component<ITimeSliderProps, ITimeSliderSta
     }
 
     componentWillReceiveProps(nextProps: ITimeSliderProps) {
-        console.log("receiving props:");
-        console.log(nextProps);
-
         this.setState({
             value: [nextProps.start / nextProps.duration * 1000 - 1,
                 nextProps.position / nextProps.duration * 1000,
@@ -70,10 +66,7 @@ export class TimeSlider extends React.Component<ITimeSliderProps, ITimeSliderSta
     }
 
     render() {
-        console.log("rendering testslider");
-        console.log(this.state.value);
         return (
-
             <div>
                 <div style={wrapperStyle}>
                     <span>

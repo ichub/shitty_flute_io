@@ -35,12 +35,11 @@ export class NoteKeyboardManager extends EventEmitter {
 
     addDownNote(note: INoteInfo): boolean {
         if (!this.down.filter(down => note.name === down.note.name)[0]) {
-            console.log("adding down note");
-
             this.down.push({
                 note: note,
                 start: new Date().getTime()
             });
+
             return true;
         }
 

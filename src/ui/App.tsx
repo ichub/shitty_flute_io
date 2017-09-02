@@ -45,5 +45,3 @@ if (initializedState.pageName === "landing") {
         document.getElementById("app-container"));
 }
 
-console.log(`the current page is: ${initializedState.pageName}`);
-

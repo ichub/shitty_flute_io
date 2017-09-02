@@ -22,13 +22,10 @@ export class AudioOutputHelper {
     public static getInstance(notes: INoteInfo[]): Promise<AudioOutputHelper> {
         const result = new AudioOutputHelper(notes);
         return result.initializeNotes()
-            .then(() => {
-                console.log("initialize notes resolves");
-            })
             .then(() => Promise.resolve(result));
     }
 
-    private initializeNotes(): Promise<void> {
+    private initializeNotes(): Promise<void[]> {
         return Promise.all(
             this.notes.filter(note => note.type != NoteType.Dummy).map(note => {
                 this.initializeSingleNote(note)
@@ -36,12 +33,9 @@ export class AudioOutputHelper {
                         this.noteToAudioBufferMap[initialized.note.name] = initialized.audioBuffers;
                     });
             })
-        ).then(() => {
-            console.log("initialized audio");
-            console.log(this.noteToAudioBufferMap);
-        }).catch(err => {
+        ).catch(err => {
             console.log(err);
-            Promise.reject(err);
+            return Promise.reject(err);
         });
     }
 
@@ -89,14 +83,12 @@ export class AudioOutputHelper {
         let r = Math.random();
         for (let i = 0; i < thresholds.length; i++) {
             if (r <= thresholds[i]) {
-                console.log(i);
                 return arr[i];
             }
         }
     }
 
     public playNote(note: INoteInfo, loop: boolean, duration: number) {
-        console.log("playing note: " + note.name + " with duration " + duration.toString());
         const audioBuffer = this.getRandomElementForShittiness(this.noteToAudioBufferMap[note.name], this.shittiness);
         const source = this.audio.createBufferSource();
         source.buffer = audioBuffer;
@@ -149,13 +141,7 @@ export class AudioOutputHelper {
         let stopped = false;
         const stopping = [];
 
-        console.log("playing list of notes");
-
         for (let completedNote of notes) {
-            console.log("attempting to play note: ");
-            console.log(completedNote);
-            console.log(completedNote.start);
-            console.log(offset);
             if (completedNote.start >= offset) {
                 setTimeout(
                     () => {
