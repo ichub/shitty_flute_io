@@ -40,10 +40,7 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
                 GlobalFont,
                 ShareComponent.styles.base
             ]}>
-                <div>
-                    <span style={[ShareComponent.styles.sharePreamble]}>
-                            share your creation:
-                            </span>
+                <div style={[ShareComponent.styles.flex]}>
                     <span
                         onClick={this.selectText.bind(this)}
                         ref="urlText"
@@ -126,9 +123,7 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
     }
 
     private static styles = {
-        base: {
-            margin: "0 50px 50px 50px"
-        },
+        base: {},
         flex: {
             justifyContent: "center",
             alignItems: "center",
@@ -139,8 +134,6 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
             borderRadius: "2px",
             backgroundColor: "rgb(220, 220, 220)",
             fontWeight: "bold",
-            marginTop: "20px",
-            marginBottom: "15px",
             cursor: "pointer"
         },
         share: {

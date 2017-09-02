@@ -53,7 +53,7 @@ export const ModalStyle = {
         overflowY: "auto",
         paddingBottom: "36px",
         paddingLeft: "40px",
-        paddingTight: "40px",
+        paddingRight: "40px",
         paddingTop: "48px",
         transitionDelay: "0s",
         transitionDuration: "0.2s",

@@ -53,7 +53,9 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     boundHandleVideoIdChange;
     boundHandleOnTimeChange;
     boundHandleCloseModal;
-;
+    boundHandleOpenShareModal;
+    boundHandleCloseShareModal;
+
     constructor(props: IRecorderPlayerPageComponentProps) {
         super();
 
@@ -93,6 +95,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             videoBuffering: false,
             videoStarted: false,
             initialized: false,
+            showShareModal: false,
         };
 
         this.audioOutputHelper = AudioOutputHelper.getInstance(NoteInfoList.notes);
@@ -140,6 +143,8 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         this.boundHandleVideoIdChange = this.handleVideoIdChange.bind(this);
         this.boundHandleOnTimeChange = this.handleOnTimeChange.bind(this);
         this.boundHandleCloseModal = this.handleCloseModal.bind(this);
+        this.boundHandleOpenShareModal = this.handleOpenShareModal.bind(this);
+        this.boundHandleCloseShareModal = this.handleCloseShareModal.bind(this);
     }
 
     private isNoteDown(note: INoteInfo): boolean {
@@ -216,21 +221,27 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 RecorderPlayerPageComponent.styles.base,
                 RecorderPlayerPageComponent.styles.flex
             ]}>
-                <div>
-                    <input
-                        style={[
-                            TitleFont,
-                            RecorderPlayerPageComponent.styles.homeButton,
-                        ]}
-                        type="button"
-                        value="floot"
-                        onClick={this.boundOnHomeClick}/>
-                </div>
+                <input
+                    style={[
+                        TitleFont,
+                        RecorderPlayerPageComponent.styles.homeButton,
+                    ]}
+                    type="button"
+                    value="floot"
+                    onClick={this.boundOnHomeClick}/>
 
                 <div>
                     <div style={[RecorderPlayerPageComponent.styles.flex]}>
-                        <ShareComponent viewToken={this.props.viewToken}/>
+                        <span key="share" style={[RecorderPlayerPageComponent.styles.share, TitleFont]}
+                              onClick={this.boundHandleOpenShareModal}>share</span>
                     </div>
+
+                    <ReactModal
+                        isOpen={this.state.showShareModal}
+                        style={ModalStyle}
+                        contentLabel="share">
+                        <ShareComponent viewToken={this.props.viewToken}/>
+                    </ReactModal>
 
                     <div style={[
                         RecorderPlayerPageComponent.styles.flex,
@@ -313,14 +324,12 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         endTime={this.state.recordingYoutubeEndTime}
                         onTimeSliderChange={this.boundHandleOnTimeChange}
                         videoBuffering={this.state.videoBuffering}/>
-                    <div>
-                        <ReactModal
-                            isOpen={this.state.showSilverModal}
-                            contentLabel="Upcoming Feature"
-                            style={ModalStyle}>
-                            <UnavailableNoteModal onDone={this.boundHandleCloseModal}/>
-                        </ReactModal>
-                    </div>
+                    <ReactModal
+                        isOpen={this.state.showSilverModal}
+                        style={ModalStyle}
+                        contentLabel="unavailable">
+                        <UnavailableNoteModal onDone={this.boundHandleCloseModal}/>
+                    </ReactModal>
                 </div>
             </div>
         );
@@ -536,11 +545,32 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         this.setState({showSilverModal: false});
     }
 
+    handleOpenShareModal() {
+        this.setState({showShareModal: true});
+
+    }
+
+    handleCloseShareModal() {
+        this.setState({showShareModal: false});
+    }
+
     private static readonly buttonColor = "rgb(192, 192, 192)";
     private static styles = {
         base: {
             width: "100vw",
             height: `calc(100vh - ${ControllerBarComponent.HEIGHT})`
+        },
+        share: {
+            opacity: 0.5,
+            transition: "200ms",
+            cursor: "pointer",
+            fontSize: "2em",
+            marginBottom: "20px",
+            userSelect: "none",
+            ":hover": {
+                opacity: 1,
+                fontWeight: "bold",
+            }
         },
         flex: {
             display: "flex",
@@ -655,6 +685,7 @@ export interface IRecorderPlayerPageComponentState {
     videoBuffering: boolean;
     videoStarted: boolean;
     initialized: boolean;
+    showShareModal: boolean;
 }
 
 export enum RecorderStateName {
