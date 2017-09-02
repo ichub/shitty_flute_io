@@ -39,13 +39,27 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                 let compositionState = result.data as ICompositionState;
                 console.log("load complete");
 
+                if (compositionState.hasRecorded) {
+                    this.setState({
+                        composition: compositionState,
+                        stateName: AutoComposeStateName.Idle,
+                        flootified: true,
+                        youtubeVideoId: compositionState.youtubeVideoId
+                    });
+                }
+
                 this.setState({
-                    composition: compositionState,
                     stateName: AutoComposeStateName.Idle,
-                    flootified: true,
-                    youtubeVideoId: compositionState.youtubeVideoId
-                });
-            })
+                })
+            });
+    }
+
+    getCurrentVideoUrl(): string {
+        if (this.state.youtubeVideoId !== null && this.state.youtubeVideoId.length != 0) {
+            return `https://www.youtube.com/watch?v=${this.state.youtubeVideoId}`
+        }
+
+        return "";
     }
 
     render() {
@@ -55,7 +69,8 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             ]}>
                 <label>
                     youtube url:
-                    <input ref="youtubeLink" type="text" value={`https://www.youtube.com/watch?v=${this.state.youtubeVideoId}`}/>
+                    <input style={[AutoComposePageComponent.styles.youtubeInput]} ref="youtubeLink" type="text"
+                           defaultValue={this.getCurrentVideoUrl()}/>
                 </label>
                 <input
                     type="submit"
@@ -66,6 +81,9 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                 state name: {this.state.stateName}
                 <br/>
                 flootified: {this.state.flootified.toString()}
+                <br/>
+                <br/>
+                <a href={`/recorder/view/${this.props.viewToken}`}>view your creation!</a>
             </div>
         );
     }
@@ -132,6 +150,9 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
     private static styles = {
         base: {
             width: "100%"
+        },
+        youtubeInput: {
+            width: "500px"
         }
     }
 }
