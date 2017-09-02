@@ -20,6 +20,7 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                 <div style={[
                     TitleFont,
                     LandingPageComponent.styles.subtitle,
+                    LandingPageComponent.styles.easeIn(0.1),
                 ]}>
                     make recorder covers of everything
                 </div>
@@ -50,17 +51,6 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                         value="RECORD"
                         onClick={this.onComposeClick.bind(this)}/>
                 </div>
-                {/*<div*/}
-                    {/*style={[*/}
-                        {/*LandingPageComponent.styles.easeIn(0.75),*/}
-                        {/*LandingPageComponent.styles.instaContainer,*/}
-                    {/*]}>*/}
-                    {/*<a key="insta"*/}
-                       {/*style={[LandingPageComponent.styles.insta]}*/}
-                       {/*href="https://www.instagram.com/ivanchubster/">*/}
-                        {/*@ivanchubster*/}
-                    {/*</a>*/}
-                {/*</div>*/}
             </div>
         );
     }
