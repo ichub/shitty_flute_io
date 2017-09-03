@@ -2,17 +2,23 @@ import {INoteInfo} from "./models/INoteInfo";
 import {ICompositionState} from "./models/ICompositionState";
 import {ICompositionNote} from "./models/ICompositionNote";
 import {NoteType} from "./models/NoteInfoList";
+import {EventEmitter} from "events";
 
 const axios = require("axios");
 const PD = require("probability-distributions");
 
-export class AudioOutputHelper {
+export class AudioOutputHelper extends EventEmitter {
+    public static readonly ON_NOTE_START = "noteStart";
+    public static readonly ON_NOTE_END = "noteEnd";
+
     private notes: INoteInfo[];
     private audio: AudioContext;
-    private noteToAudioBufferMap: { [name: string]: AudioBuffer[] };
-    shittiness: number;
+    private noteToAudioBufferMap: {[name: string]: AudioBuffer[]};
+    private shittiness: number;
 
     private constructor(notes: INoteInfo[]) {
+        super();
+
         this.notes = notes;
         this.audio = new AudioContext();
         this.noteToAudioBufferMap = {};
@@ -88,7 +94,7 @@ export class AudioOutputHelper {
         }
     }
 
-    public playNote(note: INoteInfo, loop: boolean, duration: number) {
+    public playNote(note: INoteInfo, loop: boolean, duration: number): {stop: () => void, promise: Promise<void>} {
         const audioBuffer = this.getRandomElementForShittiness(this.noteToAudioBufferMap[note.name], this.shittiness);
         const source = this.audio.createBufferSource();
         source.buffer = audioBuffer;
@@ -102,33 +108,54 @@ export class AudioOutputHelper {
 
         let delay = 0.;
 
-        if (!loop) {
-            if (duration < 1000 && Math.random() < this.shittiness) {
-                source.playbackRate.value = PD.rnorm(1, 1, 0.07)[0];
-            }
-            if (Math.random() < this.shittiness) {
-                delay = Math.abs(PD.rnorm(1, 0, 0.15)[0]);
-                delayNode.delayTime.value = delay;
+        let resolved = false;
+        let resolver = null;
+
+        const promise = new Promise<void>((resolve, reject) => {
+            resolver = resolve;
+
+            if (!loop) {
+                if (duration < 1000 && Math.random() < this.shittiness) {
+                    source.playbackRate.value = PD.rnorm(1, 1, 0.07)[0];
+                }
+                if (Math.random() < this.shittiness) {
+                    delay = Math.abs(PD.rnorm(1, 0, 0.15)[0]);
+                    delayNode.delayTime.value = delay;
+                }
+
+                setTimeout(
+                    () => {
+                        gainNode.gain.exponentialRampToValueAtTime(
+                            0.00001,
+                            this.audio.currentTime + 0.04 + delay
+                        );
+                    },
+                    duration + 1000 * delay); // TODO: if you want to change duration of note this is where you would do that
             }
 
-            setTimeout(
-                () => {
-                    gainNode.gain.exponentialRampToValueAtTime(
-                        0.00001,
-                        this.audio.currentTime + 0.04 + delay
-                    );
-                },
-                duration + 1000 * delay); // TODO: if you want to change duration of note this is where you would do that
-        }
+            if (loop) {
+                source.start();
+            } else {
+                const end = duration + delay;
+                source.start(0, 0, end);
 
-        if (loop) {
-            source.start();
-        } else {
-            source.start(0, 0, (duration / 1000) + delay);
-        }
+                setTimeout(() => {
+                        if (!resolved) {
+                            resolved = true;
+                            resolve();
+                        }
+                    },
+                    end)
+            }
+        });
 
         return {
+            promise: promise,
             stop: () => {
+                if (resolver) {
+                    resolver();
+                }
+
                 gainNode.gain.exponentialRampToValueAtTime(
                     0.00001,
                     this.audio.currentTime + 0.04
@@ -137,7 +164,7 @@ export class AudioOutputHelper {
         };
     }
 
-    public playListOfNotes(offset: number, notes: ICompositionNote[]) {
+    public playListOfNotes(offset: number, notes: ICompositionNote[]): {stop: () => void} {
         let stopped = false;
         const stopping = [];
 
@@ -146,7 +173,15 @@ export class AudioOutputHelper {
                 setTimeout(
                     () => {
                         if (!stopped) {
-                            stopping.push(this.playNote(completedNote.noteInfo, false, completedNote.end - completedNote.start));
+                            this.emit(AudioOutputHelper.ON_NOTE_START, completedNote.noteInfo.noteId);
+
+                            const result = this.playNote(completedNote.noteInfo, false, completedNote.end - completedNote.start);
+
+                            result.promise.then(() => {
+                                this.emit(AudioOutputHelper.ON_NOTE_END, completedNote.noteInfo.noteId);
+                            });
+
+                            stopping.push(result);
                         }
                     },
                     completedNote.start - offset);

@@ -114,6 +114,15 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             });
         });
 
+        this.audioOutputHelper.then(helper => {
+            helper.on(AudioOutputHelper.ON_NOTE_START, (noteId) => {
+                console.log("start: " + noteId);
+            });
+            helper.on(AudioOutputHelper.ON_NOTE_START, (noteId) => {
+                console.log("end: " + noteId);
+            });
+        });
+
         this.initializeHandlers();
     }
 
