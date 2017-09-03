@@ -5,7 +5,7 @@ import {IYoutubeVideoPlayer, VideoPlayer} from "../VideoPlayer";
 import {AudioOutputHelper} from "../../AudioOutputHelper";
 import {NoteInfoList} from "../../models/NoteInfoList";
 import {SingleNotePlayer} from "../../SingleNotePlayer";
-import {ITotalNoteState, makeNewITotalNoteState, NoteKeyboardManager} from "../../NoteKeyboardManager";
+import {ITotalNoteState, makeNewITotalNoteState, NoteKeyboardManager, IDownNote} from "../../NoteKeyboardManager";
 import {INoteInfo} from "../../models/INoteInfo";
 import {ICompositionNote} from "../../models/ICompositionNote";
 import {ICompositionState} from "../../models/ICompositionState";
@@ -88,6 +88,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             videoStarted: false,
             initialized: false,
             showShareModal: false,
+            playbackDownNotes: []
         };
 
         this.audioOutputHelper = AudioOutputHelper.getInstance(NoteInfoList.notes);
@@ -116,10 +117,17 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
         this.audioOutputHelper.then(helper => {
             helper.on(AudioOutputHelper.ON_NOTE_START, (noteId) => {
-                console.log("start: " + noteId);
+                this.state.playbackDownNotes.push(noteId);
+                this.setState({
+                    playbackDownNotes: this.state.playbackDownNotes
+                });
             });
+
             helper.on(AudioOutputHelper.ON_NOTE_START, (noteId) => {
-                console.log("end: " + noteId);
+                this.state.playbackDownNotes.splice(this.state.playbackDownNotes.indexOf(noteId));
+                this.setState({
+                    playbackDownNotes: this.state.playbackDownNotes
+                });
             });
         });
 
@@ -152,7 +160,10 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         if (!note) {
             return false;
         }
-        return this.state.noteState.down.filter(down => down.note.name === note.name).length === 1;
+        const isUserDown = this.state.noteState.down.filter(down => down.note.name === note.name).length === 1;
+        const isPlaybackDown = this.state.playbackDownNotes.filter(down => down === note.noteId).length === 1;
+
+        return isUserDown || isPlaybackDown;
     }
 
     private onVideoReady(event) {
@@ -670,6 +681,7 @@ export interface IRecorderPlayerPageComponentState {
     videoStarted: boolean;
     initialized: boolean;
     showShareModal: boolean;
+    playbackDownNotes: number[];
 }
 
 export enum RecorderStateName {
