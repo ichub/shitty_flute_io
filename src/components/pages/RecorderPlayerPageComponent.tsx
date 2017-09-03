@@ -123,7 +123,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 });
             });
 
-            helper.on(AudioOutputHelper.ON_NOTE_START, (noteId) => {
+            helper.on(AudioOutputHelper.ON_NOTE_END, (noteId) => {
                 this.state.playbackDownNotes.splice(this.state.playbackDownNotes.indexOf(noteId));
                 this.setState({
                     playbackDownNotes: this.state.playbackDownNotes
