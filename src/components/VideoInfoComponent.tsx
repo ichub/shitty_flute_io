@@ -19,7 +19,9 @@ export class VideoInfo extends React.Component<IVideoInfoComponentProps, IVideoI
     }
 
     componentDidMount() {
-        this.refresh();
+        if (this.state.thumbnailUrl) {
+            this.refresh();
+        }
     }
 
     refresh() {
@@ -46,7 +48,7 @@ export class VideoInfo extends React.Component<IVideoInfoComponentProps, IVideoI
                 VideoInfo.styles.base,
                 GlobalFont
             ]}
-            onClick={this.props.openModal}>
+                 onClick={this.props.openModal}>
                 <span style={[
                     VideoInfo.styles.imgStyle,
                     backgroundStyle
