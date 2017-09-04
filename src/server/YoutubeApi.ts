@@ -23,7 +23,7 @@ export class YoutubeApi {
 
     public static getDetailOnVideo(videoId: string): Promise<IYoutubeVideoContentDetail> {
         return axios.get(
-            `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=contentDetails&key=AIzaSyDXOagMe4Ozv3D3iFbtGxSiO4J82IcGXJo`)
+            `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=contentDetails,statistics&key=AIzaSyDXOagMe4Ozv3D3iFbtGxSiO4J82IcGXJo`)
             .then((result) => {
                 if (result.data.items.length < 1) {
                     return Promise.reject("No video found.");

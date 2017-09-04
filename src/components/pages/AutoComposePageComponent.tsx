@@ -2,6 +2,7 @@ import * as React from "react";
 import * as Radium from "radium";
 import {ICompositionState} from "../../models/ICompositionState";
 import {GlobalButton, TitleFont, BoxShadow, OpenSansFont} from "../../styles/GlobalStyles";
+import {parse} from 'iso8601-duration';
 
 const getYoutubeId = require("get-youtube-id");
 const axios = require("axios");
@@ -30,6 +31,14 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                     standard: {url: null, width: 0, height: 0},
                 },
                 channelTitle: null,
+                statistics: {
+                    commentCount: null,
+                    dislikeCount: null,
+                    favoriteCount: null,
+                    likeCount: null,
+                    viewCount: null,
+                },
+                duration: null
             }
         };
     }
@@ -37,8 +46,13 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
     loadVideoInfo() {
         axios.get(`/video-info/${this.state.youtubeVideoId}`)
             .then(result => {
+                console.log(result.data);
+                let info = result.data.snippet.items[0].snippet;
+                info.statistics = result.data.detail.items[0].statistics;
+                info.duration = result.data.detail.items[0].contentDetails.duration;
+
                 this.setState({
-                    videoInfo: result.data.snippet.items[0].snippet
+                    videoInfo: info
                 });
             });
     }
@@ -88,6 +102,22 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
         }
     }
 
+    durationToString() {
+        if (this.state.videoInfo.duration) {
+            return this.state.videoInfo.duration;
+        }
+
+        return "";
+    }
+
+    viewCountToString() {
+        if (this.state.videoInfo.statistics.viewCount) {
+            return this.state.videoInfo.statistics.viewCount;
+        }
+
+        return "";
+    }
+
     render() {
         return (
             <div style={[
@@ -109,7 +139,7 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                         <div style={
                             [AutoComposePageComponent.styles.videoIcon,
                             {
-                                backgroundImage: `url('${this.state.videoInfo.thumbnails.medium.url}')`
+                                backgroundImage: `url('${this.state.videoInfo.thumbnails.medium.url || ""}')`
                             }]}>
                         </div>
                     </div>
@@ -119,10 +149,10 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                             {this.state.videoInfo.title}
                         </div>
                         <div style={AutoComposePageComponent.styles.miscVideoInfo}>
-                            5:30 long
+                            {this.durationToString()}
                         </div>
                         <div style={AutoComposePageComponent.styles.miscVideoInfo}>
-                            520k views
+                            {this.viewCountToString()}
                         </div>
                     </div>
                 </div>
@@ -263,6 +293,14 @@ export interface IVideoInfo {
         standard: {url: string, width: number, height: number},
     },
     channelTitle: string,
+    statistics: {
+        commentCount: string;
+        dislikeCount: string;
+        favoriteCount: string;
+        likeCount: string;
+        viewCount: string;
+    },
+    duration: "string"
 }
 
 export interface IAutoComposePageComponentState {
