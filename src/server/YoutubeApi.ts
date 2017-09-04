@@ -35,7 +35,17 @@ export class YoutubeApi {
             });
     }
 
-    public static getTitleOnVideo(videoId: string): Promise<{ title: string }> {
+    public static getSnippetAndDetailOnVideo(videoId: string): Promise<{snippet, detail}> {
+        return Promise.all([YoutubeApi.getSnippetOnVideo(videoId), YoutubeApi.getDetailOnVideo(videoId)])
+            .then(results => {
+                return Promise.resolve({
+                    snippet: results[0],
+                    detail: results[1],
+                });
+            });
+    }
+
+    public static getTitleOnVideo(videoId: string): Promise<{title: string}> {
         return this.getSnippetOnVideo(videoId)
             .then(info => {
                 let title = info.items[0].snippet.title;

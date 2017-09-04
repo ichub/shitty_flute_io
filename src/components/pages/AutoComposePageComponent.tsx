@@ -2,7 +2,6 @@ import * as React from "react";
 import * as Radium from "radium";
 import {ICompositionState} from "../../models/ICompositionState";
 import {GlobalButton, TitleFont, BoxShadow, OpenSansFont} from "../../styles/GlobalStyles";
-import Marquee from 'react-text-marquee';
 
 const getYoutubeId = require("get-youtube-id");
 const axios = require("axios");
@@ -12,10 +11,6 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
     props: IAutoComposePageComponentProps;
     state: IAutoComposePageComponentState;
 
-    refs: {
-        youtubeLink: HTMLInputElement
-    };
-
     constructor(props: IAutoComposePageComponentProps) {
         super();
 
@@ -23,8 +18,29 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             stateName: AutoComposeStateName.Loading,
             composition: null,
             flootified: false,
-            youtubeVideoId: ""
+            youtubeVideoId: "",
+            youtubeVideoLink: "",
+            videoInfo: {
+                title: null,
+                thumbnails: {
+                    default: {url: null, width: 0, height: 0},
+                    high: {url: null, width: 0, height: 0},
+                    maxres: {url: null, width: 0, height: 0},
+                    medium: {url: null, width: 0, height: 0},
+                    standard: {url: null, width: 0, height: 0},
+                },
+                channelTitle: null,
+            }
         };
+    }
+
+    loadVideoInfo() {
+        axios.get(`/video-info/${this.state.youtubeVideoId}`)
+            .then(result => {
+                this.setState({
+                    videoInfo: result.data.snippet.items[0].snippet
+                });
+            });
     }
 
     componentDidMount() {
@@ -56,12 +72,20 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             });
     }
 
-    getCurrentVideoUrl(): string {
-        if (this.state.youtubeVideoId !== null && this.state.youtubeVideoId.length != 0) {
-            return `https://www.youtube.com/watch?v=${this.state.youtubeVideoId}`
-        }
+    onYoutubeVideoLinkChange(event) {
+        this.setState({youtubeVideoLink: event.target.value});
 
-        return "";
+        const youtubeVideoId = getYoutubeId(event.target.value);
+
+        if (youtubeVideoId) {
+            this.setState({
+                youtubeVideoId: youtubeVideoId
+            }, () => {
+                this.loadVideoInfo();
+            });
+        } else {
+
+        }
     }
 
     render() {
@@ -74,19 +98,25 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                         <input style={[AutoComposePageComponent.styles.youtubeInput]}
                                ref="youtubeLink"
                                type="text"
-                               defaultValue={this.getCurrentVideoUrl()}
+                               value={this.state.youtubeVideoLink}
+                               onChange={this.onYoutubeVideoLinkChange.bind(this)}
                                className="form-control form-control-sm"/>
                     </label>
                 </div>
 
                 <div style={[BoxShadow, AutoComposePageComponent.styles.videoInfo]}>
-                    <div style={AutoComposePageComponent.styles.videoIcon}>
-
+                    <div style={AutoComposePageComponent.styles.videoIconContainer}>
+                        <div style={
+                            [AutoComposePageComponent.styles.videoIcon,
+                            {
+                                backgroundImage: `url('${this.state.videoInfo.thumbnails.medium.url}')`
+                            }]}>
+                        </div>
                     </div>
 
                     <div style={[OpenSansFont, AutoComposePageComponent.styles.videoTitleContainer]}>
                         <div style={AutoComposePageComponent.styles.videoTitle}>
-                            Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet
+                            {this.state.videoInfo.title}
                         </div>
                         <div style={AutoComposePageComponent.styles.miscVideoInfo}>
                             5:30 long
@@ -100,22 +130,6 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                 {/*<a href={`/recorder/view/${this.props.viewToken}`}>view your creation!</a>*/}
             </div>
         );
-    }
-
-    onSubmitClick() {
-        if (this.state.stateName !== AutoComposeStateName.Idle) {
-            return;
-        }
-
-        let videoId = getYoutubeId(this.refs.youtubeLink.value);
-
-        console.log(`new youtube url: ${videoId}`);
-
-        if (videoId !== null) {
-            this.flootify(videoId);
-        } else {
-            console.log("youtube link was invalid");
-        }
     }
 
     flootify(videoId: string) {
@@ -186,12 +200,18 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             overflow: "hidden",
             padding: AutoComposePageComponent.Margin,
         },
-        videoIcon: {
+        videoIconContainer: {
             width: `calc(${AutoComposePageComponent.InfoHeight} - ${AutoComposePageComponent.Margin} * 2)`,
             height: `calc(${AutoComposePageComponent.InfoHeight} - ${AutoComposePageComponent.Margin} * 2)`,
             backgroundColor: "rgba(0, 0, 0, 0.1)",
             display: "inline-block",
             float: "left"
+        },
+        videoIcon: {
+            width: "100%",
+            height: "100%",
+            backgroundPosition: "50% 50%",
+            backgroundSize: "cover",
         },
         videoTitleContainer: {
             display: "inline-block",
@@ -233,9 +253,23 @@ export interface IAutoComposePageComponentProps {
     viewToken: string;
 }
 
+export interface IVideoInfo {
+    title: string,
+    thumbnails: {
+        default: {url: string, width: number, height: number},
+        high: {url: string, width: number, height: number},
+        maxres: {url: string, width: number, height: number},
+        medium: {url: string, width: number, height: number},
+        standard: {url: string, width: number, height: number},
+    },
+    channelTitle: string,
+}
+
 export interface IAutoComposePageComponentState {
     youtubeVideoId: string;
     stateName: AutoComposeStateName;
     composition: ICompositionState;
     flootified: boolean;
+    youtubeVideoLink: string;
+    videoInfo: IVideoInfo;
 }

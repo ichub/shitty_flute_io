@@ -177,6 +177,12 @@ ApiController.get("/flootify/:youtubeId", (req: express.Request, res: express.Re
     );
 });
 
+ApiController.get("/video-info/:youtubeId", (req: express.Request, res: express.Response) => {
+    returnJson(res,
+        YoutubeApi.getSnippetAndDetailOnVideo(req.params.youtubeId)
+    );
+});
+
 ApiController.get("/video-title/:youtubeId", (req: express.Request, res: express.Response) => {
     returnJson(res,
         YoutubeApi.getTitleOnVideo(req.params.youtubeId)
