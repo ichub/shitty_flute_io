@@ -88,6 +88,12 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                         <div style={AutoComposePageComponent.styles.videoTitle}>
                             Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet
                         </div>
+                        <div style={AutoComposePageComponent.styles.miscVideoInfo}>
+                            5:30 long
+                        </div>
+                        <div style={AutoComposePageComponent.styles.miscVideoInfo}>
+                            520k views
+                        </div>
                     </div>
                 </div>
 
@@ -189,7 +195,6 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
         },
         videoTitleContainer: {
             display: "inline-block",
-            width: "auto",
             float: "left",
             marginLeft: AutoComposePageComponent.Margin,
             width: `calc(${AutoComposePageComponent.InfoWidth} - ${AutoComposePageComponent.InfoHeight} - ${AutoComposePageComponent.Margin})`,
@@ -202,7 +207,15 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             whiteSpace: "nowrap",
             overflow: "hidden",
             lineHeight: "1em",
-            height: "2em",
+            height: "1.5em",
+        },
+        miscVideoInfo: {
+            color: "rgba(0, 0, 0, 0.7)",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            lineHeight: "1em",
+            height: "1.5em",
         }
     };
 }
