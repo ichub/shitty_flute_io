@@ -162,7 +162,10 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                     </label>
                 </div>
 
-                <div style={[BoxShadow, AutoComposePageComponent.styles.videoInfo]}>
+                <div style={[
+                    BoxShadow,
+                    AutoComposePageComponent.styles.videoInfo,
+                    (this.state.youtubeVideoId ? this.easeIn(0) : {})]}>
                     <div style={AutoComposePageComponent.styles.videoIconContainer}>
                         <div style={
                             [AutoComposePageComponent.styles.videoIcon,
@@ -237,6 +240,25 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
     private static readonly InfoWidth = "350px";
     private static readonly Margin = "10px";
 
+    private static readonly fadeInKeyframes = Radium.keyframes({
+        "0%": {
+            opacity: 0,
+            transform: "translatey(-10px)",
+        },
+        "100%": {
+            opacity: 1,
+            transform: "translatey(0px  )",
+        },
+    }, "fadeIn");
+
+    easeIn(offset: number) {
+        return {
+            opacity: 0,
+            animation: `x 1s ${offset}s ease forwards`,
+            animationName: AutoComposePageComponent.fadeInKeyframes,
+        }
+    }
+
     private static styles = {
         base: {
             width: "100vw",
@@ -250,6 +272,7 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             width: "500px"
         },
         videoInfo: {
+            opacity: 0,
             margin: "25px",
             width: AutoComposePageComponent.InfoWidth,
             height: AutoComposePageComponent.InfoHeight,
