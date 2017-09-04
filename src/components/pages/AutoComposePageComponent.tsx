@@ -87,6 +87,16 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             });
     }
 
+    getValidInputClass(): string {
+        if (this.state.youtubeVideoLink) {
+            if (getYoutubeId(this.state.youtubeVideoLink)) {
+                return "is-valid"
+            }
+            return "is-invalid"
+        }
+        return "";
+    }
+
     onYoutubeVideoLinkChange(event) {
         this.setState({youtubeVideoLink: event.target.value});
 
@@ -158,32 +168,33 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                                type="text"
                                value={this.state.youtubeVideoLink}
                                onChange={this.onYoutubeVideoLinkChange.bind(this)}
-                               className="form-control form-control-sm"/>
+                               className={`form-control form-control-sm ${this.getValidInputClass()}`}/>
                     </label>
                 </div>
 
                 <div style={[
-                    BoxShadow,
                     AutoComposePageComponent.styles.videoInfo,
                     (this.state.youtubeVideoId ? this.easeIn(0) : {})]}>
-                    <div style={AutoComposePageComponent.styles.videoIconContainer}>
-                        <div style={
+                    <div style={[AutoComposePageComponent.styles.videoInfoContent, BoxShadow]}>
+                        <div style={AutoComposePageComponent.styles.videoIconContainer}>
+                            <div style={
                             [AutoComposePageComponent.styles.videoIcon,
                             {
                                 backgroundImage: `url('${this.state.videoInfo.thumbnails.medium.url || ""}')`
                             }]}>
+                            </div>
                         </div>
-                    </div>
 
-                    <div style={[OpenSansFont, AutoComposePageComponent.styles.videoTitleContainer]}>
-                        <div style={AutoComposePageComponent.styles.videoTitle}>
-                            {this.state.videoInfo.title}
-                        </div>
-                        <div style={AutoComposePageComponent.styles.miscVideoInfo}>
-                            {this.durationToString()}
-                        </div>
-                        <div style={AutoComposePageComponent.styles.miscVideoInfo}>
-                            {this.viewCountToString()}
+                        <div style={[OpenSansFont, AutoComposePageComponent.styles.videoTitleContainer]}>
+                            <div style={AutoComposePageComponent.styles.videoTitle}>
+                                {this.state.videoInfo.title}
+                            </div>
+                            <div style={AutoComposePageComponent.styles.miscVideoInfo}>
+                                {this.durationToString()}
+                            </div>
+                            <div style={AutoComposePageComponent.styles.miscVideoInfo}>
+                                {this.viewCountToString()}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -274,12 +285,18 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
         videoInfo: {
             opacity: 0,
             margin: "25px",
+        },
+        videoInfoContent: {
+            transition: "200ms",
             width: AutoComposePageComponent.InfoWidth,
             height: AutoComposePageComponent.InfoHeight,
             borderRadius: "2px",
             backgroundColor: "rgba(0, 0, 0, 0.05)",
             overflow: "hidden",
             padding: AutoComposePageComponent.Margin,
+            ":hover": {
+                transform: "scale(1.05)"
+            }
         },
         videoIconContainer: {
             width: `calc(${AutoComposePageComponent.InfoHeight} - ${AutoComposePageComponent.Margin} * 2)`,
