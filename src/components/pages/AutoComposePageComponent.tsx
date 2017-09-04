@@ -2,7 +2,8 @@ import * as React from "react";
 import * as Radium from "radium";
 import {ICompositionState} from "../../models/ICompositionState";
 import {GlobalButton, TitleFont, BoxShadow, OpenSansFont} from "../../styles/GlobalStyles";
-import {parse} from 'iso8601-duration';
+import {parse as parseDuration} from 'iso8601-duration';
+import * as roundPrecision from "round-precision";
 
 const getYoutubeId = require("get-youtube-id");
 const axios = require("axios");
@@ -104,7 +105,23 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
 
     durationToString() {
         if (this.state.videoInfo.duration) {
-            return this.state.videoInfo.duration;
+            const parsed = parseDuration(this.state.videoInfo.duration);
+
+            let result = "";
+
+            if (parsed.seconds) {
+                result = parsed.seconds + result;
+            }
+
+            if (parsed.minutes) {
+                result = parsed.minutes + ":" + result;
+            }
+
+            if (parsed.hours) {
+                result = parsed.hours + ":" + result;
+            }
+
+            return result;
         }
 
         return "";
@@ -112,7 +129,18 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
 
     viewCountToString() {
         if (this.state.videoInfo.statistics.viewCount) {
-            return this.state.videoInfo.statistics.viewCount;
+            const actualCount = parseInt(this.state.videoInfo.statistics.viewCount, 10);
+
+            if (actualCount >= 1000 * 1000) {
+                return roundPrecision(actualCount / (1000 * 1000), 1) + " M"
+            }
+
+            if (actualCount >= 1000 * 10) {
+                return roundPrecision(actualCount / (1000), 1) + " k views"
+
+            }
+
+            return actualCount;
         }
 
         return "";
@@ -258,6 +286,7 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             overflow: "hidden",
             lineHeight: "1em",
             height: "1.5em",
+            marginBottom: "5px"
         },
         miscVideoInfo: {
             color: "rgba(0, 0, 0, 0.7)",

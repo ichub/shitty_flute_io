@@ -89,6 +89,7 @@
     "react-share": "^1.15.1",
     "react-tooltip": "^3.3.0",
     "react-youtube": "^7.4.0",
+    "round-precision": "^1.0.0",
     "sqlite3": "^3.1.8"
   }
 }
