@@ -2,6 +2,7 @@ import * as React from "react";
 import * as Radium from "radium";
 import {ICompositionState} from "../../models/ICompositionState";
 import {GlobalButton, TitleFont, BoxShadow, OpenSansFont} from "../../styles/GlobalStyles";
+import Marquee from 'react-text-marquee';
 
 const getYoutubeId = require("get-youtube-id");
 const axios = require("axios");
@@ -83,8 +84,10 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
 
                     </div>
 
-                    <div style={[OpenSansFont, AutoComposePageComponent.styles.videoTitle]}>
-                        Lorem ipusum dolor sit amet
+                    <div style={[OpenSansFont, AutoComposePageComponent.styles.videoTitleContainer]}>
+                        <div style={AutoComposePageComponent.styles.videoTitle}>
+                            Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet
+                        </div>
                     </div>
                 </div>
 
@@ -184,7 +187,7 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             display: "inline-block",
             float: "left"
         },
-        videoTitle: {
+        videoTitleContainer: {
             display: "inline-block",
             width: "auto",
             float: "left",
@@ -193,6 +196,13 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             color: "rgba(0, 0, 0, 0.9)",
             fontWeight: "bold",
             userSelect: "none",
+        },
+        videoTitle: {
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            lineHeight: "1em",
+            height: "2em",
         }
     };
 }
