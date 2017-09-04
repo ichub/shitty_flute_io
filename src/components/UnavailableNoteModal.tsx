@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Radium from "radium";
-import {GlobalFont} from "../styles/GlobalStyles";
+import {OpenSansFont} from "../styles/GlobalStyles";
 import {RecorderPlayerPageComponent} from "./pages/RecorderPlayerPageComponent";
 
 @Radium
@@ -16,7 +16,7 @@ export class UnavailableNoteModal extends React.Component<IUnavailableNoteModalP
         return (
             <div style={[
                 UnavailableNoteModal.styles.base,
-                GlobalFont
+                OpenSansFont
             ]}>
                 <label>
                     <div style={[UnavailableNoteModal.styles.header]}>Feature Unavailable</div>

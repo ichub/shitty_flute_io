@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Radium from "radium";
 import * as color from "color";
-import {GlobalFont} from "../styles/GlobalStyles";
+import {OpenSansFont} from "../styles/GlobalStyles";
 
 @Radium
 export class LoadingOverlayComponent extends React.Component<ILoadingOverlayComponentProps, ILoadingOverlayComponentState> {
@@ -11,7 +11,7 @@ export class LoadingOverlayComponent extends React.Component<ILoadingOverlayComp
     render() {
         return (
             <div style={[
-                GlobalFont,
+                OpenSansFont,
                 LoadingOverlayComponent.styles.base,
                 LoadingOverlayComponent.styles.visible(this.props.visible),
             ]}>

@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as Radium from "radium";
 import {ICompositionState} from "../../models/ICompositionState";
+import {GlobalButton, TitleFont, BoxShadow, OpenSansFont} from "../../styles/GlobalStyles";
 
 const getYoutubeId = require("get-youtube-id");
 const axios = require("axios");
@@ -67,23 +68,27 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             <div style={[
                 AutoComposePageComponent.styles.base
             ]}>
-                <label>
-                    youtube url:
-                    <input style={[AutoComposePageComponent.styles.youtubeInput]} ref="youtubeLink" type="text"
-                           defaultValue={this.getCurrentVideoUrl()}/>
-                </label>
-                <input
-                    type="submit"
-                    onClick={this.onSubmitClick.bind(this)}
-                    disabled={this.state.stateName !== AutoComposeStateName.Idle}/>
-                <br/>
-                <br/>
-                state name: {this.state.stateName}
-                <br/>
-                flootified: {this.state.flootified.toString()}
-                <br/>
-                <br/>
-                <a href={`/recorder/view/${this.props.viewToken}`}>view your creation!</a>
+                <div>
+                    <label>
+                        <input style={[AutoComposePageComponent.styles.youtubeInput]}
+                               ref="youtubeLink"
+                               type="text"
+                               defaultValue={this.getCurrentVideoUrl()}
+                               className="form-control form-control-sm"/>
+                    </label>
+                </div>
+
+                <div style={[BoxShadow, AutoComposePageComponent.styles.videoInfo]}>
+                    <div style={AutoComposePageComponent.styles.videoIcon}>
+
+                    </div>
+
+                    <div style={[OpenSansFont, AutoComposePageComponent.styles.videoTitle]}>
+                        Lorem ipusum dolor sit amet
+                    </div>
+                </div>
+
+                {/*<a href={`/recorder/view/${this.props.viewToken}`}>view your creation!</a>*/}
             </div>
         );
     }
@@ -147,14 +152,49 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
         });
     }
 
+    private static readonly InfoHeight = "100px";
+    private static readonly InfoWidth = "350px";
+    private static readonly Margin = "10px";
+
     private static styles = {
         base: {
-            width: "100%"
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column"
         },
         youtubeInput: {
             width: "500px"
+        },
+        videoInfo: {
+            margin: "25px",
+            width: AutoComposePageComponent.InfoWidth,
+            height: AutoComposePageComponent.InfoHeight,
+            borderRadius: "2px",
+            backgroundColor: "rgba(0, 0, 0, 0.05)",
+            overflow: "hidden",
+            padding: AutoComposePageComponent.Margin,
+        },
+        videoIcon: {
+            width: `calc(${AutoComposePageComponent.InfoHeight} - ${AutoComposePageComponent.Margin} * 2)`,
+            height: `calc(${AutoComposePageComponent.InfoHeight} - ${AutoComposePageComponent.Margin} * 2)`,
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+            display: "inline-block",
+            float: "left"
+        },
+        videoTitle: {
+            display: "inline-block",
+            width: "auto",
+            float: "left",
+            marginLeft: AutoComposePageComponent.Margin,
+            width: `calc(${AutoComposePageComponent.InfoWidth} - ${AutoComposePageComponent.InfoHeight} - ${AutoComposePageComponent.Margin})`,
+            color: "rgba(0, 0, 0, 0.9)",
+            fontWeight: "bold",
+            userSelect: "none",
         }
-    }
+    };
 }
 
 enum AutoComposeStateName {

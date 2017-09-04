@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Radium from "radium";
-import {GlobalFont} from "../styles/GlobalStyles";
+import {OpenSansFont} from "../styles/GlobalStyles";
 
 @Radium
 export class BufferingComponent extends React.Component<IBufferingComponentProps, IBufferingComponentState> {
@@ -10,7 +10,7 @@ export class BufferingComponent extends React.Component<IBufferingComponentProps
     render() {
         return (
             <div style={[
-                GlobalFont,
+                OpenSansFont,
                 BufferingComponent.styles.base]}>
                 <span style={[
                     BufferingComponent.styles.bufferingText,

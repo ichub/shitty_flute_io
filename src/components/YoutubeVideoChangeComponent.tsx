@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Radium from "radium";
-import {GlobalFont} from "../styles/GlobalStyles";
+import {OpenSansFont} from "../styles/GlobalStyles";
 
 const getYoutubeId = require("get-youtube-id");
 
@@ -17,7 +17,7 @@ export class YoutubeVideoChangeComponent extends React.Component<IYoutubeVideoCh
         return (
             <div style={[
                 YoutubeVideoChangeComponent.styles.base,
-                GlobalFont
+                OpenSansFont
             ]}>
                 <label>
                     <span style={[YoutubeVideoChangeComponent.styles.header]}>Change YouTube Url</span>

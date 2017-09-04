@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Radium from "radium";
 import {INoteInfo} from "../models/INoteInfo";
-import {GlobalFont} from "../styles/GlobalStyles";
+import {OpenSansFont} from "../styles/GlobalStyles";
 import {INoteUIPosition} from "../models/INoteUIPosition";
 
 @Radium
@@ -16,7 +16,7 @@ export class RecorderNote extends React.Component<IRecorderNoteProps, IRecorderN
     render() {
         return (
             <div style={[
-                GlobalFont,
+                OpenSansFont,
                 RecorderNote.styles.base,
                 RecorderNote.styles.flatState(this.props.notePosition.isMinor),
                 RecorderNote.styles.downState(this.props.isDown),

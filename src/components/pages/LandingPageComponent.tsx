@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Radium from "radium";
 import * as color from "color";
-import {ButtonFont, GlobalFont, TitleFont} from "../../styles/GlobalStyles";
+import {ButtonFont, OpenSansFont, TitleFont} from "../../styles/GlobalStyles";
 
 @Radium
 export class LandingPageComponent extends React.Component<any, ILandingPageComponentState> {

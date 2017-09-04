@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Radium from "radium";
-import {GlobalFont, TitleFont} from "../styles/GlobalStyles";
+import {OpenSansFont, TitleFont} from "../styles/GlobalStyles";
 
 const axios = require("axios");
 const ReactYoutube = require("react-youtube").default as any;
@@ -51,7 +51,7 @@ export class VideoPlayer extends React.Component<IVideoPlayerProps, IVideoPlayer
                     }
                 </div>
                 <div style={[
-                    GlobalFont,
+                    OpenSansFont,
                     VideoPlayer.styles.videoTitle,
                 ]}>
                 </div>

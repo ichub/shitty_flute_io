@@ -4,7 +4,7 @@ import {RecorderStateName} from "./pages/RecorderPlayerPageComponent";
 import * as ReactTooltip from "react-tooltip";
 import Slider from "rc-slider";
 import {YoutubeVideoChangeComponent} from "./YoutubeVideoChangeComponent";
-import {GlobalFont, ModalStyle} from "../styles/GlobalStyles";
+import {OpenSansFont, ModalStyle} from "../styles/GlobalStyles";
 import {TimeSlider} from "./TimeSlider";
 import {VideoInfo} from "./VideoInfoComponent";
 import * as ReactModal from "react-modal";
@@ -84,7 +84,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
         return (
             <div style={[
                 ControllerBarComponent.styles.base,
-                GlobalFont
+                OpenSansFont
             ]}>
                 <i className="fa fa-volume-up" aria-hidden="true"></i>
 

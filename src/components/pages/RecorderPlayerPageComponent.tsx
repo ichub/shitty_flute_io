@@ -9,7 +9,7 @@ import {ITotalNoteState, makeNewITotalNoteState, NoteKeyboardManager, IDownNote}
 import {INoteInfo} from "../../models/INoteInfo";
 import {ICompositionNote} from "../../models/ICompositionNote";
 import {ICompositionState} from "../../models/ICompositionState";
-import {GlobalFont, TitleFont, ModalStyle} from "../../styles/GlobalStyles";
+import {OpenSansFont, TitleFont, ModalStyle} from "../../styles/GlobalStyles";
 import * as color from "color";
 import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
