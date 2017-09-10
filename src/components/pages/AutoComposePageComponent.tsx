@@ -78,6 +78,10 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                         stateName: AutoComposeStateName.Idle,
                         flootified: true,
                         youtubeVideoId: compositionState.youtubeVideoId
+                    }, () => {
+                        if (compositionState.youtubeVideoId) {
+                            this.loadVideoInfo();
+                        }
                     });
                 }
 
@@ -199,42 +203,56 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                     </div>
                 </div>
 
-                <div style={[,
+                {
+                    !this.state.flootified ?
+                        <div style={[,
+                            AutoComposePageComponent.styles.composeButton,
+                            TitleFont,
+                            (this.state.youtubeVideoId) ? this.easeIn(0.25) : {}
+                        ]}>
+                            <input key="compose" disabled={this.state.stateName !== AutoComposeStateName.Idle}
+                                   style={GlobalButton} type="button"
+                                   value={this.state.stateName == AutoComposeStateName.Flootifying ? "flootifying..." : "flootify"}
+                                   onClick={this.flootify.bind(this)}/>
+                        </div> :
+                        null
+                }
+
+                <div style={[
                     AutoComposePageComponent.styles.composeButton,
                     TitleFont,
-                    this.state.youtubeVideoId ? this.easeIn(0.25) : {}
+                    this.state.flootified ? this.easeIn(0.25) : {}
                 ]}>
-                    <input key="compose" style={GlobalButton} type="button" value="flootify"
-                           onClick={this.flootify.bind(this)}/>
+                    <a href={`/recorder/view/${this.props.viewToken}`}>view your creation!</a>
                 </div>
-                {/*<a href={`/recorder/view/${this.props.viewToken}`}>view your creation!</a>*/}
-
             </div>
         );
     }
 
     flootify() {
-        this.setState({
-            stateName: AutoComposeStateName.Flootifying,
-        });
+        if (this.state.stateName === AutoComposeStateName.Idle) {
+            this.setState({
+                stateName: AutoComposeStateName.Flootifying,
+            }, () => {
+                axios.get(`/flootify/${this.state.youtubeVideoId}`)
+                    .then((result) => {
+                        console.log("flootify complete");
+                        const comp = result.data as ICompositionState;
 
-        axios.get(`/flootify/${this.state.youtubeVideoId}`)
-            .then((result) => {
-                console.log("flootify complete");
-                const comp = result.data as ICompositionState;
-
-                this.setState({
-                    stateName: AutoComposeStateName.Idle,
-                    composition: comp,
-                    flootified: true,
-                    youtubeVideoId: comp.youtubeVideoId
-                }, () => {
-                    this.save();
-                });
-            })
-            .catch((err) => {
-                console.log(err);
+                        this.setState({
+                            stateName: AutoComposeStateName.Idle,
+                            composition: comp,
+                            flootified: true,
+                            youtubeVideoId: comp.youtubeVideoId
+                        }, () => {
+                            this.save();
+                        });
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
             });
+        }
     }
 
     save() {
