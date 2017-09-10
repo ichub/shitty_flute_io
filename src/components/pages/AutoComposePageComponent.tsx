@@ -5,6 +5,7 @@ import {GlobalButton, TitleFont, BoxShadow, OpenSansFont, ModalStyle} from "../.
 import {parse as parseDuration} from 'iso8601-duration';
 import * as roundPrecision from "round-precision";
 import ReactModal = require("react-modal");
+import {isNullOrUndefined} from "util";
 
 const getYoutubeId = require("get-youtube-id");
 const axios = require("axios");
@@ -125,18 +126,18 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
 
             let result = "";
 
-            if (parsed.seconds) {
-                result = parsed.seconds + result;
+            if (parsed.seconds !== undefined) {
+                result = (parsed.seconds >= 10 ? parsed.seconds : "0" + parsed.seconds) + result;
             }
 
-            if (parsed.minutes) {
-                result = parsed.minutes + ":" + result;
+            if (parsed.minutes > 0) {
+                result = (parsed.minutes >= 10 ? parsed.minutes : "0" + parsed.minutes) + ":" + result;
             } else {
                 result = "00:" + result;
             }
 
-            if (parsed.hours) {
-                result = parsed.hours + ":" + result;
+            if (parsed.hours > 0) {
+                result = (parsed.hours >= 10 ? parsed.hours : "0" + parsed.hours) + ":" + result;
             }
 
             return result;
@@ -150,7 +151,7 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             const actualCount = parseInt(this.state.videoInfo.statistics.viewCount, 10);
 
             if (actualCount >= 1000 * 1000) {
-                return roundPrecision(actualCount / (1000 * 1000), 1) + " M"
+                return roundPrecision(actualCount / (1000 * 1000), 1) + " M views"
             }
 
             if (actualCount >= 1000 * 10) {
@@ -158,7 +159,7 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
 
             }
 
-            return actualCount;
+            return actualCount + "views";
         }
 
         return "";
@@ -230,13 +231,18 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                         null
                 }
 
-                <div style={[
-                    AutoComposePageComponent.styles.viewYourCreation,
-                    TitleFont,
-                    this.state.flootified ? this.easeIn(0.25) : {}
-                ]}>
-                    <a href={`/recorder/view/${this.props.viewToken}`}>view your creation!</a>
-                </div>
+                {
+                    this.state.flootified ?
+                        <div style={[
+                            AutoComposePageComponent.styles.viewYourCreation,
+                            TitleFont,
+                            this.state.flootified ? this.easeIn(0.25) : {}
+                        ]}>
+                            <a href={`/recorder/view/${this.props.viewToken}`}>view your creation!</a>
+                        </div> :
+                        null
+                }
+
 
                 <ReactModal
                     isOpen={!!this.state.errorMessage}
