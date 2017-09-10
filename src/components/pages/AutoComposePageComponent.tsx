@@ -219,7 +219,7 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                 }
 
                 <div style={[
-                    AutoComposePageComponent.styles.composeButton,
+                    AutoComposePageComponent.styles.viewYourCreation,
                     TitleFont,
                     this.state.flootified ? this.easeIn(0.25) : {}
                 ]}>
@@ -307,6 +307,9 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             backgroundColor: "rgba(0, 0, 0, 0.02)",
 
         },
+        viewYourCreation: {
+            fontSize: "2em",
+        },
         youtubeInput: {
             width: "500px"
         },
@@ -325,9 +328,6 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             backgroundColor: "white",
             overflow: "hidden",
             padding: AutoComposePageComponent.Margin,
-            ":hover": {
-                transform: "scale(1.05)"
-            }
         },
         videoIconContainer: {
             width: `calc(${AutoComposePageComponent.InfoHeight} - ${AutoComposePageComponent.Margin} * 2)`,
