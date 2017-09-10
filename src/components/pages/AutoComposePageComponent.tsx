@@ -277,7 +277,9 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            flexDirection: "column"
+            flexDirection: "column",
+            backgroundColor: "rgba(0, 0, 0, 0.02)",
+
         },
         youtubeInput: {
             width: "500px"
@@ -291,7 +293,7 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             width: AutoComposePageComponent.InfoWidth,
             height: AutoComposePageComponent.InfoHeight,
             borderRadius: "2px",
-            backgroundColor: "rgba(0, 0, 0, 0.05)",
+            backgroundColor: "white",
             overflow: "hidden",
             padding: AutoComposePageComponent.Margin,
             ":hover": {
