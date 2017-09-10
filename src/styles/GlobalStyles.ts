@@ -15,7 +15,8 @@ export const OpenSansFont = {
 };
 
 export const TitleFont = {
-    fontFamily: "'Reenie Beanie', cursive"
+    fontFamily: "'Reenie Beanie', cursive",
+    fontSize: "1.5em"
 };
 
 export const ButtonFont = {

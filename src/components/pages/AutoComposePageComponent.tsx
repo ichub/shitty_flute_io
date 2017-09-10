@@ -1,9 +1,10 @@
 import * as React from "react";
 import * as Radium from "radium";
 import {ICompositionState} from "../../models/ICompositionState";
-import {GlobalButton, TitleFont, BoxShadow, OpenSansFont} from "../../styles/GlobalStyles";
+import {GlobalButton, TitleFont, BoxShadow, OpenSansFont, ModalStyle} from "../../styles/GlobalStyles";
 import {parse as parseDuration} from 'iso8601-duration';
 import * as roundPrecision from "round-precision";
+import ReactModal = require("react-modal");
 
 const getYoutubeId = require("get-youtube-id");
 const axios = require("axios");
@@ -40,7 +41,8 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                     viewCount: null,
                 },
                 duration: null
-            }
+            },
+            errorMessage: null,
         };
     }
 
@@ -129,6 +131,8 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
 
             if (parsed.minutes) {
                 result = parsed.minutes + ":" + result;
+            } else {
+                result = "00:" + result;
             }
 
             if (parsed.hours) {
@@ -233,6 +237,19 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                 ]}>
                     <a href={`/recorder/view/${this.props.viewToken}`}>view your creation!</a>
                 </div>
+
+                <ReactModal
+                    isOpen={!!this.state.errorMessage}
+                    style={ModalStyle}
+                    contentLabel="unavailable"
+                    onRequestClose={() => this.setState({errorMessage: null})}>
+                    <div style={TitleFont}>
+                        <b>Error Flootifying</b> <br/>
+
+                        {this.state.errorMessage}
+                    </div>
+
+                </ReactModal>
             </div>
         );
     }
@@ -244,20 +261,27 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             }, () => {
                 axios.get(`/flootify/${this.state.youtubeVideoId}`)
                     .then((result) => {
-                        console.log("flootify complete");
-                        const comp = result.data as ICompositionState;
+                        if (result.status === 200) {
+                            console.log("flootify complete");
+                            const comp = result.data as ICompositionState;
 
-                        this.setState({
-                            stateName: AutoComposeStateName.Idle,
-                            composition: comp,
-                            flootified: true,
-                            youtubeVideoId: comp.youtubeVideoId
-                        }, () => {
-                            this.save();
-                        });
+                            this.setState({
+                                stateName: AutoComposeStateName.Idle,
+                                composition: comp,
+                                flootified: true,
+                                youtubeVideoId: comp.youtubeVideoId
+                            }, () => {
+                                this.save();
+                            });
+                        } else {
+                            console.log("flootify error");
+                        }
                     })
                     .catch((err) => {
-                        console.log(err);
+                        this.setState({
+                            stateName: AutoComposeStateName.Idle,
+                            errorMessage: err.response.data.toString(),
+                        });
                     });
             });
         }
@@ -432,4 +456,5 @@ export interface IAutoComposePageComponentState {
     flootified: boolean;
     youtubeVideoLink: string;
     videoInfo: IVideoInfo;
+    errorMessage: string;
 }
