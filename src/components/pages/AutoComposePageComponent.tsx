@@ -44,6 +44,7 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                 duration: null
             },
             errorMessage: null,
+            timeLeft: 0
         };
     }
 
@@ -243,6 +244,14 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                         null
                 }
 
+                {
+                    this.state.stateName == AutoComposeStateName.Flootifying ?
+                        <div style={TitleFont}>
+                            {this.state.timeLeft} seconds left
+                        </div> :
+                        null
+                }
+
 
                 <ReactModal
                     isOpen={!!this.state.errorMessage}
@@ -265,25 +274,36 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             this.setState({
                 stateName: AutoComposeStateName.Flootifying,
             }, () => {
+                let interval;
+
+                this.setState({
+                    timeLeft: 200,
+                }, () => {
+                    interval = setInterval(() => {
+                        this.setState({
+                            timeLeft: Math.max(this.state.timeLeft - 1, 0)
+                        });
+                    }, 1000);
+                });
+
                 axios.get(`/flootify/${this.state.youtubeVideoId}`)
                     .then((result) => {
-                        if (result.status === 200) {
-                            console.log("flootify complete");
-                            const comp = result.data as ICompositionState;
+                        clearInterval(interval);
+                        console.log("flootify complete");
+                        const comp = result.data as ICompositionState;
 
-                            this.setState({
-                                stateName: AutoComposeStateName.Idle,
-                                composition: comp,
-                                flootified: true,
-                                youtubeVideoId: comp.youtubeVideoId
-                            }, () => {
-                                this.save();
-                            });
-                        } else {
-                            console.log("flootify error");
-                        }
+                        this.setState({
+                            stateName: AutoComposeStateName.Idle,
+                            composition: comp,
+                            flootified: true,
+                            youtubeVideoId: comp.youtubeVideoId
+                        }, () => {
+                            this.save();
+                        });
                     })
                     .catch((err) => {
+                        clearInterval(interval);
+
                         this.setState({
                             stateName: AutoComposeStateName.Idle,
                             errorMessage: err.response.data.toString(),
@@ -463,4 +483,5 @@ export interface IAutoComposePageComponentState {
     youtubeVideoLink: string;
     videoInfo: IVideoInfo;
     errorMessage: string;
+    timeLeft: number;
 }
