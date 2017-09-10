@@ -165,16 +165,24 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             <div style={[
                 AutoComposePageComponent.styles.base
             ]}>
-                <div>
-                    <label>
-                        <input style={[AutoComposePageComponent.styles.youtubeInput]}
-                               ref="youtubeLink"
-                               type="text"
-                               value={this.state.youtubeVideoLink}
-                               onChange={this.onYoutubeVideoLinkChange.bind(this)}
-                               className={`form-control form-control-sm ${this.getValidInputClass()}`}/>
-                    </label>
-                </div>
+                {
+                    (!this.state.flootified && this.state.stateName === AutoComposeStateName.Idle) ?
+                        <div style={AutoComposePageComponent.styles.flex}>
+                            <div style={[AutoComposePageComponent.styles.title, TitleFont]}>
+                                Paste the youtube link you want to flootify below (:
+                            </div>
+                            <label>
+                                <input style={[AutoComposePageComponent.styles.youtubeInput]}
+                                       ref="youtubeLink"
+                                       type="text"
+                                       value={this.state.youtubeVideoLink}
+                                       onChange={this.onYoutubeVideoLinkChange.bind(this)}
+                                       className={`form-control form-control-sm ${this.getValidInputClass()}`}/>
+                            </label>
+                        </div> :
+                        null
+                }
+
 
                 <div style={[
                     AutoComposePageComponent.styles.videoInfo,
@@ -307,8 +315,22 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             backgroundColor: "rgba(0, 0, 0, 0.02)",
 
         },
+        flex: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexFlow: "column",
+        },
+        title: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            margin: "20px",
+            fontSize: "2em"
+        },
         viewYourCreation: {
             fontSize: "2em",
+            opacity: 0,
         },
         youtubeInput: {
             width: "500px"
