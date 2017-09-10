@@ -199,18 +199,26 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                     </div>
                 </div>
 
+                <div style={[,
+                    AutoComposePageComponent.styles.composeButton,
+                    TitleFont,
+                    this.state.youtubeVideoId ? this.easeIn(0.25) : {}
+                ]}>
+                    <input key="compose" style={GlobalButton} type="button" value="flootify"
+                           onClick={this.flootify.bind(this)}/>
+                </div>
                 {/*<a href={`/recorder/view/${this.props.viewToken}`}>view your creation!</a>*/}
+
             </div>
         );
     }
 
-    flootify(videoId: string) {
+    flootify() {
         this.setState({
             stateName: AutoComposeStateName.Flootifying,
-            youtubeVideoId: videoId,
         });
 
-        axios.get(`/flootify/${videoId}`)
+        axios.get(`/flootify/${this.state.youtubeVideoId}`)
             .then((result) => {
                 console.log("flootify complete");
                 const comp = result.data as ICompositionState;
@@ -287,6 +295,9 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
         videoInfo: {
             opacity: 0,
             margin: "25px",
+        },
+        composeButton: {
+            opacity: 0,
         },
         videoInfoContent: {
             transition: "200ms",

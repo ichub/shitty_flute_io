@@ -24,8 +24,8 @@ export const ButtonFont = {
 
 export const GlobalButton = {
     padding: "10px 5px 10px 5px",
-    backgroundColor: "white",
     color: "black",
+    backgroundColor: "transparent",
     border: "none",
     cursor: "pointer",
     transition: "200ms",
