@@ -166,7 +166,7 @@ export class ControllerBarComponent extends React.Component<IControllerBarCompon
                     <VideoInfo
                         openModal={this.openModal.bind(this)}
                         youtubeVideoId={this.props.youtubeVideoId}/>
-                    <ReactTooltip id="change video" place="top" effect="solid" delayHide={1}/>
+                    <ReactTooltip id="change video" place="top" effect="solid" delayHide={1} disable={this.props.viewOnly}/>
                 </span>
             </div>
         );

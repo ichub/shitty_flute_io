@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Radium from "radium";
-import {OpenSansFont} from "../styles/GlobalStyles";
+import {GlobalFont, OpenSansFont} from "../styles/GlobalStyles";
 import {generateShareIcon, ShareButtons, ShareCounts} from "react-share";
 
 const FacebookIcon = generateShareIcon("facebook");
@@ -40,7 +40,10 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
                 OpenSansFont,
                 ShareComponent.styles.base
             ]}>
-                <div style={[ShareComponent.styles.flex]}>
+                <div>
+                    <span style={[ShareComponent.styles.sharePreamble]}>
+                            share your creation:
+                            </span>
                     <span
                         onClick={this.selectText.bind(this)}
                         ref="urlText"
@@ -123,7 +126,9 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
     }
 
     private static styles = {
-        base: {},
+        base: {
+            margin: "0 50px 50px 50px"
+        },
         flex: {
             justifyContent: "center",
             alignItems: "center",
@@ -134,6 +139,8 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
             borderRadius: "2px",
             backgroundColor: "rgb(220, 220, 220)",
             fontWeight: "bold",
+            marginTop: "20px",
+            marginBottom: "15px",
             cursor: "pointer"
         },
         share: {

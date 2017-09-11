@@ -245,8 +245,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
                 <div>
                     <div style={[RecorderPlayerPageComponent.styles.flex]}>
-                        <span key="share" style={[RecorderPlayerPageComponent.styles.share, TitleFont]}
-                              onClick={this.boundHandleOpenShareModal}>share</span>
+                        <ShareComponent viewToken={this.props.viewToken}/>
                     </div>
 
                     <ReactModal

@@ -51,7 +51,7 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                             LandingPageComponent.styles.composeButton,
                         ]}
                             type="button"
-                            value="(AUTO COMPOSE)"
+                            value="(FLOOTIFY)"
                             onClick={this.onAutoComposeClick.bind(this)}/>
 
                         <input

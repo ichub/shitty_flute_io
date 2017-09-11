@@ -11,42 +11,14 @@ import math
 import sys
 import subprocess
 import time
+import os
 
 current_milli_time = lambda: int(round(time.time() * 1000))
 
 # set globals
-n_notes = 24
-json_for_id = [None] * n_notes
-
-# load note info strings into json_for_id
-def makeINoteInfo(note_id, name, label, noteType, soundFileUrl, shittySoundFileUrl):
-    template = "{{\"noteId\": {0}, \"name\": \"{1}\", \"label\": \"{2}\", \"type\": \"{3}\", \"soundFileUrl\": \"{4}\", \"shittySoundFileUrl\": \"{5}\"}}"
-    json_for_id[note_id] = template.format(note_id, name, label, noteType, soundFileUrl, shittySoundFileUrl)
-        
-makeINoteInfo(0, "C4", "C", "regular", "/res/notes/one-lined/C-Normal.mp3", "/res/notes/one-lined/C-Shitty.mp3"),
-makeINoteInfo(1, "Cs4", "Cs", "flat", "/res/notes/one-lined/Cs-Normal.mp3", "/res/notes/one-lined/Cs-Shitty.mp3"),
-makeINoteInfo(2, "D4", "D", "regular", "/res/notes/one-lined/D-Normal.mp3", "/res/notes/one-lined/D-Shitty.mp3"),
-makeINoteInfo(3, "Ds4", "Ds", "flat", "/res/notes/one-lined/Ds-Normal.mp3", "/res/notes/one-lined/Ds-Shitty.mp3"),
-makeINoteInfo(4, "E4", "E", "regular", "/res/notes/one-lined/E-Normal.mp3", "/res/notes/one-lined/E-Shitty.mp3"),
-makeINoteInfo(5, "F4", "F", "regular", "/res/notes/one-lined/F-Normal.mp3", "/res/notes/one-lined/F-Shitty.mp3"),
-makeINoteInfo(6, "Fs4", "Fs", "flat", "/res/notes/one-lined/Fs-Normal.mp3", "/res/notes/one-lined/Fs-Shitty.mp3"),
-makeINoteInfo(7, "G4", "G", "regular", "/res/notes/one-lined/G-Normal.mp3", "/res/notes/one-lined/G-Shitty.mp3"),
-makeINoteInfo(8, "Gs4", "Gs", "flat", "/res/notes/one-lined/Gs-Normal.mp3", "/res/notes/one-lined/Gs-Shitty.mp3"),
-makeINoteInfo(9, "A4", "A", "regular", "/res/notes/one-lined/A-Normal.mp3", "/res/notes/one-lined/A-Shitty.mp3"),
-makeINoteInfo(10, "As4", "As", "flat", "/res/notes/one-lined/As-Normal.mp3", "/res/notes/one-lined/As-Shitty.mp3"),
-makeINoteInfo(11, "B4", "B", "regular", "/res/notes/one-lined/B-Normal.mp3", "/res/notes/one-lined/B-Shitty.mp3"),
-makeINoteInfo(12, "C5", "C", "regular", "/res/notes/two-lined/High-C-Normal.mp3", "/res/notes/two-lined/High-C-Shitty.mp3"),
-makeINoteInfo(13, "Cs5", "Cs", "flat", "/res/notes/two-lined/High-Cs-Normal.mp3", "/res/notes/two-lined/High-Cs-Shitty.mp3"),
-makeINoteInfo(14, "D5", "D", "regular", "/res/notes/two-lined/High-D-Normal.mp3", "/res/notes/two-lined/High-D-Shitty.mp3"),
-makeINoteInfo(15, "Ds5", "Ds", "flat", "/res/notes/two-lined/High-Ds-Normal.mp3", "/res/notes/two-lined/High-Ds-Shitty.mp3"),
-makeINoteInfo(16, "E5", "E", "regular", "/res/notes/two-lined/High-E-Normal.mp3", "/res/notes/two-lined/High-E-Shitty.mp3"),
-makeINoteInfo(17, "F5", "F", "regular", "/res/notes/two-lined/High-F-Normal.mp3", "/res/notes/two-lined/High-F-Shitty.mp3"),
-makeINoteInfo(18, "Fs5", "Fs", "flat", "/res/notes/two-lined/High-Fs-Normal.mp3", "/res/notes/two-lined/High-Fs-Shitty.mp3"),
-makeINoteInfo(19, "G5", "G", "regular", "/res/notes/two-lined/High-G-Normal.mp3", "/res/notes/two-lined/High-G-Shitty.mp3"),
-makeINoteInfo(20, "Gs5", "Gs", "flat", "/res/notes/two-lined/High-Gs-Normal.mp3", "/res/notes/two-lined/High-Gs-Shitty.mp3"),
-makeINoteInfo(21, "A5", "A", "regular", "/res/notes/two-lined/High-A-Normal.mp3", "/res/notes/two-lined/High-A-Shitty.mp3"),
-makeINoteInfo(22, "As5", "As", "flat", "/res/notes/two-lined/High-As-Normal.mp3", "/res/notes/two-lined/High-As-Shitty.mp3"),
-makeINoteInfo(23, "B5", "B", "regular", "/res/notes/two-lined/High-B-Normal.mp3", "/res/notes/two-lined/High-B-Shitty.mp3")
+n_notes = 28
+json_for_id = [line.rstrip('\n') for line in open(os.getcwd() + "/scripts/notes.txt")] 
+# getcwd() should refer to the home directory of the project, where gulp/forever process is run from
 
 # convert pitches into discrete notes
 def cents_to_note_id(hundred_cents):
@@ -72,12 +44,6 @@ class CompositionNote:
     
     def __str__(self):
         return "{\n\tnote_id: " + str(self.note_id) + "\n\tstart: " + str(self.start) + "\n\tend: " + str(self.end) + "\n}\n"
-
-    def json_for_comp_note(comp_note):
-	    if comp_note is None:
-	        return ""
-	    template = "{{\"noteInfo\": {0}, \"start\": {1}, \"end\": {2}}}"
-	    return template.format(json_for_id[comp_note.note_id], comp_note.start, comp_note.end)
     
 # json serialization of notes compositions
 def json_for_comp_note(comp_note):
@@ -154,7 +120,7 @@ if __name__ == "__main__":
 	        if this_id is not None:
 	            current_start = timestamps[i]
 	            current_id = this_id
-	            i += 120 # all notes should be at least 75 ticks long
+	            i += 250 # all notes should be at least 250 ticks long
 	    else:
 	        if this_id is None or this_id != current_id:
 	            if this_id is None and np.random.random() < 0.998:

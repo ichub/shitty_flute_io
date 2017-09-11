@@ -2,10 +2,12 @@ import * as React from "react";
 import * as Radium from "radium";
 import {ICompositionState} from "../../models/ICompositionState";
 import {GlobalButton, TitleFont, BoxShadow, OpenSansFont, ModalStyle} from "../../styles/GlobalStyles";
-import {parse as parseDuration} from 'iso8601-duration';
+import {parse as parseDuration, toSeconds} from 'iso8601-duration';
 import * as roundPrecision from "round-precision";
 import ReactModal = require("react-modal");
 import {isNullOrUndefined} from "util";
+import {YoutubeApi} from "../../server/YoutubeApi";
+import {RecorderPlayerPageComponent} from "./RecorderPlayerPageComponent";
 
 const getYoutubeId = require("get-youtube-id");
 const axios = require("axios");
@@ -150,17 +152,18 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
     viewCountToString() {
         if (this.state.videoInfo.statistics.viewCount) {
             const actualCount = parseInt(this.state.videoInfo.statistics.viewCount, 10);
+            let nViews = actualCount.toString();
 
             if (actualCount >= 1000 * 1000) {
-                return roundPrecision(actualCount / (1000 * 1000), 1) + " M views"
+                nViews = roundPrecision(actualCount / (1000 * 1000), 1) + "M"
             }
 
-            if (actualCount >= 1000 * 10) {
-                return roundPrecision(actualCount / (1000), 1) + " k views"
+            else if (actualCount >= 1000 * 10) {
+                nViews = roundPrecision(actualCount / (1000), 1) + "k"
 
             }
 
-            return actualCount + "views";
+            return nViews + " views";
         }
 
         return "";
@@ -188,6 +191,20 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                         </div> :
                         null
                 }
+
+                <br/>
+
+                <div style={[AutoComposePageComponent.styles.description, OpenSansFont]}>
+                    <div>
+                        <span style={[TitleFont]}>flootify </span> automatically generates recorder covers of your favorite songs,
+                    </div>
+                    <div>
+                        by attempting to find and match the pitch of the vocals. Please be
+                    </div>
+                    <div>
+                        patient; it can take a minute or two. Quality is absolutely not guaranteed.
+                    </div>
+                </div>
 
 
                 <div style={[
@@ -244,14 +261,15 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                         null
                 }
 
+                <br/>
+
                 {
                     this.state.stateName == AutoComposeStateName.Flootifying ?
-                        <div style={TitleFont}>
-                            {this.state.timeLeft} seconds left
+                        <div style={[AutoComposePageComponent.styles.flex, OpenSansFont]}>
+                            (Estimated time left: {this.state.timeLeft} seconds)
                         </div> :
                         null
                 }
-
 
                 <ReactModal
                     isOpen={!!this.state.errorMessage}
@@ -275,9 +293,8 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                 stateName: AutoComposeStateName.Flootifying,
             }, () => {
                 let interval;
-
                 this.setState({
-                    timeLeft: 200,
+                    timeLeft: Math.round(10 + Math.random() * 5 + toSeconds(parseDuration(this.state.videoInfo.duration)) / 2),
                 }, () => {
                     interval = setInterval(() => {
                         this.setState({
@@ -438,6 +455,13 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             overflow: "hidden",
             lineHeight: "1em",
             height: "1.5em",
+        },
+        description: {
+            lineHeight: "1.2em",
+            display: "inline-block",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center"
         }
     };
 }

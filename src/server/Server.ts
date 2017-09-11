@@ -8,6 +8,7 @@ import {InitializationState} from "../models/IInitializationState";
 import {ErrorMiddleware} from "./ErrorMiddleware";
 import {DEBUG_PORT, PORT, rootPath} from "./Env";
 import * as exphbs from "express-handlebars";
+import {NoteInfoList} from "../models/NoteInfoList";
 
 export declare var initializedState: InitializationState;
 

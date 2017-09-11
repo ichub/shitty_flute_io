@@ -15,8 +15,8 @@ import {
     makeICompositionPreviewPromise
 } from "../models/ICompositionPreview";
 
-const util = require('util');
-const exec = require('child_process').exec;
+const util = require("util");
+const exec = require("child_process").exec;
 
 export class SQLiteDataLayer implements IDataLayer {
     private static instancePromise: Promise<SQLiteDataLayer> = null;
@@ -271,6 +271,8 @@ export class SQLiteDataLayer implements IDataLayer {
     flootify(youtubeId: string): Promise<ICompositionState> {
         console.log("Attempting to flootify...");
         let script_path = path.join(rootPath, "scripts", "flootify.py");
+        let row: RunResult = null;
+
         return this.execGetWithPromise(
             "SELECT * from compositions WHERE youtube_id=? AND auto_recorded=?",
             [youtubeId, 1])
