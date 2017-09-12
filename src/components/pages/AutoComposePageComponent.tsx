@@ -304,7 +304,7 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             }, () => {
                 let interval;
                 this.setState({
-                    timeLeft: Math.round(10 + Math.random() * 5 + toSeconds(parseDuration(this.state.videoInfo.duration)) / 2),
+                    timeLeft: Math.round(10 + Math.random() * 5 + toSeconds(parseDuration(this.state.videoInfo.duration)) * 2 / 3),
                 }, () => {
                     interval = setInterval(() => {
                         this.setState({
