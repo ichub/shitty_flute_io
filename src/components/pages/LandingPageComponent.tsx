@@ -76,7 +76,6 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                         type="button"
                         value="(RECORDER CHOIR @ STANFORD)"
                         onClick={this.onStanfordClick.bind(this)}/>
-                    <br/>
                     <div style={{width: "100%", textAlign: "center"}}>
                         coming soon
                     </div>
@@ -142,7 +141,7 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
             border: "none",
             cursor: "pointer",
             transition: "200ms",
-            fontSize: "1.5em",
+            fontSize: "1.2em",
             opacity: 0.8,
             marginRight: "20px",
             ":hover": {
@@ -155,7 +154,7 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
             color: "black",
             border: "none",
             cursor: "pointer",
-            fontSize: "1.5em",
+            fontSize: "1.2em",
             opacity: 0.8,
             ":hover": {
                 fontWeight: "bold"
@@ -167,7 +166,7 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
             color: "black",
             border: "none",
             cursor: "auto",
-            fontSize: "1.5em",
+            fontSize: "1.2em",
             opacity: 0.8,
             ":hover": {
                 fontWeight: "bold"
