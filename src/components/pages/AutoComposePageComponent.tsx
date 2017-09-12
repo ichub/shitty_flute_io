@@ -185,7 +185,7 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
 
                 {
                     (!this.state.flootified && this.state.stateName === AutoComposeStateName.Idle) ?
-                        <div style={AutoComposePageComponent.styles.flex}>
+                        <div style={[AutoComposePageComponent.styles.flex]}>
                             <div style={[AutoComposePageComponent.styles.title, TitleFont]}>
                                 Paste the youtube link you want to flootify below (:
                             </div>
@@ -231,13 +231,13 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                         </div>
 
                         <div style={[OpenSansFont, AutoComposePageComponent.styles.videoTitleContainer]}>
-                            <div style={AutoComposePageComponent.styles.videoTitle}>
+                            <div style={[AutoComposePageComponent.styles.videoTitle]}>
                                 {this.state.videoInfo.title}
                             </div>
-                            <div style={AutoComposePageComponent.styles.miscVideoInfo}>
+                            <div style={[AutoComposePageComponent.styles.miscVideoInfo]}>
                                 {this.durationToString()}
                             </div>
-                            <div style={AutoComposePageComponent.styles.miscVideoInfo}>
+                            <div style={[AutoComposePageComponent.styles.miscVideoInfo]}>
                                 {this.viewCountToString()}
                             </div>
                         </div>
@@ -387,7 +387,7 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             height: "100vh",
             display: "flex",
             justifyContent: "center",
-            alignItems: "center",
+            alignItems: "center" as any,
             flexDirection: "column",
             backgroundColor: "rgba(0, 0, 0, 0.02)",
 
@@ -412,7 +412,7 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
         flex: {
             display: "flex",
             justifyContent: "center",
-            alignItems: "center",
+            alignItems: "center" as any,
             flexFlow: "column",
         },
         title: {

@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Radium from "radium";
-import {GlobalFont, OpenSansFont} from "../styles/GlobalStyles";
+import {OpenSansFont} from "../styles/GlobalStyles";
 import {generateShareIcon, ShareButtons, ShareCounts} from "react-share";
 
 const FacebookIcon = generateShareIcon("facebook");

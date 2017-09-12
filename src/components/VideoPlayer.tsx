@@ -50,11 +50,6 @@ export class VideoPlayer extends React.Component<IVideoPlayerProps, IVideoPlayer
                             null
                     }
                 </div>
-                <div style={[
-                    OpenSansFont,
-                    VideoPlayer.styles.videoTitleContainer,
-                ]}>
-                </div>
             </div>
         );
     }
