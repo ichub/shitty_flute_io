@@ -175,7 +175,7 @@ ApiController.get("/flootify/:youtubeId/:viewToken", (req: express.Request, res:
             .then(async flootified => {
                 await SlackAPI.sendMessageToShittyFluteChannel(
                     `flootified video: https://www.youtube.com/watch?v=${req.params.youtubeId}\n` +
-                    `watch it here: http://floot.io/recorder/view${req.params.viewToken}`);
+                    `watch it here: http://floot.io/recorder/view/${req.params.viewToken}`);
                 return Promise.resolve(flootified);
             })
             .catch(async err => {
