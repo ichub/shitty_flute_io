@@ -46,7 +46,7 @@ app.use(ErrorMiddleware);
 app.listen(PORT, async() => {
     console.log(`listening on port ${PORT}`);
 
-    //await SlackAPI.sendMessageToShittyFluteChannel("server starting");
+    await SlackAPI.sendMessageToShittyFluteChannel("server starting");
 });
 
 // schedule jobs
