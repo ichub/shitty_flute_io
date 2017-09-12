@@ -174,6 +174,15 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             <div style={[
                 AutoComposePageComponent.styles.base
             ]}>
+                <input
+                    style={[
+                        TitleFont,
+                        AutoComposePageComponent.styles.homeButton,
+                    ]}
+                    type="button"
+                    value="floot"
+                    onClick={() => {window.location.href = "/"}}/>
+
                 {
                     (!this.state.flootified && this.state.stateName === AutoComposeStateName.Idle) ?
                         <div style={AutoComposePageComponent.styles.flex}>
@@ -196,7 +205,8 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
 
                 <div style={[AutoComposePageComponent.styles.description, OpenSansFont]}>
                     <div>
-                        <span style={[TitleFont]}>flootify </span> automatically generates recorder covers of your favorite songs,
+                        <span style={[TitleFont]}>flootify </span>
+                        automatically generates recorder covers of your favorite songs,
                     </div>
                     <div>
                         by attempting to find and match the pitch of the vocals. Please be
@@ -381,6 +391,23 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
             flexDirection: "column",
             backgroundColor: "rgba(0, 0, 0, 0.02)",
 
+        },
+        homeButton: {
+            padding: "10px 5px 10px 5px",
+            backgroundColor: "white",
+            position: "absolute",
+            top: "20px",
+            left: "20px",
+            color: "black",
+            border: "none",
+            cursor: "pointer",
+            transition: "200ms",
+            fontSize: "3em",
+            opacity: 0.4,
+            ":hover": {
+                opacity: 1,
+                transform: "scale(1.1)"
+            }
         },
         flex: {
             display: "flex",
