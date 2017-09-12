@@ -50,7 +50,7 @@ gulp.task("ts", function () {
         .pipe(ts({
             declaration: false,
             module: "commonjs",
-            target: "es6",
+            target: "ES2017",
             experimentalDecorators: true,
             jsx: "react"
         }))

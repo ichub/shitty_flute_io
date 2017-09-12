@@ -9,6 +9,7 @@ import {ErrorMiddleware} from "./ErrorMiddleware";
 import {DEBUG_PORT, PORT, rootPath} from "./Env";
 import * as exphbs from "express-handlebars";
 import {NoteInfoList} from "../models/NoteInfoList";
+import {SlackAPI} from "./SlackAPI";
 
 export declare var initializedState: InitializationState;
 
@@ -42,8 +43,10 @@ app.use("/css", express.static(cssDir));
 
 app.use(ErrorMiddleware);
 
-app.listen(PORT, () => {
-    console.log(`listening on port ${DEBUG_PORT}`);
+app.listen(PORT, async() => {
+    console.log(`listening on port ${PORT}`);
+
+    //await SlackAPI.sendMessageToShittyFluteChannel("server starting");
 });
 
 // schedule jobs

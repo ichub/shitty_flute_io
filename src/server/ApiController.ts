@@ -5,6 +5,7 @@ import {YoutubeApi} from "./YoutubeApi";
 import {ICompositionState} from "../models/ICompositionState";
 import {IDataLayer} from "./IDataLayer";
 import {ReactPage} from "./ReactPageRenderMiddleware";
+import {SlackAPI} from "./SlackAPI";
 
 export const ApiController = express.Router();
 const fs = require("fs");
@@ -163,15 +164,21 @@ ApiController.get("/flootify/:youtubeId", (req: express.Request, res: express.Re
         YoutubeApi.getDurationOnVideo(req.params.youtubeId)
             .then(duration => {
                 if (duration > 600) {
-                    console.log("Video duration must be under 10 minutes.")
-                    return Promise.reject("Video duration must be under 10 minutes.")
+                    console.log("Video duration must be under 10 minutes.");
+                    return Promise.reject("Video duration must be under 10 minutes.");
                 }
                 return SQLiteDataLayer.getInstance()
             })
             .then((dataLayer: IDataLayer) => {
                 return dataLayer.flootify(req.params.youtubeId);
             })
-            .catch(err => {
+            .then(async flootified => {
+                await SlackAPI.sendMessageToShittyFluteChannel(
+                    `flootified video: https://www.youtube.com/watch?v=${req.params.youtubeId}\n`);
+                return Promise.resolve(flootified);
+            })
+            .catch(async err => {
+                await SlackAPI.sendMessageToShittyFluteChannel(`flootified video: https://www.youtube.com/watch?v=${req.params.youtubeId}\n`);
                 return Promise.reject(err);
             })
     );
