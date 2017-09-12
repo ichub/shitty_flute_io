@@ -66,8 +66,20 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                 </div>
                 <div style={[
                     LandingPageComponent.styles.easeIn(0.7),
+                    TitleFont
                 ]}>
-
+                    <input
+                        key="2"
+                        style={[
+                            LandingPageComponent.styles.stanfordButton,
+                        ]}
+                        type="button"
+                        value="(RECORDER CHOIR @ STANFORD)"
+                        onClick={this.onStanfordClick.bind(this)}/>
+                    <br/>
+                    <div style={{width: "100%", textAlign: "center"}}>
+                        coming soon
+                    </div>
                 </div>
             </div>
         );
@@ -79,6 +91,10 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
 
     onComposeClick() {
         window.location.href = "/recorder";
+    }
+
+    onStanfordClick() {
+        return;
     }
 
     private static readonly videoAspectRatio = 1920 / 1080;
@@ -127,6 +143,7 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
             cursor: "pointer",
             transition: "200ms",
             fontSize: "1.5em",
+            opacity: 0.8,
             marginRight: "20px",
             ":hover": {
                 fontWeight: "bold"
@@ -139,7 +156,19 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
             border: "none",
             cursor: "pointer",
             fontSize: "1.5em",
-            opacity: 0.9,
+            opacity: 0.8,
+            ":hover": {
+                fontWeight: "bold"
+            },
+        },
+        stanfordButton: {
+            padding: "10px 5px 10px 5px",
+            backgroundColor: "white",
+            color: "black",
+            border: "none",
+            cursor: "auto",
+            fontSize: "1.5em",
+            opacity: 0.8,
             ":hover": {
                 fontWeight: "bold"
             },
