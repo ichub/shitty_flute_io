@@ -159,7 +159,9 @@ ApiController.get("/auto-compose/:editToken", (req: express.Request, res: expres
         });
 });
 
-ApiController.get("/flootify/:youtubeId/:viewToken", (req: express.Request, res: express.Response) => {
+ApiController.get("/flootify/:youtubeId/:viewToken/:editToken", (req: express.Request, res: express.Response) => {
+    console.log(`edit token: ${req.params.editToken}`);
+    
     returnJson(
         res,
         YoutubeApi.getDurationOnVideo(req.params.youtubeId)

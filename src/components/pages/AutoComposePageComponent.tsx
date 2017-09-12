@@ -313,7 +313,7 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                     }, 1000);
                 });
 
-                axios.get(`/flootify/${this.state.youtubeVideoId}/${this.props.viewToken}`)
+                axios.get(`/flootify/${this.state.youtubeVideoId}/${this.props.viewToken}/${this.props.editToken}`)
                     .then((result) => {
                         clearInterval(interval);
                         console.log("flootify complete");
