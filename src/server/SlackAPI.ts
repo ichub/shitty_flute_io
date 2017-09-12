@@ -10,6 +10,8 @@ export class SlackAPI {
     private static defaultIcon = ":japanese_goblin:";
 
     public static sendMessage(text, channel, username, icon): Promise<any> {
+        console.log(`sending message: ${text}`);
+
         if (!IS_PROD) {
             return Promise.resolve();
         }

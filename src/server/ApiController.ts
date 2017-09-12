@@ -159,7 +159,7 @@ ApiController.get("/auto-compose/:editToken", (req: express.Request, res: expres
         });
 });
 
-ApiController.get("/flootify/:youtubeId", (req: express.Request, res: express.Response) => {
+ApiController.get("/flootify/:youtubeId/:viewToken", (req: express.Request, res: express.Response) => {
     returnJson(
         res,
         YoutubeApi.getDurationOnVideo(req.params.youtubeId)
@@ -174,7 +174,8 @@ ApiController.get("/flootify/:youtubeId", (req: express.Request, res: express.Re
             })
             .then(async flootified => {
                 await SlackAPI.sendMessageToShittyFluteChannel(
-                    `flootified video: https://www.youtube.com/watch?v=${req.params.youtubeId}\n`);
+                    `flootified video: https://www.youtube.com/watch?v=${req.params.youtubeId}\n` +
+                    `watch it here: http://floot.io/recorder/view${req.params.viewToken}`);
                 return Promise.resolve(flootified);
             })
             .catch(async err => {
