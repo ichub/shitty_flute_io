@@ -275,12 +275,11 @@ export class SQLiteDataLayer implements IDataLayer {
             "SELECT * from compositions WHERE youtube_id=? AND auto_recorded=?",
             [youtubeId, 1]);
 
-        if (row) {
+        if (!row) {
             const result = await this.execCommandWithPromise("python " + script_path + " " + youtubeId);
             console.log("flootified video with id " + youtubeId);
             return Promise.resolve(JSON.parse(result) as ICompositionState);
         } else {
-            console.log("found flootified version in database");
             const composition = await this.getCompositionFromRow(row);
             return Promise.resolve(composition.state);
         }

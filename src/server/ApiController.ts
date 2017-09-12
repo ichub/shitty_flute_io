@@ -6,6 +6,7 @@ import {ICompositionState} from "../models/ICompositionState";
 import {IDataLayer} from "./IDataLayer";
 import {ReactPage} from "./ReactPageRenderMiddleware";
 import {SlackAPI} from "./SlackAPI";
+import {FlootifyQueue} from "./FlootifyQueue";
 
 export const ApiController = express.Router();
 const fs = require("fs");
@@ -167,10 +168,9 @@ ApiController.get("/flootify/:youtubeId", (req: express.Request, res: express.Re
                     console.log("Video duration must be under 10 minutes.");
                     return Promise.reject("Video duration must be under 10 minutes.");
                 }
-                return SQLiteDataLayer.getInstance()
             })
-            .then((dataLayer: IDataLayer) => {
-                return dataLayer.flootify(req.params.youtubeId);
+            .then(() => {
+                return FlootifyQueue.getInstance().flootify(req.params.youtubeId);
             })
             .then(async flootified => {
                 await SlackAPI.sendMessageToShittyFluteChannel(
