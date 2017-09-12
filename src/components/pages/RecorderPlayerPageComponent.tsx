@@ -646,7 +646,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
             top: "initial",
             left: "initial",
             margin: "0 auto",
-            fontSize: "5em",
+            fontSize: "2em",
         },
         pitchButtonsContainer: {
             width: "15%",
