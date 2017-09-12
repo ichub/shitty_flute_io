@@ -26,6 +26,8 @@ export class FlootifyQueue {
                     const result = await dataLayer.flootify(youtubeId);
                     resolve(result);
                     this.queue.shift();
+                    console.log(`flootify queue length: ${this.queue.length}`);
+
                     if (this.queue.length > 0) {
                         this.queue[0]();
                     }
