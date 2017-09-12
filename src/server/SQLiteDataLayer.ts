@@ -268,33 +268,22 @@ export class SQLiteDataLayer implements IDataLayer {
             });
     }
 
-    flootify(youtubeId: string): Promise<ICompositionState> {
+    async flootify(youtubeId: string): Promise<ICompositionState> {
         console.log("Attempting to flootify...");
         let script_path = path.join(rootPath, "scripts", "flootify.py");
-        let row: RunResult = null;
-
-        return this.execGetWithPromise(
+        let row: RunResult = await this.execGetWithPromise(
             "SELECT * from compositions WHERE youtube_id=? AND auto_recorded=?",
-            [youtubeId, 1])
-            .then(row => {
-                if ("undefined" === typeof row) {
-                    return this.execCommandWithPromise("python " + script_path + " " + youtubeId)
-                        .then(result => {
-                            console.log("flootified video with id " + youtubeId);
-                            return Promise.resolve(JSON.parse(result) as ICompositionState);
-                        });
-                } else {
-                    console.log("Found flootified version in database");
-                    return this.getCompositionFromRow(row)
-                        .then((comp: IComposition) => {
-                            return Promise.resolve(comp.state);
-                        });
-                }
-            })
-            .catch((err) => {
-                console.log("Could not flootify.");
-                return Promise.reject(err);
-            });
+            [youtubeId, 1]);
+
+        if (row) {
+            const result = await this.execCommandWithPromise("python " + script_path + " " + youtubeId);
+            console.log("flootified video with id " + youtubeId);
+            return Promise.resolve(JSON.parse(result) as ICompositionState);
+        } else {
+            console.log("found flootified version in database");
+            const composition = await this.getCompositionFromRow(row);
+            return Promise.resolve(composition.state);
+        }
     }
 
     saveComposition(editToken: string, compositionState: ICompositionState): Promise<void> {
