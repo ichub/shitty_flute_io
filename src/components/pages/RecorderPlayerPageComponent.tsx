@@ -33,6 +33,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     audioOutputStopper: {stop: () => void};
 
     boundOnHomeClick;
+    boundOnFlootifyClick;
     boundOnVideoReady;
     boundOnStateChange;
     boundSave;
@@ -140,6 +141,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
     initializeHandlers() {
         this.boundOnHomeClick = this.onHomeClick.bind(this);
+        this.boundOnFlootifyClick = this.onFlootifyClick.bind(this);
         this.boundOnVideoReady = this.onVideoReady.bind(this);
         this.boundOnStateChange = this.onStateChange.bind(this);
         this.boundSave = this.save.bind(this);
@@ -227,6 +229,10 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
         window.location.href = "/";
     }
 
+    private onFlootifyClick() {
+        window.location.href = "/auto-compose";
+    }
+
     render() {
         return (
             <div style={[
@@ -241,9 +247,10 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                     ]}
                     type="button"
                     value="floot"
+                    key="home-button"
                     onClick={this.boundOnHomeClick}/>
 
-                <div>
+                <div style={{width: "100%"}}>
                     <div style={[RecorderPlayerPageComponent.styles.flex]}>
                         <ShareComponent viewToken={this.props.viewToken}/>
                     </div>
@@ -289,6 +296,44 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                             </div>
                         </div>
                     </div>
+
+                    <div>
+                        <div style={[
+                            RecorderPlayerPageComponent.styles.flex,
+                            TitleFont,
+                            {fontSize: "1em"}
+                        ]}>
+                            instructions: play from the heart.
+                        </div>
+                        <div style={[
+                            RecorderPlayerPageComponent.styles.flex,
+                            TitleFont,
+                            {fontSize: "1em"}
+                        ]}>
+                            (hint: it's like a piano/the leftmost white note is C)
+                        </div>
+                        <div style={[
+                            RecorderPlayerPageComponent.styles.flex,
+                            TitleFont,
+                            {fontSize: "1em"}
+                        ]}>
+                            or, if you're too lazy...
+                        </div>
+                    </div>
+
+                    <br/>
+
+                    <input
+                        style={[
+                            TitleFont,
+                            RecorderPlayerPageComponent.styles.homeButton,
+                            RecorderPlayerPageComponent.styles.flex,
+                            RecorderPlayerPageComponent.styles.flootifyButton
+                        ]}
+                        type="button"
+                        value="flootify for me"
+                        key="flootify-button"
+                        onClick={this.boundOnFlootifyClick}/>
 
                     <VideoPlayer
                         videoId={this.state.youtubeVideoId}
@@ -594,6 +639,14 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                 opacity: 1,
                 transform: "scale(1.1)"
             }
+        },
+        flootifyButton: {
+            position: "initial",
+            textAlign: "center",
+            top: "initial",
+            left: "initial",
+            margin: "0 auto",
+            fontSize: "5em",
         },
         pitchButtonsContainer: {
             width: "15%",
