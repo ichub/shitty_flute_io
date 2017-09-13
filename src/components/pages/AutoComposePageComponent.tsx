@@ -22,7 +22,6 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
 
         this.state = {
             stateName: AutoComposeStateName.Loading,
-            composition: null,
             flootified: false,
             youtubeVideoId: "",
             youtubeVideoLink: "",
@@ -80,7 +79,6 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
 
                 if (compositionState.hasRecorded) {
                     this.setState({
-                        composition: compositionState,
                         stateName: AutoComposeStateName.Idle,
                         flootified: true,
                         youtubeVideoId: compositionState.youtubeVideoId
@@ -313,49 +311,35 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                     }, 1000);
                 });
 
-                axios.get(`/flootify/${this.state.youtubeVideoId}/${this.props.viewToken}/${this.props.editToken}`)
-                    .then((result) => {
-                        clearInterval(interval);
-                        console.log("flootify complete");
-                        const comp = result.data as ICompositionState;
+                axios.get(`/flootify/${this.state.youtubeVideoId}/${this.props.viewToken}/${this.props.editToken}`);
 
-                        this.setState({
-                            stateName: AutoComposeStateName.Idle,
-                            composition: comp,
-                            flootified: true,
-                            youtubeVideoId: comp.youtubeVideoId
-                        }, () => {
-                            this.save();
-                        });
-                    })
-                    .catch((err) => {
-                        clearInterval(interval);
+                let intervalGet = setInterval(() => {
+                    axios.get(`/recorder/${this.props.editToken}/data`)
+                        .then((result) => {
+                            if (((result.data) as ICompositionState).hasRecorded) {
+                                clearInterval(intervalGet);
+                                clearInterval(interval);
+                                console.log("flootify complete");
+                                const comp = result.data as ICompositionState;
 
-                        this.setState({
-                            stateName: AutoComposeStateName.Idle,
-                            errorMessage: err.response.data.toString(),
-                        });
-                    });
+                                this.setState({
+                                    stateName: AutoComposeStateName.Idle,
+                                    flootified: true,
+                                    youtubeVideoId: comp.youtubeVideoId
+                                });
+                            }
+                        })
+                        .catch((err) => {
+                            clearInterval(interval);
+
+                            this.setState({
+                                stateName: AutoComposeStateName.Idle,
+                                errorMessage: err.response.data.toString(),
+                            });
+                        });;
+                }, 5000);
             });
         }
-    }
-
-    save() {
-        this.setState({
-            stateName: AutoComposeStateName.Saving
-        }, () => {
-            axios.post(`/recorder/${this.props.editToken}/save`, this.state.composition)
-                .then((result) => {
-                    console.log("save complete");
-                    this.setState({
-                        stateName: AutoComposeStateName.Idle,
-                        flootified: true,
-                    });
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        });
     }
 
     private static readonly InfoHeight = "100px";
@@ -529,7 +513,6 @@ export interface IVideoInfo {
 export interface IAutoComposePageComponentState {
     youtubeVideoId: string;
     stateName: AutoComposeStateName;
-    composition: ICompositionState;
     flootified: boolean;
     youtubeVideoLink: string;
     videoInfo: IVideoInfo;

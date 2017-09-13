@@ -1,5 +1,6 @@
 import {ICompositionState} from "../models/ICompositionState";
 import {SQLiteDataLayer} from "./SQLiteDataLayer";
+import {SlackAPI} from "./SlackAPI";
 
 export class FlootifyQueue {
     private static instance;
@@ -18,7 +19,7 @@ export class FlootifyQueue {
         return this.instance;
     }
 
-    async flootify(youtubeId: string): Promise<ICompositionState> {
+    async flootify(youtubeId: string, editToken: string, viewToken: string): Promise<ICompositionState> {
         return new Promise<ICompositionState>((resolve, reject) => {
             this.queue.push({
                 generator: async() => {
@@ -31,7 +32,7 @@ export class FlootifyQueue {
                         }, 1000 * 5);
 
                         const dataLayer = await SQLiteDataLayer.getInstance();
-                        const result = await dataLayer.flootify(youtubeId);
+                        const result = await dataLayer.flootify(youtubeId, editToken);
                         clearInterval(interval);
 
                         const difference = Date.now() - startDate;
@@ -56,7 +57,13 @@ export class FlootifyQueue {
             }
 
             this.printQueue();
-        });
+        })
+            .then(async flootified => {
+                await SlackAPI.sendMessageToShittyFluteChannel(
+                    `flootified video: https://www.youtube.com/watch?v=${youtubeId}\n` +
+                    `watch it here: http://floot.io/recorder/view/${viewToken}`);
+                return Promise.resolve(flootified);
+            });
     }
 
     printQueue() {

@@ -172,13 +172,9 @@ ApiController.get("/flootify/:youtubeId/:viewToken/:editToken", (req: express.Re
                 }
             })
             .then(() => {
-                return FlootifyQueue.getInstance().flootify(req.params.youtubeId);
-            })
-            .then(async flootified => {
-                await SlackAPI.sendMessageToShittyFluteChannel(
-                    `flootified video: https://www.youtube.com/watch?v=${req.params.youtubeId}\n` +
-                    `watch it here: http://floot.io/recorder/view/${req.params.viewToken}`);
-                return Promise.resolve(flootified);
+                // this happens async; we just resolve
+                FlootifyQueue.getInstance().flootify(req.params.youtubeId, req.params.editToken, req.params.viewToken);
+                return Promise.resolve();
             })
             .catch(async err => {
                 await SlackAPI.sendMessageToShittyFluteChannel(`flootified video: https://www.youtube.com/watch?v=${req.params.youtubeId}\n`);

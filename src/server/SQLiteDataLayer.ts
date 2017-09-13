@@ -268,8 +268,9 @@ export class SQLiteDataLayer implements IDataLayer {
             });
     }
 
-    async flootify(youtubeId: string): Promise<ICompositionState> {
+    async flootify(youtubeId: string, editToken: string): Promise<ICompositionState> {
         console.log("Attempting to flootify...");
+        let compositionState: ICompositionState = null;
         let script_path = path.join(rootPath, "scripts", "flootify.py");
         let row: RunResult = await this.execGetWithPromise(
             "SELECT * from compositions WHERE youtube_id=? AND auto_recorded=?",
@@ -278,11 +279,16 @@ export class SQLiteDataLayer implements IDataLayer {
         if (!row) {
             const result = await this.execCommandWithPromise("python " + script_path + " " + youtubeId);
             console.log("flootified video with id " + youtubeId);
-            return Promise.resolve(JSON.parse(result) as ICompositionState);
+            compositionState = JSON.parse(result) as ICompositionState;
         } else {
             const composition = await this.getCompositionFromRow(row);
-            return Promise.resolve(composition.state);
+            compositionState = composition.state;
         }
+
+        return this.saveComposition(editToken, compositionState)
+            .then(() => {
+                return Promise.resolve(compositionState);
+            });
     }
 
     saveComposition(editToken: string, compositionState: ICompositionState): Promise<void> {
