@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Radium from "radium";
 import * as color from "color";
-import {ButtonFont, OpenSansFont, TitleFont} from "../../styles/GlobalStyles";
+import {ButtonFont, OpenSansFont, TitleFont, NiceButton} from "../../styles/GlobalStyles";
 
 @Radium
 export class LandingPageComponent extends React.Component<any, ILandingPageComponentState> {
@@ -48,19 +48,19 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                         <input
                             key="0"
                             style={[
-                            LandingPageComponent.styles.composeButton,
+                            NiceButton,
                         ]}
                             type="button"
-                            value="(FLOOTIFY)"
+                            value="FLOOTIFY"
                             onClick={this.onAutoComposeClick.bind(this)}/>
 
                         <input
                             key="1"
                             style={[
-                            LandingPageComponent.styles.advancedEditorButton,
+                            NiceButton,
                         ]}
                             type="button"
-                            value="(RECORD)"
+                            value="RECORD"
                             onClick={this.onComposeClick.bind(this)}/>
                     </div>
                 </div>

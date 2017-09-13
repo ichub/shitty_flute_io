@@ -1,7 +1,10 @@
 import * as React from "react";
 import * as Radium from "radium";
 import {ICompositionState} from "../../models/ICompositionState";
-import {GlobalButton, TitleFont, BoxShadow, OpenSansFont, ModalStyle} from "../../styles/GlobalStyles";
+import {
+    GlobalButton, TitleFont, BoxShadow, OpenSansFont, ModalStyle, NiceButton,
+    MaterialYellow
+} from "../../styles/GlobalStyles";
 import {parse as parseDuration, toSeconds} from 'iso8601-duration';
 import * as roundPrecision from "round-precision";
 import ReactModal = require("react-modal");
@@ -45,7 +48,8 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                 duration: null
             },
             errorMessage: null,
-            timeLeft: 0
+            timeLeft: 0,
+            hadVideo: false
         };
     }
 
@@ -112,7 +116,8 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
 
         if (youtubeVideoId) {
             this.setState({
-                youtubeVideoId: youtubeVideoId
+                youtubeVideoId: youtubeVideoId,
+                hadVideo: true,
             }, () => {
                 this.loadVideoInfo();
             });
@@ -184,9 +189,13 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                 {
                     (!this.state.flootified && this.state.stateName === AutoComposeStateName.Idle) ?
                         <div style={[AutoComposePageComponent.styles.flex]}>
-                            <div style={[AutoComposePageComponent.styles.title, TitleFont]}>
-                                Paste the youtube link you want to flootify below (:
-                            </div>
+                            {
+                                (this.state.hadVideo || this.state.youtubeVideoId) ?
+                                    null :
+                                    <div style={[AutoComposePageComponent.styles.title, TitleFont]}>
+                                        Paste the youtube link you want to flootify below (:
+                                    </div>
+                            }
                             <label>
                                 <input style={[AutoComposePageComponent.styles.youtubeInput]}
                                        ref="youtubeLink"
@@ -201,18 +210,22 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
 
                 <br/>
 
-                <div style={[AutoComposePageComponent.styles.description, OpenSansFont]}>
-                    <div>
-                        <span style={[TitleFont]}>flootify </span>
-                        automatically generates recorder covers of your favorite songs,
-                    </div>
-                    <div>
-                        by attempting to find and match the pitch of the vocals. Please be
-                    </div>
-                    <div>
-                        patient; it can take a minute or two. Quality is absolutely not guaranteed.
-                    </div>
-                </div>
+                {
+                    (this.state.hadVideo || this.state.youtubeVideoId) ?
+                        null :
+                        <div style={[AutoComposePageComponent.styles.description, OpenSansFont]}>
+                            <div>
+                                <span style={[TitleFont]}>flootify </span>
+                                automatically generates recorder covers of your favorite songs,
+                            </div>
+                            <div>
+                                by attempting to find and match the pitch of the vocals. Please be
+                            </div>
+                            <div>
+                                patient; it can take a minute or two. Quality is absolutely not guaranteed.
+                            </div>
+                        </div>
+                }
 
 
                 <div style={[
@@ -250,8 +263,9 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                             (this.state.youtubeVideoId) ? this.easeIn(0.25) : {}
                         ]}>
                             <input key="compose" disabled={this.state.stateName !== AutoComposeStateName.Idle}
-                                   style={GlobalButton} type="button"
-                                   value={this.state.stateName == AutoComposeStateName.Flootifying ? "flootifying..." : "flootify"}
+                                   style={[NiceButton, this.state.stateName == AutoComposeStateName.Flootifying ? MaterialYellow : {}]}
+                                   type="button"
+                                   value={this.state.stateName == AutoComposeStateName.Flootifying ? "FLOOTIFYING..." : "FLOOTIFY"}
                                    onClick={this.flootify.bind(this)}/>
                         </div> :
                         null
@@ -336,7 +350,8 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
                                 stateName: AutoComposeStateName.Idle,
                                 errorMessage: err.response.data.toString(),
                             });
-                        });;
+                        });
+                    ;
                 }, 5000);
             });
         }
@@ -378,7 +393,7 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
         },
         homeButton: {
             padding: "10px 5px 10px 5px",
-            backgroundColor: "white",
+            backgroundColor: "transparent",
             position: "absolute",
             top: "20px",
             left: "20px",
@@ -415,7 +430,7 @@ export class AutoComposePageComponent extends React.Component<IAutoComposePageCo
         },
         videoInfo: {
             opacity: 0,
-            margin: "25px",
+            margin: "15px",
         },
         composeButton: {
             opacity: 0,
@@ -518,4 +533,5 @@ export interface IAutoComposePageComponentState {
     videoInfo: IVideoInfo;
     errorMessage: string;
     timeLeft: number;
+    hadVideo: boolean;
 }
