@@ -9,7 +9,7 @@ import {ITotalNoteState, makeNewITotalNoteState, NoteKeyboardManager, IDownNote}
 import {INoteInfo} from "../../models/INoteInfo";
 import {ICompositionNote} from "../../models/ICompositionNote";
 import {ICompositionState} from "../../models/ICompositionState";
-import {OpenSansFont, TitleFont, ModalStyle} from "../../styles/GlobalStyles";
+import {OpenSansFont, TitleFont, ModalStyle, NiceButton} from "../../styles/GlobalStyles";
 import * as color from "color";
 import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
@@ -323,17 +323,18 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
 
                     <br/>
 
-                    <input
-                        style={[
+                    <div style={RecorderPlayerPageComponent.styles.flex}>
+                        <input
+                            style={[
                             TitleFont,
-                            RecorderPlayerPageComponent.styles.homeButton,
-                            RecorderPlayerPageComponent.styles.flex,
-                            RecorderPlayerPageComponent.styles.flootifyButton
+                            NiceButton
                         ]}
-                        type="button"
-                        value="flootify for me"
-                        key="flootify-button"
-                        onClick={this.boundOnFlootifyClick}/>
+                            type="button"
+                            value="FLOOTIFY FOR ME"
+                            key="flootify-button"
+                            onClick={this.boundOnFlootifyClick}/>
+                    </div>
+
 
                     <VideoPlayer
                         videoId={this.state.youtubeVideoId}
