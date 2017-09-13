@@ -6,6 +6,7 @@ export class FlootifyQueue {
     private static instance;
 
     private queue: Array<{id: string, generator: () => void}> = [];
+    private flootifying: Set<{id: string, generator: () => void}> = new Set();
 
     private constructor() {
 
@@ -21,7 +22,7 @@ export class FlootifyQueue {
 
     async flootify(youtubeId: string, editToken: string, viewToken: string): Promise<ICompositionState> {
         return new Promise<ICompositionState>((resolve, reject) => {
-            this.queue.push({
+            let me = {
                 generator: async() => {
                     try {
                         const startDate = Date.now();
@@ -39,21 +40,25 @@ export class FlootifyQueue {
                         console.log(`FINISHED: ${youtubeId} after ${difference / 1000} seconds`);
 
                         resolve(result);
-                        this.queue.shift();
-                        this.printQueue();
-
-                        if (this.queue.length > 0) {
-                            this.queue[0].generator();
+                        this.flootifying.delete(me);
+                        let next = this.queue.shift();
+                        if (!(next == null)) {
+                            this.flootifying.add(next);
+                            next.generator();
                         }
+                        this.printQueue();
                     } catch (e) {
                         reject(e);
                     }
                 },
                 id: youtubeId
-            });
+            };
 
-            if (this.queue.length === 1) {
-                this.queue[0].generator();
+            if (this.flootifying.size < 10) {
+                this.flootifying.add(me);
+                me.generator();
+            } else {
+                this.queue.push(me);
             }
 
             this.printQueue();
@@ -68,12 +73,18 @@ export class FlootifyQueue {
 
     printQueue() {
         console.log(`flootify queue length: ${this.queue.length}`);
-        let result = "[";
+        let resultQueue = "[";
 
-        this.queue.forEach(item => result += " " + item.id);
+        this.queue.forEach(item => resultQueue += " " + item.id);
 
-        result += " ]";
+        resultQueue += " ]";
 
-        console.log(result);
+        console.log(resultQueue);
+
+        console.log(`flootifying already: ${this.flootifying.size}`);
+        let resultSet = "[";
+        this.flootifying.forEach(item => resultSet += " " + item.id);
+        resultSet += " ]";
+        console.log(resultSet);
     }
 }

@@ -36,6 +36,7 @@ export class SlackAPI {
     }
 
     public static async sendMessageToShittyFluteChannel(text): Promise<any> {
+        console.log("sending message with slack API");
         return SlackAPI.sendMessage(
             text,
             SlackAPI.shittyFluteChannelName,
