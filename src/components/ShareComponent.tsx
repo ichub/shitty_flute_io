@@ -49,61 +49,6 @@ export class ShareComponent extends React.Component<IShareComponentProps, IShare
                         ref="urlText"
                         style={[ShareComponent.styles.url]}>{`http://floot.io/recorder/view/${this.props.viewToken}`}</span>
                 </div>
-
-                <br/>
-
-                <div style={[ShareComponent.styles.flex]}>
-                    <div style={[ShareComponent.styles.button]}>
-                        <FacebookShareButton
-                            url={this.getViewUrl()}
-                            quote={""}
-                            className="Demo__some-network__share-button">
-                            <FacebookIcon
-                                size={32}
-                                round/>
-                        </FacebookShareButton>
-                    </div>
-                    <div style={[ShareComponent.styles.button]}>
-                        <TwitterShareButton
-                            url={this.getViewUrl()}
-                            quote={""}
-                            className="Demo__some-network__share-button">
-                            <TwitterIcon
-                                size={32}
-                                round/>
-                        </TwitterShareButton>
-                    </div>
-                    <div style={[ShareComponent.styles.button]}>
-                        <GooglePlusShareButton
-                            url={this.getViewUrl()}
-                            quote={""}
-                            className="Demo__some-network__share-button">
-                            <GooglePlusIcon
-                                size={32}
-                                round/>
-                        </GooglePlusShareButton>
-                    </div>
-                    <div style={[ShareComponent.styles.button]}>
-                        <RedditShareButton
-                            url={this.getViewUrl()}
-                            quote={""}
-                            className="Demo__some-network__share-button">
-                            <RedditIcon
-                                size={32}
-                                round/>
-                        </RedditShareButton>
-                    </div>
-                    <div style={[ShareComponent.styles.button]}>
-                        <VKShareButton
-                            url={this.getViewUrl()}
-                            quote={""}
-                            className="Demo__some-network__share-button">
-                            <VKIcon
-                                size={32}
-                                round/>
-                        </VKShareButton>
-                    </div>
-                </div>
             </div>
         );
     }

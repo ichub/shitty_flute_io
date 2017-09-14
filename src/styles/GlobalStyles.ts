@@ -52,8 +52,20 @@ export const NiceButton = {
     }
 };
 
+export const SmallButton = {
+    padding: "5px 10px 5px 10px",
+    fontSize: "90%",
+    backgroundColor: "transparent",
+    boxShadow: "none",
+    color: "black"
+};
+
 export const MaterialYellow = {
     backgroundColor: "#FFD600"
+};
+
+export const MaterialGray = {
+    backgroundColor: "#9E9E9E"
 };
 
 export const ModalStyle = {

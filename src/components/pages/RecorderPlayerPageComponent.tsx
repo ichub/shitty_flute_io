@@ -5,11 +5,11 @@ import {IYoutubeVideoPlayer, VideoPlayer} from "../VideoPlayer";
 import {AudioOutputHelper} from "../../AudioOutputHelper";
 import {NoteInfoList} from "../../models/NoteInfoList";
 import {SingleNotePlayer} from "../../SingleNotePlayer";
-import {ITotalNoteState, makeNewITotalNoteState, NoteKeyboardManager, IDownNote} from "../../NoteKeyboardManager";
+import {ITotalNoteState, makeNewITotalNoteState, NoteKeyboardManager} from "../../NoteKeyboardManager";
 import {INoteInfo} from "../../models/INoteInfo";
 import {ICompositionNote} from "../../models/ICompositionNote";
 import {ICompositionState} from "../../models/ICompositionState";
-import {OpenSansFont, TitleFont, ModalStyle, NiceButton} from "../../styles/GlobalStyles";
+import {MaterialGray, MaterialYellow, ModalStyle, NiceButton, SmallButton, TitleFont} from "../../styles/GlobalStyles";
 import * as color from "color";
 import {ShareComponent} from "../ShareComponent";
 import {getINoteInfoForPositionIndex, NoteUIPositionList} from "../../models/NoteUIPositionList";
@@ -18,6 +18,7 @@ import {ControllerBarComponent} from "../ControllerBarComponent";
 import {UnavailableNoteModal} from "../UnavailableNoteModal";
 import {YoutubeApi} from "../../server/YoutubeApi";
 import {BufferingComponent} from "../BufferingComponent";
+
 const axios = require("axios");
 
 @Radium
@@ -30,7 +31,7 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
     noteKeyboardManager: NoteKeyboardManager;
     video: IYoutubeVideoPlayer;
     stopPlayingTimeout: NodeJS.Timer;
-    audioOutputStopper: {stop: () => void};
+    audioOutputStopper: { stop: () => void };
 
     boundOnHomeClick;
     boundOnFlootifyClick;
@@ -297,38 +298,39 @@ export class RecorderPlayerPageComponent extends React.Component<IRecorderPlayer
                         </div>
                     </div>
 
-                    <div>
-                        <div style={[
-                            RecorderPlayerPageComponent.styles.flex,
-                            TitleFont,
-                            {fontSize: "1em"}
-                        ]}>
-                            instructions: play from the heart.
-                        </div>
-                        <div style={[
-                            RecorderPlayerPageComponent.styles.flex,
-                            TitleFont,
-                            {fontSize: "1em"}
-                        ]}>
-                            (hint: it's like a piano/the leftmost white note is C)
-                        </div>
-                        <div style={[
-                            RecorderPlayerPageComponent.styles.flex,
-                            TitleFont,
-                            {fontSize: "1em"}
-                        ]}>
-                            or, if you're too lazy...
-                        </div>
+                    <div style={[RecorderPlayerPageComponent.styles.flex]}>
+                        {
+                            this.state.stateName === RecorderStateName.Playing ?
+                                <input
+                                    style={[
+                                        TitleFont,
+                                        NiceButton,
+                                        MaterialYellow
+                                    ]}
+                                    type="button"
+                                    value="STOP"
+                                    key="stopButton"
+                                    onClick={this.boundStopPlayback}/> :
+                                <input
+                                    style={[
+                                        TitleFont,
+                                        NiceButton,
+                                        this.state.stateName !== RecorderStateName.FreePlay ? MaterialGray : {}
+                                    ]}
+                                    type="button"
+                                    value={this.state.stateName === RecorderStateName.FreePlay ? "PLAY" : "    "}
+                                    key="play-button"
+                                    onClick={this.boundPlay}/>
+                        }
                     </div>
 
-                    <br/>
-
-                    <div style={RecorderPlayerPageComponent.styles.flex}>
+                    <div style={[RecorderPlayerPageComponent.styles.flex]}>
                         <input
                             style={[
-                            TitleFont,
-                            NiceButton
-                        ]}
+                                TitleFont,
+                                NiceButton,
+                                SmallButton
+                            ]}
                             type="button"
                             value="FLOOTIFY FOR ME"
                             key="flootify-button"
