@@ -30,11 +30,11 @@ ApiController.get("/", (req: express.Request, res: express.Response) => {
     });
 });
 
-ApiController.get("/about", (req: express.Request, res: express.Response) => {
-    res.render("index", {
-        pageName: ReactPage.About
-    });
-});
+// ApiController.get("/about", (req: express.Request, res: express.Response) => {
+//     res.render("index", {
+//         pageName: ReactPage.About
+//     });
+// });
 
 // ApiController.get("/all-recordings", (req: express.Request, res: express.Response) => {
 //     res.json(dataStore);
