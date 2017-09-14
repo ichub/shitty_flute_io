@@ -6,6 +6,7 @@ import {RecorderPlayerPageComponent} from "../components/pages/RecorderPlayerPag
 import {StyleRoot} from "radium";
 import {ErrorPageComponent} from "../components/pages/ErrorPageComponent";
 import {AutoComposePageComponent} from "../components/pages/AutoComposePageComponent";
+import {AboutPageComponent} from "../components/pages/AboutPageComponent";
 
 declare const initializedState: InitializationState;
 
@@ -43,5 +44,12 @@ if (initializedState.pageName === "landing") {
                 viewToken={initializedState.viewToken}/>
         </StyleRoot>,
         document.getElementById("app-container"));
+} else if (initializedState.pageName === "about") {
+    ReactDom.render(
+        <StyleRoot>
+            <AboutPageComponent/>
+        </StyleRoot>,
+        document.getElementById("app-container"));
 }
+
 

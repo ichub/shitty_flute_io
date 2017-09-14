@@ -10,6 +10,7 @@ export enum ReactPage {
     RecorderView = "recorder-view",
     Error = "error",
     AutoCompose = "auto-compose",
+    About = "about",
 }
 
 declare namespace Express {
