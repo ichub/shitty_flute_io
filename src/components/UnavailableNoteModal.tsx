@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Radium from "radium";
-import {OpenSansFont} from "../styles/GlobalStyles";
+import {OpenSansFont, TitleFont} from "../styles/GlobalStyles";
 import {RecorderPlayerPageComponent} from "./pages/RecorderPlayerPageComponent";
 
 @Radium
@@ -24,7 +24,7 @@ export class UnavailableNoteModal extends React.Component<IUnavailableNoteModalP
                     <br/>
 
                     <div>
-                        Sorry, this note (low D#) is not available in the current version of floot.
+                        Sorry, this note (low D#) is not available in the current version of  <span style={[TitleFont]}> floot.io</span>.
                         <br/>
                         Please check back regularly for more updates and new features, including auto-flootify and adjustable audio quality levels!
                     </div>
