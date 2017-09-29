@@ -85,7 +85,7 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                     LandingPageComponent.styles.easeIn(0.8),
                     LandingPageComponent.styles.contact
                 ]}>
-                    contact: <a href="mailto:ivansergchub@gmai.com">ivansergchub@gmail.com</a>
+                    contact: <a href="mailto:ivansergchub@gmai.com">ivan@floot.io</a>
                 </div>
             </div>
         );
