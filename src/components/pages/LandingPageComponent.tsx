@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Radium from "radium";
 import * as color from "color";
-import {ButtonFont, OpenSansFont, TitleFont, NiceButton} from "../../styles/GlobalStyles";
+import {NiceButton, TitleFont} from "../../styles/GlobalStyles";
 
 @Radium
 export class LandingPageComponent extends React.Component<any, ILandingPageComponentState> {
@@ -48,8 +48,8 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                         <input
                             key="0"
                             style={[
-                            NiceButton,
-                        ]}
+                                NiceButton,
+                            ]}
                             type="button"
                             value="FLOOTIFY"
                             onClick={this.onAutoComposeClick.bind(this)}/>
@@ -57,8 +57,8 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                         <input
                             key="1"
                             style={[
-                            NiceButton,
-                        ]}
+                                NiceButton,
+                            ]}
                             type="button"
                             value="RECORD"
                             onClick={this.onComposeClick.bind(this)}/>
@@ -79,6 +79,13 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                     <div style={{width: "100%", textAlign: "center"}}>
                         coming soon
                     </div>
+                </div>
+                <div style={[
+                    TitleFont,
+                    LandingPageComponent.styles.easeIn(0.8),
+                    LandingPageComponent.styles.contact
+                ]}>
+                    contact: <a href="mailto:ivansergchub@gmai.com">ivansergchub@gmail.com</a>
                 </div>
             </div>
         );
@@ -194,6 +201,11 @@ export class LandingPageComponent extends React.Component<any, ILandingPageCompo
                 animation: `x 1s ${offset}s ease forwards`,
                 animationName: LandingPageComponent.fadeInKeyframes,
             };
+        },
+        contact: {
+            marginTop: "15px",
+            color: "rgba(0, 0, 0, 0.5)",
+            fontSize: "1em"
         },
         insta: {
             color: "rgba(0, 0, 0, 0.1)",
