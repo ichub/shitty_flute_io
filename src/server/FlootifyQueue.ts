@@ -54,7 +54,7 @@ export class FlootifyQueue {
                 id: youtubeId
             };
 
-            if (this.flootifying.size < 10) {
+            if (this.flootifying.size < 15) {
                 this.flootifying.add(me);
                 me.generator();
             } else {
