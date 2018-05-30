@@ -25,12 +25,19 @@ export class SlackAPI {
                     "headers": {"Content-Type": "application/x-www-form-urlencoded"},
                 },
                 function (response) {
-                    resolve();
+                    if (response.statusCode == 200) {
+			resolve();
+		    } else {
+		    	reject();
+		    }
                 });
 
             request.write(
                 'payload={"text":"' + text + '","channel":"' +
                 channel + '","username":"' + username + '","icon_emoji":"' + icon + '"}');
+	    request.on('error', (e) => {
+		console.error(e);
+	    });
             request.end();
         });
     }
