@@ -47,6 +47,10 @@ app.listen(PORT, async() => {
     console.log(`listening on port ${PORT}`);
 
     await SlackAPI.sendMessageToShittyFluteChannel("server starting");
+    console.log("Attempting to clean DB.");
+    await cleanDB();
+
+    console.log("cleaned DB");
 });
 
 // schedule jobs

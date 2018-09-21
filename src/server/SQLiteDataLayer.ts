@@ -359,8 +359,8 @@ export class SQLiteDataLayer implements IDataLayer {
         let thresholdTime = (new Date()).getTime() - 1000 * 60 * 60 * 24;
         return this.execRunWithPromise(
             "DELETE FROM compositions " +
-            "WHERE has_recorded=? " +
-            "AND last_edited<?", [0, thresholdTime])
+            "WHERE view_count<? " +
+            "AND last_edited<?", [2, thresholdTime])
             .then(() => {
                 console.log("Cleaned successfully");
             })
