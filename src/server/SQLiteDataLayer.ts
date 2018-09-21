@@ -363,7 +363,7 @@ export class SQLiteDataLayer implements IDataLayer {
             "AND last_edited<?", [2, thresholdTime])
             .then(() => {
                 return this.execRunWithPromise("DELETE FROM compositions_notes_map " +
-                "WHERE composition_edit_token NOT IN (SELECT compositions.edit_token FROM compositions)");
+                "WHERE composition_edit_token NOT IN (SELECT edit_token FROM compositions)");
             })
             .then(() => {
                 console.log("Cleaned successfully");
